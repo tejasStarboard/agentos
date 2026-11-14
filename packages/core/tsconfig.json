@@ -7,6 +7,14 @@
     "paths": {
       "@agentos/core": ["./src/index.ts"],
       "@agentos/core/api/*": ["./src/api/lib/*"],
+      "@agentos/core/builtins/*/env": ["./builtins/*/api/env.ts"],
+      "@agentos/core/builtins/*": ["./builtins/*"],
+      "@agentos/core/client/lib/*": ["./src/client/lib/*"],
+      "@agentos/core/client/components/*": ["./src/client/components/*"],
+      "@agentos/core/vite/lib/*": ["./src/vite/lib/*"],
+      "@agentos/core/agent/lib/*": ["./src/agent/lib/*"],
+      "@agentos/core/shell/mount": ["./src/shell/mount.tsx"],
+      "@agentos/core/shell/*": ["./src/shell/*/index.ts"],
       "@agentos/core/*": ["./src/*/index.ts"]
     }
   },

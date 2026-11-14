@@ -12,7 +12,7 @@ import { pgDocuments, sqliteDocuments } from './schema';
 export type Dialect = 'sqlite' | 'postgres';
 
 export type CreateDbOptions = {
-  /** Override DATABASE_URL (postgres://… or file path). */
+  /** Override AGENT_OS_EXT_DB_STORE_DATABASE_URL (postgres://… or file path). */
   databaseUrl?: string;
   /** SQLite path when not using Postgres; `:memory:` for tests. */
   databasePath?: string;
@@ -35,10 +35,8 @@ export type DbStoreContext =
       close: () => Promise<void>;
     };
 
-/** Default local store: `~/.agentos/store/db-store.sqlite` (override with AGENTOS_DB_PATH). */
+/** Default local store: `~/.agentos/store/db-store.sqlite` (override with AGENT_OS_EXT_DB_STORE_PATH). */
 function defaultSqlitePath(): string {
-  const override = Bun.env.AGENTOS_DB_PATH;
-  if (override) return override;
   return join(homedir(), '.agentos', 'store', 'db-store.sqlite');
 }
 
@@ -73,13 +71,13 @@ async function ensurePostgresSchema(db: PostgresDb): Promise<void> {
 }
 
 /**
- * Open Drizzle-backed store. Sole process that may hold DATABASE_URL / SQL drivers.
+ * Open Drizzle-backed store. Sole process that may hold SQL drivers.
  * Auth and customer APIs must use the HTTP client (ticket 22), not open drivers here.
  */
 export async function createDb(
   options: CreateDbOptions = {},
 ): Promise<DbStoreContext> {
-  const databaseUrl = options.databaseUrl ?? Bun.env.DATABASE_URL ?? undefined;
+  const databaseUrl = options.databaseUrl ?? undefined;
 
   if (databaseUrl && isPostgresUrl(databaseUrl)) {
     const client = postgres(databaseUrl, { max: 4 });

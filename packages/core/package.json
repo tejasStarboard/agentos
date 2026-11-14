@@ -11,11 +11,31 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client/index.ts",
+    "./client/lib/*": [
+      "./src/client/lib/*.ts",
+      "./src/client/lib/*.tsx"
+    ],
+    "./client/components/*": "./src/client/components/*.tsx",
     "./api": "./src/api/index.ts",
     "./api/*": "./src/api/lib/*.ts",
+    "./builtins/*/env": "./builtins/*/api/env.ts",
+    "./builtins/*": [
+      "./builtins/*.ts",
+      "./builtins/*.tsx"
+    ],
     "./vite": "./src/vite/index.ts",
+    "./vite/lib/*": [
+      "./src/vite/lib/*.ts",
+      "./src/vite/lib/*.tsx"
+    ],
     "./sdk": "./src/sdk/index.ts",
+    "./agent": "./src/agent/index.ts",
+    "./agent/lib/*": [
+      "./src/agent/lib/*.ts",
+      "./src/agent/lib/*.tsx"
+    ],
     "./shell": "./src/shell/index.ts",
+    "./shell/mount": "./src/shell/mount.tsx",
     "./shell/*": "./src/shell/*/index.ts"
   },
   "scripts": {
@@ -27,12 +47,14 @@
   "dependencies": {
     "@agentos/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
+    "@t3-oss/env-core": "^0.13.11",
     "better-auth": "^1.7.25",
     "comlink": "^4.4.2",
     "drizzle-orm": "^0.45.4",
     "postgres": "^4.1.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "zod": "^4.6.7",
     "zustand": "^5.1.0"
   },
   "peerDependencies": {

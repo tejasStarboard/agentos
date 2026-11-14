@@ -4,8 +4,8 @@ import { join } from 'node:path';
 import {
   serializeRegistryModule,
   skillsBindingName,
-} from '../lib/serialize-registry';
-import type { RegistryModel } from '../lib/types';
+} from '@agentos/core/vite/lib/serialize-registry';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
 
 describe('serializeRegistryModule', () => {
   test('skillsBindingName sanitizes ids', () => {

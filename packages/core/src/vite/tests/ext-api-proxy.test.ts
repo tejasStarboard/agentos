@@ -9,10 +9,13 @@ import {
   createExtApiProxyMiddleware,
   createExtensionEnableState,
   parseExtApiPath,
-} from '../lib/agentos-plugin';
-import { scanExtensions } from '../lib/scan-extensions';
-import type { ProxyFetch } from '../lib/ext-api-proxy';
-import type { RegistryModel, ScannedExtension } from '../lib/types';
+} from '@agentos/core/vite/lib/agentos-plugin';
+import { scanExtensions } from '@agentos/core/vite/lib/scan-extensions';
+import type { ProxyFetch } from '@agentos/core/vite/lib/ext-api-proxy';
+import type {
+  RegistryModel,
+  ScannedExtension,
+} from '@agentos/core/vite/lib/types';
 
 const fixturesRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
 const extensionsDir = join(fixturesRoot, 'extensions');

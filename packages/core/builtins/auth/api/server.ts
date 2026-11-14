@@ -1,10 +1,17 @@
+import { keys } from './env';
 import { AUTH_PORT } from './lib/constants';
 import { createAuth } from './lib/create-auth';
 import { handleAuthRequest } from './lib/handle-request';
 
-const port = Number(Bun.env.AGENTOS_AUTH_PORT ?? AUTH_PORT);
+const env = keys();
 
-const ctx = await createAuth();
+const port = env.AGENT_OS_EXT_AUTH_PORT ?? AUTH_PORT;
+
+const ctx = await createAuth({
+  secret: env.AGENT_OS_EXT_AUTH_SECRET,
+  databasePath: env.AGENT_OS_EXT_AUTH_DB,
+  baseURL: env.AGENT_OS_EXT_AUTH_BASE_URL,
+});
 
 const server = Bun.serve({
   port,

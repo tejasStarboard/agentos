@@ -3,7 +3,7 @@
 export {
   HostProvider,
   type HostProviderProps,
-} from '../components/host-provider';
+} from '@agentos/core/client/components/host-provider';
 
 export {
   ExtensionViewApp,

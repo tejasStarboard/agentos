@@ -51,13 +51,14 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 
 1. **UI SDK** → `@agentos/core/client` only. Never `@agentos/core/api` in `ui/`.
 2. **UI primitives** → `@agentos/ui` (shadcn) for buttons, inputs, checkboxes, selects, dropdowns, etc. Avoid native HTML controls unless specifically required.
-3. **TS routes** → `@agentos/core/api/*` only. No `DATABASE_URL` / Redis — use `/api/store`.
+3. **TS routes** → `@agentos/core/api/*` only. No customer product DB URL / Redis — use `/api/store` (db-store may use `AGENT_OS_EXT_DB_STORE_DATABASE_URL` internally only).
 4. **Python** → `agentos.*` in `services/` only, linked from `meta.json`.
 5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`).
 6. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
 7. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.
 8. **Builtins** locked; **customer** extensions toggleable.
 9. **pnpm** installs the monorepo; **Bun** runs all TS/JS. Never Node for services.
+10. **Env** → each extension exports `keys = () => createEnv(...)`; the app calls `createEnv({ extends: [keys(), ...] })`. Naming: `AGENT_OS_GLOBAL_*` (platform), `AGENT_OS_EXT_<DOMAIN>_*` (extensions). Helpers live in `@agentos/core/api/env`.
 
 ## Prefer these words
 

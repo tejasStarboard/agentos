@@ -16,11 +16,63 @@ extensions/<id>/
     skills.ts      # /slash skills
     instructions.md
   api/             # optional — Bun only
+    env.ts         # optional — export `keys` (Zod schemas)
     server.ts
     routes/
       tools/
         search_contacts/index.ts
 ```
+
+## Env (`api/env.ts`)
+
+Each extension exports a `keys()` factory that returns a `@t3-oss/env-core` `createEnv` instance. The app extends those instances — no custom merge helper.
+
+```ts
+// extensions/crm/api/env.ts
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
+
+export const keys = (runtimeEnv = Bun.env) =>
+  createEnv({
+    server: {
+      AGENT_OS_EXT_CRM_API_TOKEN: z.string().min(1),
+    },
+    clientPrefix: 'AGENT_OS_EXT_CRM_CLIENT',
+    client: {},
+    runtimeEnv: {
+      AGENT_OS_EXT_CRM_API_TOKEN: runtimeEnv.AGENT_OS_EXT_CRM_API_TOKEN,
+    },
+    emptyStringAsUndefined: true,
+  });
+// Always set: server, client, clientPrefix, runtimeEnv
+```
+
+| Scope             | Pattern                       | Example                    |
+| ----------------- | ----------------------------- | -------------------------- |
+| Global / platform | `AGENT_OS_GLOBAL_<VAR>`       | `AGENT_OS_GLOBAL_NODE_ENV` |
+| Extension         | `AGENT_OS_EXT_<DOMAIN>_<VAR>` | `AGENT_OS_EXT_AUTH_SECRET` |
+
+Domain = extension id uppercased with `-` → `_` (`db-store` → `DB_STORE`).
+
+```ts
+import { createEnv } from '@t3-oss/env-core';
+import { platformKeys } from '@agentos/core/api/env';
+import { keys as authKeys } from '@agentos/core/builtins/auth/env';
+import { keys as crmKeys } from '@extensions/crm/api/env';
+
+export const env = createEnv({
+  extends: [platformKeys(), authKeys(), crmKeys()],
+  server: {},
+  clientPrefix: 'AGENT_OS_APP_CLIENT',
+  client: {},
+  runtimeEnv: Bun.env,
+  emptyStringAsUndefined: true,
+});
+```
+
+Every `createEnv` / `keys()` call must define `server`, `client`, `clientPrefix`, and `runtimeEnv`.
+
+Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
 
 ## meta.json (Bun API)
 

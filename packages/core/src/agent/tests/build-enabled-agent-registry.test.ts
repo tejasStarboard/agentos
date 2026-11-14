@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 
-import { buildEnabledAgentRegistry } from '../lib/build-enabled-agent-registry';
-import type { RegistryModel, ScannedExtension } from '../../vite/lib/types';
+import { buildEnabledAgentRegistry } from '@agentos/core/agent/lib/build-enabled-agent-registry';
+import type {
+  RegistryModel,
+  ScannedExtension,
+} from '@agentos/core/vite/lib/types';
 
 function ext(
   partial: Pick<ScannedExtension, 'id' | 'kind' | 'toggleable'> &

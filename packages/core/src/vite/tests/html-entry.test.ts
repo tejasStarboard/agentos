@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { serializeExtEntryModule } from '../lib/ext-entry-module';
+import { serializeExtEntryModule } from '@agentos/core/vite/lib/ext-entry-module';
 import {
   parseExtHtmlPath,
   parseVirtualExtEntryId,
@@ -10,7 +10,7 @@ import {
   resolvedVirtualExtEntryId,
   virtualExtEntryId,
   virtualExtEntryScriptSrc,
-} from '../lib/html-entry';
+} from '@agentos/core/vite/lib/html-entry';
 
 const fixturesRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
 

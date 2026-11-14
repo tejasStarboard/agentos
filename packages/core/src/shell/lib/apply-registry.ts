@@ -1,4 +1,4 @@
-import type { RegistryModel } from '../../vite/lib/types';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
 import type { UiContribution } from './contribution';
 import type { ExtensionEntry } from './extension-catalog';
 import { useShellStore } from './store';

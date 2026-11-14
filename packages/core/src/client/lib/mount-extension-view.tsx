@@ -10,7 +10,7 @@ import {
   type AgentosTheme,
 } from '@agentos/ui/components/theme-provider';
 import type { HostAPIClient } from '@agentos/core/sdk';
-import { HostProvider } from '../components/host-provider';
+import { HostProvider } from '@agentos/core/client/components/host-provider';
 import { createStandaloneHost, isShellIframe } from './standalone-host';
 import '@agentos/ui/globals.css';
 

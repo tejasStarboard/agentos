@@ -28,13 +28,10 @@ export type AuthContext = {
   db: AuthSqlite;
 };
 
-const DEFAULT_SECRET =
-  Bun.env.AGENTOS_AUTH_SECRET ?? 'agentos-dev-auth-secret-min-32-chars!!';
+const DEFAULT_SECRET = 'agentos-dev-auth-secret-min-32-chars!!';
 
-/** Default local store: `~/.agentos/store/auth.sqlite` (override with AGENTOS_AUTH_DB). */
+/** Default local store: `~/.agentos/store/auth.sqlite` (override with AGENT_OS_EXT_AUTH_DB). */
 function defaultDatabasePath(): string {
-  const override = Bun.env.AGENTOS_AUTH_DB;
-  if (override) return override;
   return join(homedir(), '.agentos', 'store', 'auth.sqlite');
 }
 
@@ -85,10 +82,7 @@ export async function createAuth(
 ): Promise<AuthContext> {
   const databasePath = options.databasePath ?? defaultDatabasePath();
   const db = openDatabase(databasePath);
-  const baseURL =
-    options.baseURL ??
-    Bun.env.AGENTOS_AUTH_BASE_URL ??
-    `http://127.0.0.1:${AUTH_PORT}`;
+  const baseURL = options.baseURL ?? `http://127.0.0.1:${AUTH_PORT}`;
   const secret = options.secret ?? DEFAULT_SECRET;
 
   const betterAuthOptions = {
