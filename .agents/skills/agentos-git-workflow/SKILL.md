@@ -44,17 +44,17 @@ Use the **ticket number** from `.project/tickets/` (e.g. `1`, `2`). One ticket p
 
 ## Pull request
 
-**Title** (verbatim shape):
+**Title** — same shape as the commit title:
 
 ```text
-(<ticket number>): <commit title>
+[feat/fix/chore](<ticket number>): <commit title>
 ```
 
 Examples:
 
 ```text
-(1): reset legacy workspace
-(2): scaffold monorepo
+chore(1): reset legacy workspace
+feat(2): scaffold monorepo
 ```
 
 **Body** must include:
