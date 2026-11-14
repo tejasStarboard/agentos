@@ -2,11 +2,21 @@
   "name": "agentos",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "AgentOS monorepo",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "build": "pnpm -r --if-present build",
+    "test": "bun test"
+  },
   "devDependencies": {
     "@agentos/typescript-config": "workspace:*",
+    "@eslint/js": "^9.39.1",
     "@types/bun": "^1.4.4",
-    "typescript": "~5.8.3"
+    "eslint": "^9.39.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.46.4"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {

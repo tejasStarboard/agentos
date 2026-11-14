@@ -39,10 +39,13 @@ function createLinkedWindows(): {
   const portsOf = (transfer?: Transferable[]): MessagePort[] =>
     (transfer ?? []).filter((t): t is MessagePort => t instanceof MessagePort);
 
-  let parent!: FakeParentWindow;
-  let child!: FakeChildWindow;
+  // Holder so parent/child closures can reference each other without `let` reassignment.
+  const pair: {
+    parent?: FakeParentWindow;
+    child?: FakeChildWindow;
+  } = {};
 
-  parent = {
+  pair.parent = {
     setTimeout: (handler, timeout) => globalThis.setTimeout(handler, timeout),
     clearTimeout: (id) => {
       globalThis.clearTimeout(id);
@@ -56,15 +59,15 @@ function createLinkedWindows(): {
     postMessage(data, _origin, transfer) {
       const event: HandshakeIncomingMessage = {
         data,
-        source: child,
+        source: pair.child!,
         ports: portsOf(transfer),
       };
       for (const listener of parentListeners) listener(event);
     },
   };
 
-  child = {
-    parent,
+  pair.child = {
+    parent: pair.parent,
     addEventListener(type, listener) {
       if (type === 'message') childListeners.add(listener);
     },
@@ -74,14 +77,14 @@ function createLinkedWindows(): {
     postMessage(message, _origin, transfer) {
       const event: HandshakeIncomingMessage = {
         data: message,
-        source: parent,
+        source: pair.parent!,
         ports: portsOf(transfer),
       };
       for (const listener of childListeners) listener(event);
     },
   };
 
-  return { parent, child };
+  return { parent: pair.parent, child: pair.child };
 }
 
 function stubHostApi(store: Map<string, StorageValue>): HostAPI {
