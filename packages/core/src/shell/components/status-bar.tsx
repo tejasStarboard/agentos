@@ -1,7 +1,6 @@
 import { MoonIcon, SunIcon } from '@phosphor-icons/react';
 import { useShellActiveView } from '@agentos/core/shell/hooks';
 import {
-  STUB_EXTENSION_CATALOG,
   useShellStore,
   type ContributionRuntimeStatus,
   type ExtensionEntry,
@@ -83,9 +82,7 @@ export function StatusBar(props: StatusBarProps = {}) {
   const enabledCustomers = extensions.filter(
     (e) => e.kind === 'customer' && enabledById[e.id] !== false,
   ).length;
-  const customerTotal = (
-    extensions.length ? extensions : STUB_EXTENSION_CATALOG
-  ).filter((e) => e.kind === 'customer').length;
+  const customerTotal = extensions.filter((e) => e.kind === 'customer').length;
   const loadingCount = countRuntime(runtimeStatus, 'loading');
   const crashedCount = countRuntime(runtimeStatus, 'crashed');
 

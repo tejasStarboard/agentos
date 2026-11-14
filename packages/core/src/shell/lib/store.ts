@@ -2,13 +2,7 @@ import { create } from 'zustand';
 import type { NotificationType } from '@agentos/core/sdk';
 import type { ContributionRuntimeStatus, UiContribution } from './contribution';
 import { contributionKey } from './contribution';
-import {
-  defaultEnabledById,
-  defaultSkillsByExtension,
-  STUB_EXTENSION_CATALOG,
-  STUB_SKILLS_BY_EXTENSION,
-  type ExtensionEntry,
-} from './extension-catalog';
+import { defaultEnabledById, type ExtensionEntry } from './extension-catalog';
 import { requestExtensionEnable } from './extension-enable';
 
 export type ShellView = 'home' | (string & {});
@@ -20,11 +14,24 @@ function filterContributions(
   return desired.filter((c) => enabledById[c.extensionId] !== false);
 }
 
+function filterSkills(
+  desired: Record<string, string[]>,
+  enabledById: Record<string, boolean>,
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [extensionId, skills] of Object.entries(desired)) {
+    if (enabledById[extensionId] !== false) {
+      out[extensionId] = [...skills];
+    }
+  }
+  return out;
+}
+
 export type ShellUiState = {
   activeView: ShellView;
   sidebarOpen: boolean;
   drawerOpen: boolean;
-  /** Catalog entries shown in Extension Manager (stub until ticket 11). */
+  /** Catalog entries shown in Extension Manager (from registry). */
   extensions: ExtensionEntry[];
   /** Per-extension enable flag; builtins stay true. */
   enabledById: Record<string, boolean>;
@@ -35,7 +42,9 @@ export type ShellUiState = {
   desiredContributions: UiContribution[];
   contributions: UiContribution[];
   runtimeStatus: Record<string, ContributionRuntimeStatus>;
-  /** Skills contributed per extension (palette wiring). */
+  /** All known skills from the registry (before enable filtering). */
+  desiredSkillsByExtension: Record<string, string[]>;
+  /** Skills contributed per enabled extension (palette wiring). */
   skillsByExtension: Record<string, string[]>;
   /** Latest notification / status line for the status bar. */
   statusText: string | null;
@@ -47,6 +56,7 @@ export type ShellUiState = {
   toggleDrawer: () => void;
   setExtensions: (extensions: ExtensionEntry[]) => void;
   setContributions: (contributions: UiContribution[]) => void;
+  setDesiredSkills: (skillsByExtension: Record<string, string[]>) => void;
   setRuntimeStatus: (
     extensionId: string,
     view: UiContribution['view'],
@@ -61,12 +71,13 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   activeView: 'home',
   sidebarOpen: true,
   drawerOpen: false,
-  extensions: STUB_EXTENSION_CATALOG,
-  enabledById: defaultEnabledById(),
+  extensions: [],
+  enabledById: {},
   desiredContributions: [],
   contributions: [],
   runtimeStatus: {},
-  skillsByExtension: defaultSkillsByExtension(),
+  desiredSkillsByExtension: {},
+  skillsByExtension: {},
   statusText: null,
   statusTone: null,
   setActiveView: (view) => set({ activeView: view }),
@@ -88,12 +99,21 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
         extensions,
         enabledById,
         contributions: filterContributions(s.desiredContributions, enabledById),
+        skillsByExtension: filterSkills(
+          s.desiredSkillsByExtension,
+          enabledById,
+        ),
       };
     }),
   setContributions: (desiredContributions) =>
     set((s) => ({
       desiredContributions,
       contributions: filterContributions(desiredContributions, s.enabledById),
+    })),
+  setDesiredSkills: (desiredSkillsByExtension) =>
+    set((s) => ({
+      desiredSkillsByExtension,
+      skillsByExtension: filterSkills(desiredSkillsByExtension, s.enabledById),
     })),
   setRuntimeStatus: (extensionId, view, status) =>
     set((s) => ({
@@ -103,12 +123,19 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
       },
     })),
   setExtensionSkills: (extensionId, skills) =>
-    set((s) => ({
-      skillsByExtension: {
-        ...s.skillsByExtension,
+    set((s) => {
+      const desiredSkillsByExtension = {
+        ...s.desiredSkillsByExtension,
         [extensionId]: skills,
-      },
-    })),
+      };
+      return {
+        desiredSkillsByExtension,
+        skillsByExtension: filterSkills(
+          desiredSkillsByExtension,
+          s.enabledById,
+        ),
+      };
+    }),
   setStatusText: (text, tone = null) =>
     set({
       statusText: text,
@@ -120,14 +147,6 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
 
     set((s) => {
       const enabledById = { ...s.enabledById, [extensionId]: enabled };
-      const skillsByExtension = { ...s.skillsByExtension };
-      if (!enabled) {
-        delete skillsByExtension[extensionId];
-      } else if (STUB_SKILLS_BY_EXTENSION[extensionId]) {
-        skillsByExtension[extensionId] = [
-          ...STUB_SKILLS_BY_EXTENSION[extensionId],
-        ];
-      }
       const runtimeStatus = { ...s.runtimeStatus };
       if (!enabled) {
         for (const key of Object.keys(runtimeStatus)) {
@@ -138,7 +157,10 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
       }
       return {
         enabledById,
-        skillsByExtension,
+        skillsByExtension: filterSkills(
+          s.desiredSkillsByExtension,
+          enabledById,
+        ),
         runtimeStatus,
         contributions: filterContributions(s.desiredContributions, enabledById),
       };

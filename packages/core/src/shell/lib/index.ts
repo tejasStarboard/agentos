@@ -1,4 +1,9 @@
 export {
+  applyRegistry,
+  mapRegistry,
+  type AppliedRegistry,
+} from './apply-registry';
+export {
   contributionKey,
   type ContributionRuntimeStatus,
   type ExtensionView,

@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, mock, test } from 'bun:test';
-import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   ActivityBar,
@@ -22,6 +21,7 @@ function resetStore() {
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
+    desiredSkillsByExtension: defaultSkillsByExtension(),
     skillsByExtension: defaultSkillsByExtension(),
     statusText: null,
     statusTone: null,
@@ -38,7 +38,12 @@ describe('ExtensionManagerDrawer', () => {
   });
 
   test('list shows builtins and customers with status badges', () => {
-    const html = renderToStaticMarkup(createElement(ExtensionManagerList));
+    const html = renderToStaticMarkup(
+      <ExtensionManagerList
+        extensions={STUB_EXTENSION_CATALOG}
+        enabledById={defaultEnabledById()}
+      />,
+    );
 
     expect(html).toContain('data-slot="extension-manager-list"');
     expect(html).toContain('data-extension-id="auth"');
@@ -64,7 +69,7 @@ describe('ExtensionManagerDrawer', () => {
   });
 
   test('ActivityBar Extensions control toggles drawer without changing view', () => {
-    const html = renderToStaticMarkup(createElement(ActivityBar));
+    const html = renderToStaticMarkup(<ActivityBar />);
     expect(html).toContain('aria-label="Extensions"');
 
     useShellStore.getState().setDrawerOpen(true);

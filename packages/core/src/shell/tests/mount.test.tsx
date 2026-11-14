@@ -21,6 +21,7 @@ function resetStore(
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
+    desiredSkillsByExtension: defaultSkillsByExtension(),
     skillsByExtension: defaultSkillsByExtension(),
     statusText: null,
     statusTone: null,

@@ -1,4 +1,4 @@
-/** Builtin vs customer extension (matches future virtual:agentos-registry). */
+/** Builtin vs customer extension (matches virtual:agentos-registry). */
 export type ExtensionKind = 'builtin' | 'customer';
 
 /** One row in the Extension Manager list. */
@@ -8,6 +8,8 @@ export type ExtensionEntry = {
   kind: ExtensionKind;
   /** Builtins are never toggleable. */
   toggleable: boolean;
+  /** Driving builtins (auth, db-store, …); all builtins are driven. */
+  driven: boolean;
 };
 
 /**
@@ -18,21 +20,46 @@ export type ExtensionManagerStatus =
   'active' | 'disabled' | 'crashed' | 'loading';
 
 /**
- * Stub catalog until ticket 11 (`virtual:agentos-registry`).
+ * Test fixture catalog (not used as Shell default — registry owns that).
  * Builtins match `.project/docs/builtins.md` driving set.
  */
 export const STUB_EXTENSION_CATALOG: ExtensionEntry[] = [
-  { id: 'auth', name: 'Auth', kind: 'builtin', toggleable: false },
-  { id: 'db-store', name: 'DB Store', kind: 'builtin', toggleable: false },
+  {
+    id: 'auth',
+    name: 'Auth',
+    kind: 'builtin',
+    toggleable: false,
+    driven: true,
+  },
+  {
+    id: 'db-store',
+    name: 'DB Store',
+    kind: 'builtin',
+    toggleable: false,
+    driven: true,
+  },
   {
     id: 'cache-store',
     name: 'Cache Store',
     kind: 'builtin',
     toggleable: false,
+    driven: true,
   },
-  { id: 'ai', name: 'AI', kind: 'builtin', toggleable: false },
-  { id: 'crm', name: 'CRM', kind: 'customer', toggleable: true },
-  { id: 'invoices', name: 'Invoices', kind: 'customer', toggleable: true },
+  { id: 'ai', name: 'AI', kind: 'builtin', toggleable: false, driven: true },
+  {
+    id: 'crm',
+    name: 'CRM',
+    kind: 'customer',
+    toggleable: true,
+    driven: false,
+  },
+  {
+    id: 'invoices',
+    name: 'Invoices',
+    kind: 'customer',
+    toggleable: true,
+    driven: false,
+  },
 ];
 
 /** Default enable map: every catalog entry starts enabled. */
@@ -47,7 +74,7 @@ export function defaultEnabledById(
 }
 
 /**
- * Stub skills until the Vite scanner / registry (tickets 10–11) fills them.
+ * Test fixture skills (Shell defaults come from `applyRegistry`).
  * Keys are extension ids from {@link STUB_EXTENSION_CATALOG}.
  */
 export const STUB_SKILLS_BY_EXTENSION: Record<string, string[]> = {
