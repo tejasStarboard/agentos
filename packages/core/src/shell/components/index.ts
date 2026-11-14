@@ -1,6 +1,11 @@
 export { ActivityBar } from './activity-bar';
 export { EnsureMounted } from './ensure-mounted';
 export { ExtensionFrame } from './extension-frame';
+export {
+  ExtensionManagerDrawer,
+  ExtensionManagerList,
+  type ExtensionManagerListProps,
+} from './extension-manager-drawer';
 export { HiddenSlot } from './hidden-slot';
 export { HomeDashboard } from './home-dashboard';
 export { MainCanvas } from './main-canvas';

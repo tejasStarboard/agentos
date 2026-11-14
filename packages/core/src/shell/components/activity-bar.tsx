@@ -11,17 +11,26 @@ import {
 import { cn } from '@agentos/ui/lib/utils';
 
 const ITEMS: {
-  id: ShellView;
+  id: ShellView | 'extensions';
   label: string;
   Icon: typeof HouseIcon;
+  /** Opens Extension Manager instead of switching canvas view. */
+  opensManager?: boolean;
 }[] = [
   { id: 'home', label: 'Home', Icon: HouseIcon },
-  { id: 'ext-placeholder', label: 'Extensions', Icon: SquaresFourIcon },
+  {
+    id: 'extensions',
+    label: 'Extensions',
+    Icon: SquaresFourIcon,
+    opensManager: true,
+  },
 ];
 
 export function ActivityBar() {
   const activeView = useShellActiveView();
+  const drawerOpen = useShellStore((s) => s.drawerOpen);
   const setActiveView = useShellStore((s) => s.setActiveView);
+  const setDrawerOpen = useShellStore((s) => s.setDrawerOpen);
   const toggleSidebar = useShellStore((s) => s.toggleSidebar);
 
   return (
@@ -30,8 +39,8 @@ export function ActivityBar() {
         className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2"
         aria-label="Activity bar"
       >
-        {ITEMS.map(({ id, label, Icon }) => {
-          const current = activeView === id;
+        {ITEMS.map(({ id, label, Icon, opensManager }) => {
+          const current = opensManager ? drawerOpen : activeView === id;
           return (
             <Tooltip key={id}>
               <TooltipTrigger
@@ -48,6 +57,10 @@ export function ActivityBar() {
                         'bg-sidebar-accent text-sidebar-accent-foreground',
                     )}
                     onClick={() => {
+                      if (opensManager) {
+                        setDrawerOpen(!drawerOpen);
+                        return;
+                      }
                       if (current) {
                         toggleSidebar();
                         return;
