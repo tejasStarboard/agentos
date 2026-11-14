@@ -1,8 +1,12 @@
-import * as React from 'react';
+import type { ComponentProps } from 'react';
 import { Input as InputPrimitive } from '@base-ui/react/input';
 import { cn } from '@agentos/ui/lib/utils';
 
-function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
+function Input({
+  className,
+  type,
+  ...props
+}: ComponentProps<typeof InputPrimitive>) {
   return (
     <InputPrimitive
       type={type}

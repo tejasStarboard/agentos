@@ -1,0 +1,7 @@
+{
+  "name": "Auth",
+  "api": {
+    "language": "bun",
+    "port": 6110
+  }
+}

@@ -48,4 +48,22 @@ describe('createShellHostApi notifications', () => {
     expect(state.statusText).toBe('hello');
     expect(state.statusTone).toBe('info');
   });
+
+  test('api.fetch proxies to /api/ext/:extensionId', async () => {
+    const originalFetch = globalThis.fetch;
+    const calls: string[] = [];
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      calls.push(String(input));
+      return new Response('{"ok":true}', { status: 200 });
+    }) as typeof fetch;
+
+    try {
+      const host = createShellHostApi('auth');
+      const res = await host.api.fetch('/session');
+      expect(calls).toEqual(['/api/ext/auth/session']);
+      expect(res).toEqual({ ok: true, status: 200, body: '{"ok":true}' });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
 });

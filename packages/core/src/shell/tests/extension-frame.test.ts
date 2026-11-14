@@ -37,7 +37,9 @@ describe('ExtensionFrame slot placement', () => {
         theme: 'dark',
       }),
     );
-    expect(html).toContain('sandbox="allow-scripts allow-same-origin"');
+    expect(html).toContain(
+      'sandbox="allow-scripts allow-same-origin allow-forms"',
+    );
     expect(html).toContain('data-extension-id="crm"');
     expect(html).toContain('data-view="page"');
     expect(html).toContain('src="/__agentos/ext/crm/page.html?theme=dark"');
@@ -62,7 +64,9 @@ describe('ExtensionFrame slot placement', () => {
       }),
     );
     expect(main).toContain('data-slot="main"');
-    expect(main).toContain('sandbox="allow-scripts allow-same-origin"');
+    expect(main).toContain(
+      'sandbox="allow-scripts allow-same-origin allow-forms"',
+    );
     expect(main).toContain('data-view="page"');
 
     const sidebar = renderToStaticMarkup(
@@ -72,7 +76,9 @@ describe('ExtensionFrame slot placement', () => {
       }),
     );
     expect(sidebar).toContain('data-view="sidebar"');
-    expect(sidebar).toContain('sandbox="allow-scripts allow-same-origin"');
+    expect(sidebar).toContain(
+      'sandbox="allow-scripts allow-same-origin allow-forms"',
+    );
 
     const home = renderToStaticMarkup(
       createElement(HomeDashboard, { contributions: crmContributions }),

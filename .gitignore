@@ -32,3 +32,6 @@ dist-ssr
 
 # typescript
 *.tsbuildinfo
+
+# AgentOS local stores (repo-relative; user store is ~/.agentos/store)
+.agentos/

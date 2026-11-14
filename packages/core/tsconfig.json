@@ -1,7 +1,6 @@
 {
   "extends": "@agentos/typescript-config/base.json",
   "compilerOptions": {
-    "rootDir": "src",
     "outDir": "dist",
     "noEmit": true,
     "baseUrl": ".",
@@ -11,5 +10,12 @@
       "@agentos/core/*": ["./src/*/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "builtins/**/*.ts",
+    "builtins/**/*.tsx"
+  ],
+  "exclude": ["dist", "node_modules"]
 }
