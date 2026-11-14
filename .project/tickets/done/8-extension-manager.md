@@ -1,6 +1,6 @@
 # 8 — Extension Manager drawer
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

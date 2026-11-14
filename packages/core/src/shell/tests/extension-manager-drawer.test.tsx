@@ -7,6 +7,7 @@ import {
 } from '@agentos/core/shell/components';
 import {
   defaultEnabledById,
+  defaultSkillsByExtension,
   STUB_EXTENSION_CATALOG,
   useShellStore,
 } from '@agentos/core/shell/lib';
@@ -21,7 +22,9 @@ function resetStore() {
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
-    skillsByExtension: {},
+    skillsByExtension: defaultSkillsByExtension(),
+    statusText: null,
+    statusTone: null,
   });
 }
 

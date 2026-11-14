@@ -1,6 +1,6 @@
 # 7 — `@agentos/core/client` hooks
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

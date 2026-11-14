@@ -45,3 +45,50 @@ export function defaultEnabledById(
   }
   return out;
 }
+
+/**
+ * Stub skills until the Vite scanner / registry (tickets 10–11) fills them.
+ * Keys are extension ids from {@link STUB_EXTENSION_CATALOG}.
+ */
+export const STUB_SKILLS_BY_EXTENSION: Record<string, string[]> = {
+  crm: ['search-contacts', 'create-contact'],
+  invoices: ['list-invoices', 'create-invoice'],
+};
+
+/** Skills for currently enabled extensions (from stub map). */
+export function defaultSkillsByExtension(
+  enabledById: Record<string, boolean> = defaultEnabledById(),
+  stubs: Record<string, string[]> = STUB_SKILLS_BY_EXTENSION,
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [extensionId, skills] of Object.entries(stubs)) {
+    if (enabledById[extensionId] !== false) {
+      out[extensionId] = [...skills];
+    }
+  }
+  return out;
+}
+
+export type PaletteSkill = {
+  extensionId: string;
+  extensionName: string;
+  skill: string;
+};
+
+/** Flatten enabled-extension skills for the command palette. */
+export function collectEnabledSkills(
+  skillsByExtension: Record<string, string[]>,
+  enabledById: Record<string, boolean>,
+  extensions: ExtensionEntry[] = STUB_EXTENSION_CATALOG,
+): PaletteSkill[] {
+  const nameById = new Map(extensions.map((e) => [e.id, e.name]));
+  const items: PaletteSkill[] = [];
+  for (const [extensionId, skills] of Object.entries(skillsByExtension)) {
+    if (enabledById[extensionId] === false) continue;
+    const extensionName = nameById.get(extensionId) ?? extensionId;
+    for (const skill of skills) {
+      items.push({ extensionId, extensionName, skill });
+    }
+  }
+  return items;
+}

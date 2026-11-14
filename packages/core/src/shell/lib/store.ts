@@ -1,9 +1,12 @@
 import { create } from 'zustand';
+import type { NotificationType } from '@agentos/core/sdk';
 import type { ContributionRuntimeStatus, UiContribution } from './contribution';
 import { contributionKey } from './contribution';
 import {
   defaultEnabledById,
+  defaultSkillsByExtension,
   STUB_EXTENSION_CATALOG,
+  STUB_SKILLS_BY_EXTENSION,
   type ExtensionEntry,
 } from './extension-catalog';
 import { requestExtensionEnable } from './extension-enable';
@@ -32,8 +35,11 @@ export type ShellUiState = {
   desiredContributions: UiContribution[];
   contributions: UiContribution[];
   runtimeStatus: Record<string, ContributionRuntimeStatus>;
-  /** Skills contributed per extension (palette wiring in ticket 9). */
+  /** Skills contributed per extension (palette wiring). */
   skillsByExtension: Record<string, string[]>;
+  /** Latest notification / status line for the status bar. */
+  statusText: string | null;
+  statusTone: NotificationType | null;
   setActiveView: (view: ShellView) => void;
   setSidebarOpen: (open: boolean) => void;
   setDrawerOpen: (open: boolean) => void;
@@ -48,6 +54,7 @@ export type ShellUiState = {
   ) => void;
   setExtensionSkills: (extensionId: string, skills: string[]) => void;
   setExtensionEnabled: (extensionId: string, enabled: boolean) => void;
+  setStatusText: (text: string | null, tone?: NotificationType | null) => void;
 };
 
 export const useShellStore = create<ShellUiState>((set, get) => ({
@@ -59,7 +66,9 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   desiredContributions: [],
   contributions: [],
   runtimeStatus: {},
-  skillsByExtension: {},
+  skillsByExtension: defaultSkillsByExtension(),
+  statusText: null,
+  statusTone: null,
   setActiveView: (view) => set({ activeView: view }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   setDrawerOpen: (open) => set({ drawerOpen: open }),
@@ -100,6 +109,11 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
         [extensionId]: skills,
       },
     })),
+  setStatusText: (text, tone = null) =>
+    set({
+      statusText: text,
+      statusTone: text == null ? null : (tone ?? null),
+    }),
   setExtensionEnabled: (extensionId, enabled) => {
     const entry = get().extensions.find((e) => e.id === extensionId);
     if (!entry || !entry.toggleable) return;
@@ -109,6 +123,10 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
       const skillsByExtension = { ...s.skillsByExtension };
       if (!enabled) {
         delete skillsByExtension[extensionId];
+      } else if (STUB_SKILLS_BY_EXTENSION[extensionId]) {
+        skillsByExtension[extensionId] = [
+          ...STUB_SKILLS_BY_EXTENSION[extensionId],
+        ];
       }
       const runtimeStatus = { ...s.runtimeStatus };
       if (!enabled) {
