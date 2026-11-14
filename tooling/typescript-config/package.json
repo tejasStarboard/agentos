@@ -4,6 +4,7 @@
   "private": true,
   "description": "Shared TypeScript configs for the AgentOS monorepo",
   "exports": {
-    "./base.json": "./base.json"
+    "./base.json": "./base.json",
+    "./react-library.json": "./react-library.json"
   }
 }

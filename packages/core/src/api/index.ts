@@ -1,2 +1,2 @@
-/** @agentos/core/api — Bun API kit (stub). */
-export {};
+/** @agentos/core/api — Bun API kit. */
+export * from './lib/index';

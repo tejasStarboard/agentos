@@ -13,6 +13,8 @@ Skills teach Cursor/Claude how to plan and implement against AgentOS.
 
 Agents **must** read `.project/docs/concepts.md` (via these skills) before planning code changes.
 
+UI work also follows `.cursor/rules/agentos-ui.mdc`: base controls from `@agentos/ui` (shadcn), not native HTML tags, unless specifically required.
+
 Symlinked for Cursor discovery: `.cursor/skills/*` → `.agents/skills/…`.
 
 ## Third-party (vendored)

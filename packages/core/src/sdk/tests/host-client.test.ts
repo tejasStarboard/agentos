@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'bun:test';
 import * as Comlink from 'comlink';
-import { hostApiFromRemote } from './client';
+import { hostApiFromRemote } from '../lib/client';
 import type {
   ExtensionContentWindow,
   HandshakeIncomingMessage,
   HandshakeMessageTarget,
   StorageValue,
-} from './contracts';
-import { HANDSHAKE } from './handshake';
-import { connectExtensionHost } from './host';
-import { proxyHostApi } from './proxy';
-import type { ExtensionAPI, HostAPI, HostAPIClient } from './types';
+} from '../lib/contracts';
+import { HANDSHAKE } from '../lib/handshake';
+import { connectExtensionHost } from '../lib/host';
+import { proxyHostApi } from '../lib/proxy';
+import type { ExtensionAPI, HostAPI, HostAPIClient } from '../lib/types';
 
 type MessageListener = (event: HandshakeIncomingMessage) => void;
 

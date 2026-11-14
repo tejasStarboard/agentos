@@ -68,7 +68,7 @@ export const POST: RouteHandlers['POST'] = async (c) => {
 
 ## UI
 
-Import only `@agentos/core/client`. Views are wrapped by framework iframe bootstrap — no handshake boilerplate in FDE code.
+Import `@agentos/core/client` for host SDK hooks. For base controls (buttons, inputs, checkboxes, selects, dropdowns, …) import from **`@agentos/ui/components/*`** (shadcn) — do not use native HTML controls unless specifically required. Views are wrapped by framework iframe bootstrap — no handshake boilerplate in FDE code.
 
 ## Builtins
 

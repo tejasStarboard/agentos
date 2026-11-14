@@ -18,7 +18,7 @@ export {
   type JsonValue,
   type StorageValue,
   type WireMessageData,
-} from './contracts';
+} from './lib/contracts';
 
 export {
   HANDSHAKE,
@@ -26,7 +26,7 @@ export {
   isHandshakeType,
   type HandshakeMessage,
   type HandshakeType,
-} from './handshake';
+} from './lib/handshake';
 
 export {
   ExtensionRpcTimeoutError,
@@ -40,21 +40,21 @@ export {
   type HitlApprovalRequest,
   type HitlApprovalResult,
   type NotificationType,
-} from './types';
+} from './lib/types';
 
-export { withRpcTimeout } from './timeout';
+export { withRpcTimeout } from './lib/timeout';
 
-export { proxyHostApi } from './proxy';
+export { proxyHostApi } from './lib/proxy';
 
 export {
   createExtensionClient,
   hostApiFromRemote,
   type ExtensionClient,
   type ExtensionClientOptions,
-} from './client';
+} from './lib/client';
 
 export {
   connectExtensionHost,
   type ConnectExtensionHostOptions,
   type ExtensionHostConnection,
-} from './host';
+} from './lib/host';

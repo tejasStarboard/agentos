@@ -8,7 +8,13 @@ Work items live in status folders. **Do them in numeric order** (filename prefix
 | Active          | `in-progress/` |
 | Finished        | `done/`        |
 
-Move the file when status changes (e.g. `todo/1-….md` → `in-progress/1-….md`).
+### Agent status rules
+
+1. When implementation **starts**, move the ticket `todo/` → `in-progress/` and set `**Status:** in-progress`.
+2. When implementation **finishes**, leave the ticket in `in-progress/`. **Do not** move it to `done/`.
+3. Only the **ticket reconciliation** process moves tickets into `done/` (and updates `**Status:** done`).
+
+Agents must never promote tickets to `done/` themselves.
 
 ## Order (1 → 30)
 

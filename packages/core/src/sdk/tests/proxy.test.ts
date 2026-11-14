@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import * as Comlink from 'comlink';
-import { hostApiFromRemote } from './client';
-import type { StorageValue } from './contracts';
-import { proxyHostApi } from './proxy';
-import type { HostAPI, HostAPIClient } from './types';
+import { hostApiFromRemote } from '../lib/client';
+import type { StorageValue } from '../lib/contracts';
+import { proxyHostApi } from '../lib/proxy';
+import type { HostAPI, HostAPIClient } from '../lib/types';
 
 function stubHostApi(calls: string[]): HostAPI {
   return {

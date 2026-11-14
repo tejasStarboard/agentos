@@ -1,6 +1,6 @@
 # 5 — Shell UI skeleton
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Build dark-mode Core Shell layout: activity bar, sidebar slot, main canvas, home
 
 ## Done when
 
-- [ ] `mountShell(root)` renders the workspace
-- [ ] Slots exist for sidebar / main / widgets / hidden iframes
-- [ ] Basic Zustand store for UI state (active view, drawers open)
+- [x] `mountShell(root)` renders the workspace
+- [x] Slots exist for sidebar / main / widgets / hidden iframes
+- [x] Basic Zustand store for UI state (active view, drawers open)
 
 ## Notes
 
