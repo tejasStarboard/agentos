@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgentOS</title>
+    <script>
+      // Avoid theme flash before React mounts (next-themes storageKey).
+      try {
+        var t = localStorage.getItem('agentos-theme');
+        if (t === 'light' || t === 'dark')
+          document.documentElement.classList.add(t);
+        else document.documentElement.classList.add('dark');
+      } catch (_) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
     <style>
       html,
       body,

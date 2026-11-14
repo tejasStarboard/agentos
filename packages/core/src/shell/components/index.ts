@@ -1,4 +1,5 @@
 export { ActivityBar } from './activity-bar';
+export { EnsureMounted } from './ensure-mounted';
 export { HiddenSlot } from './hidden-slot';
 export { HomeDashboard } from './home-dashboard';
 export { MainCanvas } from './main-canvas';

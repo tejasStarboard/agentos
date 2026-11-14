@@ -1,5 +1,36 @@
+import { MoonIcon, SunIcon } from '@phosphor-icons/react';
 import { Badge } from '@agentos/ui/components/badge';
+import { Switch } from '@agentos/ui/components/switch';
+import { useTheme } from '@agentos/ui/components/theme-provider';
 import { useShellStore } from '../lib/store';
+import { EnsureMounted } from './ensure-mounted';
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  return (
+    <div className="ml-auto flex items-center gap-1.5">
+      <SunIcon
+        className="size-3 dark:hidden"
+        aria-hidden={isDark ? 'false' : 'true'}
+      />
+      <MoonIcon
+        className="size-3 hidden dark:block"
+        aria-hidden={isDark ? 'true' : 'false'}
+      />
+      <Switch
+        size="sm"
+        checked={isDark}
+        aria-label="Toggle dark theme"
+        title="Temporary theme toggle"
+        onCheckedChange={(checked) => {
+          setTheme(checked ? 'dark' : 'light');
+        }}
+      />
+    </div>
+  );
+}
 
 /** Status bar chrome — richer badges land in ticket 9. */
 export function StatusBar() {
@@ -16,6 +47,9 @@ export function StatusBar() {
       <Badge variant="secondary">
         {drawerOpen ? 'drawer open' : 'drawer closed'}
       </Badge>
+      <EnsureMounted>
+        <ThemeToggle />
+      </EnsureMounted>
     </footer>
   );
 }

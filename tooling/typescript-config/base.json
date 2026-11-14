@@ -13,16 +13,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
-    "composite": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
     "allowImportingTsExtensions": false,
     "rewriteRelativeImportExtensions": false,
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
     "types": ["bun"]
   }
 }

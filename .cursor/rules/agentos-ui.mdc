@@ -28,6 +28,8 @@ Import base controls from `@agentos/ui/components/*` (shadcn + Tailwind tokens i
 
 Icons: `@phosphor-icons/react` (matches the UI package).
 
+Themes: wrap app/Shell with `@agentos/ui/components/theme-provider` (`next-themes`). Default is `dark`; extend `AGENTOS_THEMES` when adding themes. Do not hardcode a `dark` class on layout roots.
+
 ## Do not
 
 - Do **not** use native `<button>`, `<input>`, `<textarea>`, `<select>`, `<option>`, or hand-rolled checkbox/radio markup when an `@agentos/ui` component exists.
