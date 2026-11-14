@@ -1,0 +1,48 @@
+---
+description: Prefer @agentos/ui (shadcn) primitives over native HTML controls
+globs: "**/*.{tsx,jsx,css}"
+alwaysApply: false
+---
+
+# AgentOS UI primitives
+
+Design philosophy: one shared look across Shell, builtins, and extension UI.
+
+## File naming
+
+Use **kebab-case** for all UI/source files: `activity-bar.tsx`, `home-dashboard.tsx`, `mount.test.tsx`. Keep React component exports in PascalCase (`export function ActivityBar`).
+
+## Default
+
+Import base controls from `@agentos/ui/components/*` (shadcn + Tailwind tokens in `@agentos/ui/globals.css`).
+
+| Need | Use |
+| ---- | --- |
+| Button / icon button | `@agentos/ui/components/button` |
+| Text / textarea | `@agentos/ui/components/input`, `textarea` |
+| Checkbox / switch / radio | `checkbox`, `switch`, `radio-group` |
+| Select / dropdown / menu | `select`, `dropdown-menu`, `combobox` |
+| Dialog / sheet / popover | `dialog`, `sheet`, `popover`, `tooltip` |
+| Layout chrome helpers | `separator`, `scroll-area`, `card`, `badge`, `tabs` |
+| Class merge | `cn` from `@agentos/ui/lib/utils` |
+
+Icons: `@phosphor-icons/react` (matches the UI package).
+
+Themes: wrap app/Shell with `@agentos/ui/components/theme-provider` (`next-themes`). Default is `dark`; extend `AGENTOS_THEMES` when adding themes. Do not hardcode a `dark` class on layout roots.
+
+## Do not
+
+- Do **not** use native `<button>`, `<input>`, `<textarea>`, `<select>`, `<option>`, or hand-rolled checkbox/radio markup when an `@agentos/ui` component exists.
+- Do **not** invent parallel button/input styles or one-off CSS that bypasses design tokens.
+- Do **not** import another component library for base controls.
+
+## Exceptions (native HTML OK)
+
+Only when specifically required, for example:
+
+- Semantic landmarks / structure: `<nav>`, `<main>`, `<aside>`, `<footer>`, `<section>`, `<form>`
+- Hidden iframe parks / slot hosts (`data-slot=…`)
+- File inputs or other controls with no shadcn equivalent yet
+- Non-UI host glue (tests, SSR string checks)
+
+When in doubt, prefer `@agentos/ui` and ask before adding a new primitive package.

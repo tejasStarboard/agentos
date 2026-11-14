@@ -1,0 +1,19 @@
+{
+  "extends": "@agentos/typescript-config/react-library.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "baseUrl": ".",
+    "paths": {
+      "@agentos/ui/components/*": ["./src/components/*"],
+      "@agentos/ui/lib/*": ["./src/lib/*"],
+      "@agentos/ui/hooks/*": ["./src/hooks/*"],
+      "@agentos/ui/globals.css": ["./src/styles/globals.css"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

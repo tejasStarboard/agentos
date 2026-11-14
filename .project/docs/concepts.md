@@ -17,6 +17,7 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 | **BFF**                    | Informal name for API _or_ service                                  | Prefer saying **API** or **service**                 | —                                                       |
 | **`@agentos/core`**        | Framework: Shell, CLI, builtins, kits                               | `packages/core`                                      | Not the customer app                                    |
 | **`@agentos/core/client`** | SDK for extension **UI** (iframes)                                  | Import in `ui/*.tsx`                                 | Never in `api/routes` or Python                         |
+| **`@agentos/ui`**          | Shared shadcn + Tailwind primitives (Button, Input, Select, …)      | `packages/ui`                                        | Not a place for domain business logic                   |
 | **`@agentos/core/api/*`**  | SDK for TS **API** routes                                           | Import in `api/routes/**`                            | Never in iframe UI                                      |
 | **`@agentos/core/vite`**   | Vite plugin + gateway                                               | `vite.config.ts`                                     | Not for route handlers                                  |
 | **`agentos` (Python)**     | SDK for Python services                                             | `services/<id>/`                                     | Not a subpath of `@agentos/core`                        |
@@ -31,7 +32,7 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 │  vite.config   ←── @agentos/core/vite                                │
 │                                                                      │
 │  extensions/<id>/          ←── EXTENSION                             │
-│    ui/*.tsx                ←── @agentos/core/client                  │
+│    ui/*.tsx                ←── @agentos/core/client + @agentos/ui    │
 │    agent/*                 ←── declarations for builtin ai           │
 │    api/routes/**           ←── @agentos/core/api/*  (Bun)            │
 │    meta.json               ←── may point at a Service if Python      │
@@ -41,21 +42,22 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 └──────────────────────────────────────────────────────────────────────┘
          │  /api/ext/<id>/*
          ▼
-┌──────────────────────────── @agentos/core ───────────────────────────┐
-│  Shell + Gateway + builtins (auth, db-store, cache-store, ai, …)     │
+┌──────────────────────────── @agentos/core + @agentos/ui ─────────────┐
+│  Shell + Gateway + builtins + shadcn primitives                      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Rules of thumb
 
-1. **UI** → `@agentos/core/client` only. Never `@agentos/core/api` in `ui/`.
-2. **TS routes** → `@agentos/core/api/*` only. No `DATABASE_URL` / Redis — use `/api/store`.
-3. **Python** → `agentos.*` in `services/` only, linked from `meta.json`.
-4. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`).
-5. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
-6. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.
-7. **Builtins** locked; **customer** extensions toggleable.
-8. **pnpm** installs the monorepo; **Bun** runs all TS/JS. Never Node for services.
+1. **UI SDK** → `@agentos/core/client` only. Never `@agentos/core/api` in `ui/`.
+2. **UI primitives** → `@agentos/ui` (shadcn) for buttons, inputs, checkboxes, selects, dropdowns, etc. Avoid native HTML controls unless specifically required.
+3. **TS routes** → `@agentos/core/api/*` only. No `DATABASE_URL` / Redis — use `/api/store`.
+4. **Python** → `agentos.*` in `services/` only, linked from `meta.json`.
+5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`).
+6. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
+7. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.
+8. **Builtins** locked; **customer** extensions toggleable.
+9. **pnpm** installs the monorepo; **Bun** runs all TS/JS. Never Node for services.
 
 ## Prefer these words
 
@@ -65,3 +67,4 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 | service                 | “Python extension folder”             |
 | builtin `auth`          | “rbac package” as separate builtin    |
 | `db-store`              | “give the CRM service a database URL” |
+| `@agentos/ui` Button    | raw `<button>` / ad-hoc button CSS    |

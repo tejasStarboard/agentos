@@ -19,6 +19,33 @@ Framework package. Parent exports:
 
 Internal (not FDE import paths): `shell/`, `agent/` (gateway helpers), `builtins/`.
 
+Module layout (every `packages/core/src/<module>/` and app packages):
+
+```text
+<module>/
+  index.ts            # public/internal barrel
+  components/         # React UI (when applicable)
+  lib/                # implementation (non-UI helpers, stores, stubs)
+  tests/              # bun:test suites
+```
+
+Examples: `shell/` (components + lib + tests), `sdk/` (lib + tests), `api/` (`lib/auth.ts` → `@agentos/core/api/auth`). File names stay kebab-case.
+
+## `@agentos/ui` (TypeScript)
+
+Shared **shadcn + Tailwind** primitives for Shell, builtins, and extension UI.
+
+| Export                     | Who                | Responsibility                         |
+| -------------------------- | ------------------ | -------------------------------------- |
+| `@agentos/ui/components/*` | Shell / `ui/*.tsx` | Button, Input, Select, Dialog, …       |
+| `@agentos/ui/lib/utils`    | Same               | `cn()` class merge                     |
+| `@agentos/ui/hooks/*`      | Same               | Shared UI hooks                        |
+| `@agentos/ui/globals.css`  | App / Shell entry  | Tailwind + design tokens (import once) |
+
+**Rule:** use these components for base controls by default. Do not drop native `<button>` / `<input>` / `<select>` unless specifically required. See `.cursor/rules/agentos-ui.mdc`.
+
+**File names:** kebab-case everywhere (`button.tsx`, `scroll-area.tsx`, `activity-bar.tsx`).
+
 ## `agentos` (Python)
 
 Separate pip/uv package under `packages/python`. Mirrors `/api` domains: `agentos.auth`, `agentos.store`, `agentos.ai`, etc. **Only** for `services/<id>/`.

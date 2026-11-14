@@ -10,3 +10,7 @@ Before planning or implementing work in this repository:
 3. Use skills: `agentos-architecture`, `agentos-ticket-planner`, `agentos-bun-runtime`.
 4. pnpm = install; Bun = run TS/JS; never Node for services.
 5. Do not start build tickets 1+ until the user explicitly asks to build.
+6. On implement: move the working ticket `todo/` → `in-progress/`. Never move tickets to `done/` (reconciliation owns that).
+7. UI base controls must come from `@agentos/ui` (shadcn). Do not use native HTML tags for buttons, inputs, checkboxes, selects, dropdowns, etc. unless specifically required.
+8. Source files use **kebab-case** (`shell-root.tsx`, `store.test.ts`). Do not use PascalCase filenames.
+9. Package modules use `index.ts` + `lib/` + `tests/` (+ `components/` for React UI).

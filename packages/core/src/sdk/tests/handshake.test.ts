@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { HANDSHAKE, isHandshakeMessage, isHandshakeType } from './handshake';
+import {
+  HANDSHAKE,
+  isHandshakeMessage,
+  isHandshakeType,
+} from '../lib/handshake';
 
 describe('handshake guards', () => {
   test('HANDSHAKE constants match ADR sequence names', () => {

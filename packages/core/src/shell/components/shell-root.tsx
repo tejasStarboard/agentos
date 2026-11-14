@@ -1,0 +1,55 @@
+import {
+  AGENTOS_THEMES,
+  ThemeProvider,
+} from '@agentos/ui/components/theme-provider';
+import { useShellStore } from '../lib/store';
+import { ActivityBar } from './activity-bar';
+import { HiddenSlot } from './hidden-slot';
+import { HomeDashboard } from './home-dashboard';
+import { MainCanvas } from './main-canvas';
+import { SidebarSlot } from './sidebar-slot';
+import { StatusBar } from './status-bar';
+import '@agentos/ui/globals.css';
+
+export function ShellRoot() {
+  const activeView = useShellStore((s) => s.activeView);
+  const isHome = activeView === 'home';
+
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      storageKey="agentos-theme"
+      themes={[...AGENTOS_THEMES]}
+    >
+      <div
+        className="flex h-full min-h-screen w-full flex-col bg-background text-foreground"
+        data-agentos-shell
+      >
+        <div className="flex min-h-0 flex-1">
+          <ActivityBar />
+          <SidebarSlot />
+          <div className="relative min-h-0 min-w-0 flex-1 bg-background">
+            <div
+              className="h-full w-full overflow-auto"
+              data-active={isHome ? 'true' : 'false'}
+              hidden={!isHome}
+            >
+              <HomeDashboard />
+            </div>
+            <div
+              className="h-full w-full overflow-auto"
+              data-active={isHome ? 'false' : 'true'}
+              hidden={isHome}
+            >
+              <MainCanvas />
+            </div>
+          </div>
+        </div>
+        <StatusBar />
+        <HiddenSlot />
+      </div>
+    </ThemeProvider>
+  );
+}

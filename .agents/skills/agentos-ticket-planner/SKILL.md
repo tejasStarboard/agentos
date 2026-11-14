@@ -14,6 +14,20 @@ description: >-
 2. Open the ticket file under `.project/tickets/{todo|in-progress}/`.
 3. Skim `.project/docs/roadmap.md` for phase context and dependencies (lower ticket numbers first).
 
+## Ticket status (agents)
+
+Folders: `todo/` → `in-progress/` → `done/`.
+
+| When                                                      | Agent action                                                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Implementation **starts** (user asked to build/implement) | **Required:** move the ticket file `todo/` → `in-progress/`, set `**Status:** in-progress` in the file |
+| Implementation finishes / PR merges                       | **Do not** move to `done/`. Leave the file in `in-progress/`                                           |
+| Planning only (no code yet)                               | Leave the ticket in `todo/`                                                                            |
+
+- **Never** move a ticket into `done/`. Promotion to `done/` happens only in the next **ticket reconciliation** process (human/process-owned), not during implementation.
+- Checking off “Done when” boxes inside the ticket file while working is fine; folder/`Status:` must stay `in-progress` until reconciliation.
+- At most one ticket should be in `in-progress/` for the work you are actively implementing (unless the user says otherwise).
+
 ## Planning checklist
 
 Produce a short plan with:
@@ -31,7 +45,7 @@ Produce a short plan with:
 - Do **not** start coding unless the user explicitly asks to implement/execute.
 - Do **not** skip to a high-number ticket if lower blockers are open (call that out).
 - Setup-only work (docs/skills) is ticket **31** / docs — already may be done; don’t rebuild the world.
-- Prefer moving the ticket file `todo/` → `in-progress/` only when implementation starts.
+- On implement: `todo/` → `in-progress/` immediately; never `in-progress/` → `done/`.
 
 ## Template
 

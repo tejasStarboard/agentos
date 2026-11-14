@@ -1,2 +1,2 @@
-/** @agentos/core/vite — Vite plugin + gateway (stub). */
-export {};
+/** @agentos/core/vite — Vite plugin + gateway. */
+export * from './lib/index';

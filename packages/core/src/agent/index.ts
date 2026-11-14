@@ -1,2 +1,2 @@
-/** Internal agent/gateway helpers (stub) — not a public package export. */
-export {};
+/** Internal agent/gateway helpers — not a public package export. */
+export * from './lib/index';

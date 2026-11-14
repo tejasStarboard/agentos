@@ -19,10 +19,15 @@ This repository is the **AgentOS** experiment. Coding agents must follow project
 - Python backends → `services/<id>/`, not inside `extensions/`.
 - No customer `DATABASE_URL` — use builtin **db-store** / **cache-store**.
 - Auth+RBAC → builtin **auth** (Better Auth) via `@agentos/core/api/auth` only.
+- **UI primitives** → `@agentos/ui` (shadcn + Tailwind). Use `Button`, `Input`, `Checkbox`, `Select`, `DropdownMenu`, etc. by default. Do **not** use native HTML controls (`<button>`, `<input>`, `<select>`, …) unless there is a specific accessibility, semantic, or platform reason.
+- **File names** → **kebab-case** for source files (`activity-bar.tsx`, `mount.test.tsx`, `host-client.test.ts`). Exported symbols stay PascalCase/camelCase as usual.
+- **Module folders** → each package module uses `index.ts` + `lib/` + `tests/` (and `components/` when there is React UI).
 
 ## Tickets
 
 Work is ordered in [`.project/tickets/`](.project/tickets/). Do not start **build** tickets (1+) until the user explicitly asks. Docs/skills setup is separate.
+
+**Status:** on implement, move the ticket `todo/` → `in-progress/`. Do **not** move tickets to `done/` — reconciliation owns that.
 
 ## Docs index
 

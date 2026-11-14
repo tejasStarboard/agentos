@@ -77,3 +77,4 @@ Base branch: **`dev`** (unless the user explicitly asks for `main`).
 2. Do not amend/force-push shared `dev`/`main` unless the user explicitly requests a history rewrite.
 3. Match existing user commit rules (HEREDOC messages, no `-i`, no secrets).
 4. After merging to `dev`, leave `main` alone unless the user asks for a release/promotion PR.
+5. Ticket folder status: keep the ticket in `in-progress/` through commit/PR/merge. Never move it to `done/` — ticket reconciliation owns that (see **agentos-ticket-planner**).

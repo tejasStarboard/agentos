@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { withRpcTimeout } from './timeout';
-import { ExtensionRpcTimeoutError } from './types';
+import { withRpcTimeout } from '../lib/timeout';
+import { ExtensionRpcTimeoutError } from '../lib/types';
 
 describe('withRpcTimeout', () => {
   test('resolves when the promise settles in time', async () => {
