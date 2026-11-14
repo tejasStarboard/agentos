@@ -1,9 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import {
-  HANDSHAKE,
-  isHandshakeMessage,
-  isHandshakeType,
-} from './handshake';
+import { HANDSHAKE, isHandshakeMessage, isHandshakeType } from './handshake';
 
 describe('handshake guards', () => {
   test('HANDSHAKE constants match ADR sequence names', () => {
@@ -25,8 +21,8 @@ describe('handshake guards', () => {
     expect(isHandshakeType({ type: HANDSHAKE.READY }, HANDSHAKE.READY)).toBe(
       true,
     );
-    expect(
-      isHandshakeType({ type: HANDSHAKE.READY }, HANDSHAKE.HOST_ACK),
-    ).toBe(false);
+    expect(isHandshakeType({ type: HANDSHAKE.READY }, HANDSHAKE.HOST_ACK)).toBe(
+      false,
+    );
   });
 });

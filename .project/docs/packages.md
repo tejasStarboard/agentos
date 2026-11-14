@@ -4,18 +4,18 @@
 
 Framework package. Parent exports:
 
-| Export | Who | Responsibility |
-|--------|-----|----------------|
-| `@agentos/core` | App `main.tsx` | `mountShell()`, shared types |
-| `@agentos/core/client` | `ui/*.tsx` | Comlink + React hooks |
-| `@agentos/core/api` | `api/routes/**` | `createApp`, `loadRoutes` |
-| `@agentos/core/api/auth` | API routes | Session + RBAC (Better Auth) |
-| `@agentos/core/api/store` | API routes | `dbStore`, `cacheStore` clients |
-| `@agentos/core/api/ai` | API routes | AI client |
-| `@agentos/core/api/hitl` … | API routes | Other builtin clients |
-| `@agentos/core/vite` | `vite.config.ts` | Scanner, virtual modules, gateway |
-| `@agentos/core/sdk` | Advanced | Low-level Comlink |
-| `agentos` CLI | Scripts | `dev` / `build` (starts Shell + APIs via Bun) |
+| Export                     | Who              | Responsibility                                |
+| -------------------------- | ---------------- | --------------------------------------------- |
+| `@agentos/core`            | App `main.tsx`   | `mountShell()`, shared types                  |
+| `@agentos/core/client`     | `ui/*.tsx`       | Comlink + React hooks                         |
+| `@agentos/core/api`        | `api/routes/**`  | `createApp`, `loadRoutes`                     |
+| `@agentos/core/api/auth`   | API routes       | Session + RBAC (Better Auth)                  |
+| `@agentos/core/api/store`  | API routes       | `dbStore`, `cacheStore` clients               |
+| `@agentos/core/api/ai`     | API routes       | AI client                                     |
+| `@agentos/core/api/hitl` … | API routes       | Other builtin clients                         |
+| `@agentos/core/vite`       | `vite.config.ts` | Scanner, virtual modules, gateway             |
+| `@agentos/core/sdk`        | Advanced         | Low-level Comlink                             |
+| `agentos` CLI              | Scripts          | `dev` / `build` (starts Shell + APIs via Bun) |
 
 Internal (not FDE import paths): `shell/`, `agent/` (gateway helpers), `builtins/`.
 

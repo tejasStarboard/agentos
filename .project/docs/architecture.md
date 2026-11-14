@@ -44,12 +44,12 @@ See [builtins.md](./builtins.md). Hard rules:
 
 ## Runtime tooling
 
-| Concern | Tool |
-|---------|------|
-| Workspace install | **pnpm** |
-| Run TS/JS | **Bun** (`bun run`, `bunx`) |
-| Python services | **uv** / uvicorn |
-| Host UI build | Vite (via Bun) |
+| Concern           | Tool                        |
+| ----------------- | --------------------------- |
+| Workspace install | **pnpm**                    |
+| Run TS/JS         | **Bun** (`bun run`, `bunx`) |
+| Python services   | **uv** / uvicorn            |
+| Host UI build     | Vite (via Bun)              |
 
 ## Related ADRs
 

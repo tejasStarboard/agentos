@@ -3,9 +3,11 @@
 **Status:** todo
 
 ## Goal
+
 Ship default-on supporting builtins needed for HITL inbox, events, files, notifications, secrets, and audit logging.
 
 ## Done when
+
 - [ ] `hitl` — create/list/resolve approvals; Shell inbox wired
 - [ ] `events` — publish/subscribe HTTP (or SSE) API
 - [ ] `files` — put/get blob API (local disk OK for v1)
@@ -15,4 +17,5 @@ Ship default-on supporting builtins needed for HITL inbox, events, files, notifi
 - [ ] All marked non-toggleable or default-on per plan
 
 ## Notes
+
 Can implement hitl first if time-boxed; others may be thin stubs with stable routes.

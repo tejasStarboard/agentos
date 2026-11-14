@@ -4,20 +4,20 @@ Convention-based extension platform: Shell + Comlink iframes + Bun APIs / Python
 
 ## Start here
 
-1. **[`.project/docs/concepts.md`](.project/docs/concepts.md)** — extension vs service vs packages  
-2. **[`.project/docs/README.md`](.project/docs/README.md)** — full docs index  
-3. **[`.project/tickets/`](.project/tickets/)** — ordered build tickets (`todo` → `in-progress` → `done`)  
-4. **[`AGENTS.md`](AGENTS.md)** — instructions for Cursor / Claude  
+1. **[`.project/docs/concepts.md`](.project/docs/concepts.md)** — extension vs service vs packages
+2. **[`.project/docs/README.md`](.project/docs/README.md)** — full docs index
+3. **[`.project/tickets/`](.project/tickets/)** — ordered build tickets (`todo` → `in-progress` → `done`)
+4. **[`AGENTS.md`](AGENTS.md)** — instructions for Cursor / Claude
 
 **Do not start build tickets (1+) until explicitly asked.** Docs and skills are already set up.
 
 ## Tooling policy
 
-| Concern | Tool |
-|---------|------|
-| Workspace install | **pnpm** |
+| Concern            | Tool                                    |
+| ------------------ | --------------------------------------- |
+| Workspace install  | **pnpm**                                |
 | Run TS/JS services | **Bun** (`bun run` / `bunx`) — not Node |
-| Python services | uv / uvicorn |
+| Python services    | uv / uvicorn                            |
 
 See [ADR 001](.project/docs/adr/001-pnpm-bun-hybrid.md).
 

@@ -1,8 +1,5 @@
 import * as Comlink from 'comlink';
-import {
-  fromDomMessageEvent,
-  type EventPayload,
-} from './contracts';
+import { fromDomMessageEvent, type EventPayload } from './contracts';
 import { HANDSHAKE, isHandshakeType } from './handshake';
 import {
   HandshakeTimeoutError,

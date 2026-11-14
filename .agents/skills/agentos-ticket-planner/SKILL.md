@@ -18,13 +18,13 @@ description: >-
 
 Produce a short plan with:
 
-1. **Goal** — restated from the ticket  
-2. **Depends on** — prior tickets that must be done  
-3. **Touches** — packages/paths (`packages/core/...`, `examples/...`, `services/...`)  
-4. **Boundaries** — which kit applies (`/client` vs `/api` vs Python `agentos`)  
-5. **ADR risks** — any temptation to violate ADRs 001–005  
-6. **Done when** — copy/adjust ticket checkboxes  
-7. **Verify** — commands using **pnpm** (install) and **bun** (run), not node  
+1. **Goal** — restated from the ticket
+2. **Depends on** — prior tickets that must be done
+3. **Touches** — packages/paths (`packages/core/...`, `examples/...`, `services/...`)
+4. **Boundaries** — which kit applies (`/client` vs `/api` vs Python `agentos`)
+5. **ADR risks** — any temptation to violate ADRs 001–005
+6. **Done when** — copy/adjust ticket checkboxes
+7. **Verify** — commands using **pnpm** (install) and **bun** (run), not node
 
 ## Rules
 
@@ -39,25 +39,32 @@ Produce a short plan with:
 ## Plan for ticket N — <title>
 
 ### Goal
+
 …
 
 ### Dependencies
+
 - Ticket …
 
 ### Files / packages
+
 - …
 
 ### Boundary
+
 - UI → /client | API → /api/* (Bun) | Python → services/ + agentos
 
 ### Risks / ADR
+
 - …
 
 ### Implementation steps
+
 1. …
 2. …
 
 ### Verify
+
 - pnpm …
 - bun …
 ```

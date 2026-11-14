@@ -98,7 +98,8 @@ export interface HandshakeIncomingMessage {
    * Posting frame identity (compared by reference).
    * Includes real windows and test fakes.
    */
-  source: ExtensionContentWindow | HandshakeMessageTarget | MessageEventSource | null;
+  source:
+    ExtensionContentWindow | HandshakeMessageTarget | MessageEventSource | null;
   ports: readonly MessagePort[];
 }
 

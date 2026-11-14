@@ -18,13 +18,13 @@ Before proposing designs or code for this repo, load the canonical docs:
 
 ## Non-negotiable boundaries
 
-| Layer | Import / place | Forbidden |
-|-------|----------------|-----------|
-| Extension UI (`ui/*.tsx`) | `@agentos/core/client` | `@agentos/core/api`, direct DB |
-| Extension API (`api/routes`) | `@agentos/core/api/*`, run with **Bun** | Node runtime, `DATABASE_URL`, `@agentos/core/client` |
-| Python backend | `services/<id>/` + `agentos.*` | Python inside `extensions/<id>/` |
-| Auth / RBAC | builtin `auth` + `@agentos/core/api/auth` | Separate rbac builtin or `/api/rbac` |
-| SQL / cache | `dbStore` / `cacheStore` → builtins | Drizzle/Redis in customer code |
+| Layer                        | Import / place                            | Forbidden                                            |
+| ---------------------------- | ----------------------------------------- | ---------------------------------------------------- |
+| Extension UI (`ui/*.tsx`)    | `@agentos/core/client`                    | `@agentos/core/api`, direct DB                       |
+| Extension API (`api/routes`) | `@agentos/core/api/*`, run with **Bun**   | Node runtime, `DATABASE_URL`, `@agentos/core/client` |
+| Python backend               | `services/<id>/` + `agentos.*`            | Python inside `extensions/<id>/`                     |
+| Auth / RBAC                  | builtin `auth` + `@agentos/core/api/auth` | Separate rbac builtin or `/api/rbac`                 |
+| SQL / cache                  | `dbStore` / `cacheStore` → builtins       | Drizzle/Redis in customer code                       |
 
 ## Vocabulary (prefer exact terms)
 
@@ -36,8 +36,8 @@ Before proposing designs or code for this repo, load the canonical docs:
 
 ## Runtime
 
-- **pnpm** = install / workspaces  
-- **Bun** = run all TS/JS  
+- **pnpm** = install / workspaces
+- **Bun** = run all TS/JS
 - See `.project/docs/adr/001-pnpm-bun-hybrid.md`
 
 ## Comlink

@@ -27,7 +27,8 @@ consistent. Works for every surface: marketing, dashboards, apps, stores, conten
 mobile, redesigns, and standalone design systems.
 
 Follow the steps in order. Four are non-negotiable:
-- **Step 1 routing** — apply the *right* rules, not one recipe.
+
+- **Step 1 routing** — apply the _right_ rules, not one recipe.
 - **Step 2.7 concept** — commit to one distinctive idea before building.
 - **Step 4.5 adversarial review** — judge the work as a critic, not its author.
 - **Step 5 documentation** — leave a `DESIGN_SYSTEM.md` behind, always.
@@ -37,6 +38,7 @@ reflex. When the brief contradicts a default, the brief wins — say so and proc
 
 This file is the always-loaded core. Heavier detail lives in `references/` and is loaded
 on demand:
+
 - **`references/surface-rules.md`** — per-surface rules (landing, dashboard, app, mobile,
   store, content). Load your Step 1 profile's section before building.
 - **`references/quality-floor.md`** — Step 3/4 depth: the contrast computation, gradients/
@@ -51,6 +53,7 @@ on demand:
 ## Step 1 — Analyze the request, then ROUTE (REQUIRED)
 
 ### 1a. Extract the brief
+
 Identify: **surface type** (landing/marketing, dashboard/admin, app/product, mobile,
 store, portfolio, redesign, design-system-only), **brand**, **industry**, **audience**,
 **design style**, **color system** (map to 60/30/10), **typography intent**,
@@ -59,6 +62,7 @@ If the user gave only colors + a name, infer the rest from industry and style �
 your inferences so they can correct you.
 
 ### 1b. State a one-line Design Read
+
 > **"Reading this as: a `<surface>` for `<audience>`, `<style>` direction,
 > `<color/type/motion summary>`, built in `<stack>`."**
 
@@ -68,27 +72,29 @@ Match the profile, then **immediately use the Read tool to open the listed
 `references/surface-rules.md` section before building** — its rules and per-surface gate
 are required, not optional. A hybrid brief reads two sections.
 
-| Profile | Pick when | → Read now |
-|---|---|---|
-| **Landing / Marketing** | landing, marketing, campaign, portfolio, long-form | `references/surface-rules.md` §B1 — page anatomy + hero + conversion |
-| **Dashboard / Admin / Data** | dashboard, admin, analytics, console, internal tool | `references/surface-rules.md` §B2 — density, tables, charts |
-| **App / Product UI** | web app, SaaS surface, settings, onboarding, flows | `references/surface-rules.md` §B3 — navigation + forms + full state set |
-| **E-commerce / Store** | store, shop, catalog, PDP, cart, checkout | `references/surface-rules.md` §B5 — listing, PDP, cart, checkout, trust |
-| **Content / Editorial / Docs** | blog, article, docs, KB, news, long reading | `references/surface-rules.md` §B6 — reading measure, TOC, prose |
-| **Mobile / Native** | iOS, Android, React Native, Flutter | `references/surface-rules.md` §B4 — HIG/Material, touch, safe areas |
-| **Redesign** | "redesign / improve / fix / clean up" existing UI | Audit first (1d), then Read the matching profile's section |
-| **Design-system-only** | "create a design system / tokens / DESIGN_SYSTEM.md" | Skip page building → Step 3 → 4 → 5; the artifact IS the deliverable |
+| Profile                        | Pick when                                            | → Read now                                                              |
+| ------------------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Landing / Marketing**        | landing, marketing, campaign, portfolio, long-form   | `references/surface-rules.md` §B1 — page anatomy + hero + conversion    |
+| **Dashboard / Admin / Data**   | dashboard, admin, analytics, console, internal tool  | `references/surface-rules.md` §B2 — density, tables, charts             |
+| **App / Product UI**           | web app, SaaS surface, settings, onboarding, flows   | `references/surface-rules.md` §B3 — navigation + forms + full state set |
+| **E-commerce / Store**         | store, shop, catalog, PDP, cart, checkout            | `references/surface-rules.md` §B5 — listing, PDP, cart, checkout, trust |
+| **Content / Editorial / Docs** | blog, article, docs, KB, news, long reading          | `references/surface-rules.md` §B6 — reading measure, TOC, prose         |
+| **Mobile / Native**            | iOS, Android, React Native, Flutter                  | `references/surface-rules.md` §B4 — HIG/Material, touch, safe areas     |
+| **Redesign**                   | "redesign / improve / fix / clean up" existing UI    | Audit first (1d), then Read the matching profile's section              |
+| **Design-system-only**         | "create a design system / tokens / DESIGN_SYSTEM.md" | Skip page building → Step 3 → 4 → 5; the artifact IS the deliverable    |
 
 ### 1d. Redesign audit (Redesign profile only)
+
 Before changing anything, read the existing code/UI and list (a) what works and must be
 preserved (brand, palette, IA, components), (b) the concrete slop/quality issues scored
 against Step 3 + the pre-flight gate, (c) the minimal set of changes that fixes the most.
 Never overhaul what isn't broken. **Seeing the current UI is part of auditing it** — the
-"don't open a browser unless asked" rule is about verification theater *after* building,
+"don't open a browser unless asked" rule is about verification theater _after_ building,
 not this. You **may** render/screenshot the current state to ground the audit (say so);
 if you can't, note the audit is code-only with reduced confidence.
 
 ### 1e. The category-reflex test (run before choosing colors/theme)
+
 If someone could guess your palette from the **domain alone** — "fintech → navy + gold",
 "healthcare → white + teal", "crypto → neon on black", "coffee → cream + brown", "AI
 startup → purple gradient on dark" — that's the training reflex, not a decision. Rework
@@ -110,6 +116,7 @@ failure.
 3. **Never re-ask, never override** a named framework/palette/niche/library.
 
 **Checklist (ask each ONLY if missing):**
+
 1. **Niche / industry** — drives mood + imagery.
 2. **Tech stack / platform** — adopt an existing project's stack without asking.
 3. **Design direction** — offer: Minimal, Modern, Editorial, Bold, Luxury, Brutalist,
@@ -136,6 +143,7 @@ After answers, restate the full brief in one paragraph, then proceed.
 
 When the user chooses **AI-generated**, produce real images — don't probe for an API key,
 find none, and downgrade to a placeholder. Order:
+
 1. **`/chatgpt-image-gen` — PREFERRED, no API key.** Drives the user's logged-in ChatGPT
    via browser. If not logged in, tell them clearly ("A Chrome window is open — log in,
    then tell me") and **WAIT** for confirmation. **Non-interactive/headless runs** (no one
@@ -145,7 +153,7 @@ find none, and downgrade to a placeholder. Order:
 2. **`/ai-image-generation`** (inference.sh) when `INFERENCE_API_KEY` is set or supplied;
    if missing, ask or offer to switch to `/chatgpt-image-gen`.
 
-For *reference* images before building, consider `/imagegen-frontend-web` (one per
+For _reference_ images before building, consider `/imagegen-frontend-web` (one per
 section) or `/imagegen-frontend-mobile`. Fall back to a custom SVG/text mark only if the
 user explicitly agrees. Keep generated assets isolated (one `Logo` component / assets
 module) so they're swappable from one file.
@@ -165,6 +173,7 @@ and the category-reflex test. State that references were unavailable.
 **The style word is a first-class search driver.** When the brief names a direction
 (minimal, editorial, brutalist, luxury, bold, playful, modern, swiss…), run **three**
 style-keyed searches and let them set the design before building:
+
 - **Reference designs of that style** — "`<style>` `<surface>` design awards".
 - **Color schemes for that style** — "best palettes for `<style>` `<industry>`" — then run
   results through the category-reflex test before committing.
@@ -192,11 +201,12 @@ Avoiding banned patterns still leaves clean-but-bland. The fix is positive: comm
 single distinctive concept before building, and let it drive specific decisions.
 
 Write it as one sentence — a concrete organizing idea, not an adjective:
+
 > **"The concept is: `<one specific idea>` — expressed through `<layout>`, `<type>`,
 > `<color>`, `<motion>`."**
 
-- *Weak:* "modern, clean, professional fintech dashboard." (defaults, not a concept)
-- *Strong:* "a trading terminal that feels like precision instrumentation — mono numerals
+- _Weak:_ "modern, clean, professional fintech dashboard." (defaults, not a concept)
+- _Strong:_ "a trading terminal that feels like precision instrumentation — mono numerals
   everywhere, hairline grid, near-black field with one signal-green accent, data animates
   in like a ticker."
 
@@ -215,6 +225,7 @@ floor, the nine perf levers, the official-design-system table). Apply those on t
 laws. If you haven't opened them yet, do it now.
 
 ### Color — strategy first, then 60/30/10, in OKLCH
+
 - **Pick a strategy first:** **Restrained** (tinted neutrals + one accent ≤10% — product/
   dashboard default), **Committed** (one saturated color carries 30–60%), **Full palette**
   (3–4 named roles), **Drenched** (the surface IS the color). The "≤10%" rule is
@@ -222,8 +233,8 @@ laws. If you haven't opened them yet, do it now.
 - **60/30/10:** 60% dominant (backgrounds/large surfaces), 30% secondary (raised sections/
   cards), 10% accent (buttons/links/focus rings).
 - **Work in OKLCH.** Reduce chroma near L 0 or 100. **Tint every neutral toward the brand
-  hue** (chroma ~0.005–0.01) rather than using raw `#000`/`#fff` — *unless the concept
-  explicitly calls for pure ink* (brutalist, hard-edged editorial, true-OLED black), in
+  hue** (chroma ~0.005–0.01) rather than using raw `#000`/`#fff` — _unless the concept
+  explicitly calls for pure ink_ (brutalist, hard-edged editorial, true-OLED black), in
   which case pure `#000`/`#fff` is a deliberate, documented choice, not a default.
 - **One palette per project.** No warm/cool drift; no surprise CTA color in section 7.
 - **Dark mode is derived, not inverted.** Theme semantic tokens (`--bg`, `--surface`,
@@ -233,9 +244,10 @@ laws. If you haven't opened them yet, do it now.
   contrast independently.
 
 ### Separation by depth first, not borders-by-reflex
-- **Background contrast + (hue-tinted) shadow is the *primary* way to separate and elevate
+
+- **Background contrast + (hue-tinted) shadow is the _primary_ way to separate and elevate
   containers — not a border drawn around everything.** A border is not banned outright; it
-  is the wrong *default* for elevation. Borders are legitimate and expected for: input/
+  is the wrong _default_ for elevation. Borders are legitimate and expected for: input/
   control outlines that need a perceivable edge on a flat surface, thin token dividers in
   dense data UIs, table cell/row rules, and `:focus-visible` rings. Use them for those
   jobs; don't use them as the go-to device for separating cards and sections.
@@ -245,6 +257,7 @@ laws. If you haven't opened them yet, do it now.
   decorative border on and off.
 
 ### Text contrast (enforce — never ship gray-on-white body)
+
 - **Body/supporting text meets WCAG AA (≥4.5:1)**; large text (≥24px or ≥19px bold) and
   UI/graphical elements ≥3:1. Light-gray on near-white (e.g. `#9aa` on `#fff`) is a fail.
 - **Verify by computing, not by eye**, in light and dark separately — the linearization
@@ -253,6 +266,7 @@ laws. If you haven't opened them yet, do it now.
 - Muted/secondary copy is still high-contrast — darken until it reads clearly.
 
 ### Typography — choose fonts FOR THE BRAND, then lock one scale
+
 Typography is the fastest way a design reads as generic. **Never reuse the same fonts by
 reflex.** Choose in three moves:
 
@@ -266,19 +280,19 @@ neutral/modern/corporate/minimal (the common "professional/clean/unstated" case)
 self-hostable grotesque sans from the Corporate-clean row below and **say which and why**
 — rotate by sub-nuance (Geist, Hanken Grotesk, Mona Sans, Neue Montreal, Space Grotesk all
 qualify) rather than reaching for the same one every time; mandating a single font is its
-own reflex. Reach for a serif/display face only when the personality is *explicitly*
+own reflex. Reach for a serif/display face only when the personality is _explicitly_
 editorial-luxury, elegant-fashion, or heritage — a serif on a "modern minimal" brief is a
 mis-inference and a fail.
 
 **Move B — map personality → category → pick a face** (self-hostable / Google Fonts unless
 the brand owns one). The **personality→category→face lookup table is in
-`references/quality-floor.md`** — pick the row that fits *this* brief's nuance, and write
+`references/quality-floor.md`** — pick the row that fits _this_ brief's nuance, and write
 one line tying the face to the personality (if it'd read the same on any brief, you picked
 by reflex).
 
 **Move C — pair with intent.** Heading carries the personality; body stays quiet and
 readable; both in the same emotional family. Max 2 families (+ optional mono). Emphasis =
-italic/bold of the *same* family.
+italic/bold of the _same_ family.
 
 **Anti-reflex (enforce):** don't default to Inter; for a no-signal brief pick a grotesque
 sans (never a serif) and justify the specific face; don't reach for serif just because the
@@ -293,6 +307,7 @@ brief says "creative/premium"; a playful/cartoon brand must NOT get a corporate 
   on mobile; never clip or truncate.
 
 ### Components (build them reusable)
+
 Buttons, cards, badges, navbar, footer, forms, inputs, feature/CTA sections — plus
 feedback primitives (Toast, Spinner, Modal, Skeleton, empty/error state) — each defined
 once and reused. Interactive states live inside the primitive. No one-off inline variants.
@@ -300,6 +315,7 @@ Select a component base by capability (see `references/component-libraries.md`);
 styled base per project**, re-themed to your tokens — never a library's default look.
 
 ### Interaction feedback & states (nothing static or silent)
+
 - **Every interactive element ships its full state set:** default, hover,
   **focus (`:focus-visible`, not `:focus`)**, **active/pressed** (visible — slight
   scale-down + shadow shift, fires immediately), disabled.
@@ -324,6 +340,7 @@ styled base per project**, re-themed to your tokens — never a library's defaul
   error (recoverable + retry). Drive all from shared components + motion tokens.
 
 ### Motion
+
 - Consistent, purposeful; reuse the same durations/easings. Micro-interactions ~150–300ms;
   ease-out entering, ease-in exiting; avoid linear. Animate **only `transform`/`opacity`**.
 - **Motion must be motivated** — communicates hierarchy, feedback, storytelling, or state.
@@ -332,14 +349,15 @@ styled base per project**, re-themed to your tokens — never a library's defaul
   cursor on all interactive elements.
 
 ### UX copy & content (write like a person, not a placeholder)
-- **Specific over generic.** Headlines say what the thing *does* for *this* audience — not
+
+- **Specific over generic.** Headlines say what the thing _does_ for _this_ audience — not
   "Elevate your workflow / Seamless solutions / Next-gen platform." If it fits any company
   in the category, rewrite it.
 - **Verb-first CTAs:** "Start the 14-day trial" > "Get started"; one label per intent.
 - **Real or honestly-marked mock data** — never "Acme / John Doe / Lorem ipsum" shipped as
   real; no invented fake-precise stats.
 - **Microcopy carries UX:** empty states explain the next action; errors say what happened
-  + how to fix (never bare "Something went wrong"); loading buttons name the work.
+  - how to fix (never bare "Something went wrong"); loading buttons name the work.
 
 > **Icons, images, gradients/glass, the full accessibility floor, and the
 > official-design-system honesty table now live in `references/quality-floor.md` — apply
@@ -365,12 +383,14 @@ styled base per project**, re-themed to your tokens — never a library's defaul
    Standard page renders and is usable before and without the 3D layer.
 
 ### Performance & delivery (production-ready means fast)
+
 Target **Core Web Vitals: LCP < 2.5s, CLS < 0.1, INP < 200ms.** Apply all **nine levers**
 — the full list is in `references/quality-floor.md`. In short: perceived speed, smaller
 first load, critical-path-first CSS, ship less JS, lazy-load below-fold, protect the main
 thread, stable layouts (CLS), optimized images, smart caching.
 
 ### Engineering principles
+
 - **DRY / KISS / YAGNI** — any value/logic appearing twice is declared once; simplest thing
   that works; build only what's needed now.
 - **Code lazily (`/ponytail` ladder):** native HTML/CSS before a JS lib (`<dialog>`,
@@ -378,7 +398,7 @@ thread, stable layouts (CLS), optimized images, smart caching.
   one line before fifty; fewest files. Mark deliberate shortcuts with a `ponytail:` comment.
   If `/ponytail` is installed, invoke it for non-trivial components; if not, just follow the
   ladder.
-- **Ponytail governs *how you implement*, not *what the design requires*.** Never lazy away:
+- **Ponytail governs _how you implement_, not _what the design requires_.** Never lazy away:
   the token layer, reusable primitives, the full state set, empty/loading/error states,
   accessibility, the adversarial review, or `DESIGN_SYSTEM.md`. Be lazy on mechanism; never
   on the design system itself.
@@ -389,6 +409,7 @@ thread, stable layouts (CLS), optimized images, smart caching.
 
 Judge as an adversary, not the author. **Your goal this pass is to make the case that the
 design is generic.** Any "yes-it's-generic" is a finding to fix:
+
 1. **Concept test.** Cover the brand name — could this be any competitor? If yes, sharpen
    and re-apply the Step 2.7 concept.
 2. **Reflex test (1e), as attacker.** Is the palette guessable from the category? Is the
@@ -432,6 +453,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
 `references/surface-rules.md` section.
 
 ### Hard bans (any hit = fail)
+
 - ❌ Any color outside the approved palette; default purple/blue-purple gradient (unless
   approved); raw `#000`/`#fff` **used by default** (pure ink is allowed only when the
   concept explicitly calls for it — brutalist / hard editorial / true-OLED — and it's
@@ -442,7 +464,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
 - ❌ Typography not matching personality (playful brand on corporate grotesque; editorial on
   generic sans; a serif as the no-signal default where a grotesque sans is correct); the
   same pairing reused by reflex instead of chosen via Move A→C.
-- ❌ Borders used as the *primary* device for separating/elevating cards and sections, or an
+- ❌ Borders used as the _primary_ device for separating/elevating cards and sections, or an
   elevation/selection state changed by toggling a decorative border. (Input outlines, token
   dividers, table rules, and focus rings are fine — they're not elevation.)
 - ❌ Nested elevated surfaces (card-in-card-in-card).
@@ -453,7 +475,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
   top-aligned instead of centered, or an **empty full-width band/gap above the hero**
   (a stray spacer or empty section pushing content down off-center).
 - ❌ **The left-text / right-image (or right-mockup/video) hero split is a FAIL by default**
-  — it is the single most templated hero on the web. It counts as done *only* if you wrote
+  — it is the single most templated hero on the web. It counts as done _only_ if you wrote
   down the specific distinctive move that earns it (asymmetric ratio, image bleeds off the
   edge, an overlap/depth or motion move) AND it lands. A plain 50/50 text-left + rounded
   image-card-right is an automatic fail — pick another composition (centered editorial,
@@ -486,6 +508,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
   library pulled for what native HTML/CSS or an installed dep already does.
 
 ### Countable limits
+
 - **Eyebrows** (small uppercase tracked labels): **≤ ceil(sections ÷ 3)**, and each must be
   a real label/category — no decorative sparkle/AI icon, no vague tagline as an eyebrow.
 - **Consecutive zigzag** (alternating image+text rows): **≤ 2 in a row**; the 3rd breaks the
@@ -499,6 +522,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
 - **Fake-precise numbers / generic names / filler copy** = 0 unless real or marked mock.
 
 ### Performance gates
+
 - ❌ Any image/media/embed without `width`/`height` or `aspect-ratio`.
 - ❌ Hero/LCP image not prioritized; below-fold images/components not lazy.
 - ❌ Animating any property other than `transform`/`opacity`.
@@ -514,17 +538,17 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
 ## Verify before done
 
 1. **Typecheck.** Run the project's typecheck (`<pm> run typecheck`, or `<pm> exec tsc
-   --noEmit`, or the lint command) using the detected package manager. Don't run a
+--noEmit`, or the lint command) using the detected package manager. Don't run a
    production build just to find errors.
 2. **Compute, don't eyeball, the things that are computable.** Run the contrast ratios in a
    one-off script (formula in `references/quality-floor.md`). This is required, not optional.
-3. **Render-verify the things that are *only* observable after layout — this is not
+3. **Render-verify the things that are _only_ observable after layout — this is not
    verification theater, it is the only way to confirm them.** The gate asserts several
-   *rendered* outcomes that cannot be read from source: the hero fits inside `100svh` at
+   _rendered_ outcomes that cannot be read from source: the hero fits inside `100svh` at
    ~700px and ~800px laptop heights, nothing clips/overflows at 375/768/1280 widths, and a
    horizontal rail shows no phantom scrollbar. For those specific items, **take a quick
    headless screenshot at those viewports** (`/use-my-browser`, `/agent-browser`, or
-   Playwright) and confirm — *or*, if you genuinely cannot render, say so explicitly and
+   Playwright) and confirm — _or_, if you genuinely cannot render, say so explicitly and
    downgrade the claim from "verified" to "built to target, not visually confirmed." Do not
    assert a render-only gate item passes without having looked. (This is the one sanctioned
    exception to "don't open a browser to verify"; the rule still bans decorative
@@ -533,6 +557,7 @@ list to maintain. Run the universal gate below, plus your profile's gate at the 
    complete.
 
 ## Future work & updates
+
 Every future page reuses the colors, typography, spacing, components, icons, cards,
 animation, and image style from `DESIGN_SYSTEM.md` — no new visual style unless the user
 updates it. If anything changes, update `DESIGN_SYSTEM.md` immediately so it never drifts.

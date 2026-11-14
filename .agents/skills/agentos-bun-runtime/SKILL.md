@@ -10,12 +10,12 @@ description: >-
 
 ## Policy (ADR 001)
 
-| Action | Tool |
-|--------|------|
-| Install / lockfile / filters | **`pnpm`** (`pnpm install`, `pnpm --filter`) |
-| Execute TS/JS, API servers, vite, tests | **`bun`** / **`bunx`** / **`bun run`** |
-| Python services | **uv** / uvicorn |
-| Node | **Do not use** to run services |
+| Action                                  | Tool                                         |
+| --------------------------------------- | -------------------------------------------- |
+| Install / lockfile / filters            | **`pnpm`** (`pnpm install`, `pnpm --filter`) |
+| Execute TS/JS, API servers, vite, tests | **`bun`** / **`bunx`** / **`bun run`**       |
+| Python services                         | **uv** / uvicorn                             |
+| Node                                    | **Do not use** to run services               |
 
 ## Overrides
 

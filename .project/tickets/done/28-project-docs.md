@@ -3,9 +3,11 @@
 **Status:** done
 
 ## Goal
+
 Fill developer-facing documentation so extension vs service vs packages are unambiguous.
 
 ## Done when
+
 - [x] `.project/docs/README.md` index
 - [x] `concepts.md` glossary + diagram
 - [x] `architecture.md`, `roadmap.md`, `prd.md`
@@ -15,4 +17,5 @@ Fill developer-facing documentation so extension vs service vs packages are unam
 - [x] `packages.md`, `extensions.md`, `services.md`, `builtins.md`, `skills.md`
 
 ## Notes
+
 Completed as pre-build setup (not during platform implementation).
