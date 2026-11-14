@@ -1,6 +1,6 @@
 # 8 — Extension Manager drawer
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ List extensions; toggle customer extensions ON/OFF; show builtins as locked/alwa
 
 ## Done when
 
-- [ ] Customer disable unmounts iframes and clears contributed skills from palette state
-- [ ] Builtins (`auth`, `db-store`, `cache-store`, `ai`, …) cannot be toggled off
-- [ ] Status: active / disabled / crashed / loading
+- [x] Customer disable unmounts iframes and clears contributed skills from palette state
+- [x] Builtins (`auth`, `db-store`, `cache-store`, `ai`, …) cannot be toggled off
+- [x] Status: active / disabled / crashed / loading
 
 ## Notes
 

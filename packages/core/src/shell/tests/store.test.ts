@@ -1,24 +1,44 @@
-import { beforeEach, describe, expect, test } from 'bun:test';
-import { useShellStore } from '@agentos/core/shell/lib';
+import { beforeEach, describe, expect, mock, test } from 'bun:test';
+import {
+  defaultEnabledById,
+  STUB_EXTENSION_CATALOG,
+  useShellStore,
+} from '@agentos/core/shell/lib';
+
+function resetStore() {
+  useShellStore.setState({
+    activeView: 'home',
+    sidebarOpen: true,
+    drawerOpen: false,
+    extensions: STUB_EXTENSION_CATALOG,
+    enabledById: defaultEnabledById(),
+    desiredContributions: [],
+    contributions: [],
+    runtimeStatus: {},
+    skillsByExtension: {},
+  });
+}
 
 describe('useShellStore', () => {
   beforeEach(() => {
-    useShellStore.setState({
-      activeView: 'home',
-      sidebarOpen: true,
-      drawerOpen: false,
-      contributions: [],
-      runtimeStatus: {},
-    });
+    resetStore();
+    mock.restore();
+    globalThis.fetch = mock(() =>
+      Promise.resolve(new Response(null, { status: 404 })),
+    ) as unknown as typeof fetch;
   });
 
-  test('defaults to home with sidebar open', () => {
+  test('defaults to home with sidebar open and stub catalog', () => {
     const state = useShellStore.getState();
     expect(state.activeView).toBe('home');
     expect(state.sidebarOpen).toBe(true);
     expect(state.drawerOpen).toBe(false);
     expect(state.contributions).toEqual([]);
     expect(state.runtimeStatus).toEqual({});
+    expect(state.extensions.map((e) => e.id)).toContain('auth');
+    expect(state.extensions.map((e) => e.id)).toContain('crm');
+    expect(state.enabledById.auth).toBe(true);
+    expect(state.enabledById.crm).toBe(true);
   });
 
   test('setContributions and setRuntimeStatus track iframe host state', () => {
@@ -32,6 +52,7 @@ describe('useShellStore', () => {
 
     const state = useShellStore.getState();
     expect(state.contributions).toHaveLength(1);
+    expect(state.desiredContributions).toHaveLength(1);
     expect(state.runtimeStatus['crm:page']).toBe('active');
   });
 
@@ -61,5 +82,55 @@ describe('useShellStore', () => {
     expect(useShellStore.getState().drawerOpen).toBe(true);
     useShellStore.getState().toggleDrawer();
     expect(useShellStore.getState().drawerOpen).toBe(false);
+  });
+
+  test('customer disable unmounts contributions and clears skills', () => {
+    useShellStore.getState().setContributions([
+      { extensionId: 'crm', view: 'page', src: '/crm.html' },
+      { extensionId: 'crm', view: 'sidebar', src: '/crm-side.html' },
+      { extensionId: 'invoices', view: 'page', src: '/inv.html' },
+    ]);
+    useShellStore.getState().setExtensionSkills('crm', ['search-contacts']);
+    useShellStore.getState().setRuntimeStatus('crm', 'page', 'active');
+    useShellStore.getState().setExtensionEnabled('crm', false);
+
+    const state = useShellStore.getState();
+    expect(state.enabledById.crm).toBe(false);
+    expect(state.contributions).toEqual([
+      { extensionId: 'invoices', view: 'page', src: '/inv.html' },
+    ]);
+    expect(state.desiredContributions).toHaveLength(3);
+    expect(state.skillsByExtension.crm).toBeUndefined();
+    expect(state.runtimeStatus['crm:page']).toBeUndefined();
+  });
+
+  test('customer re-enable restores contributions from desired list', () => {
+    useShellStore.getState().setContributions([
+      { extensionId: 'crm', view: 'page', src: '/crm.html' },
+      { extensionId: 'invoices', view: 'page', src: '/inv.html' },
+    ]);
+    useShellStore.getState().setExtensionEnabled('crm', false);
+    expect(useShellStore.getState().contributions).toHaveLength(1);
+
+    useShellStore.getState().setExtensionEnabled('crm', true);
+    expect(useShellStore.getState().enabledById.crm).toBe(true);
+    expect(useShellStore.getState().contributions).toHaveLength(2);
+  });
+
+  test('builtins cannot be toggled off', () => {
+    for (const id of ['auth', 'db-store', 'cache-store', 'ai'] as const) {
+      useShellStore.getState().setExtensionEnabled(id, false);
+      expect(useShellStore.getState().enabledById[id]).toBe(true);
+    }
+  });
+
+  test('setExtensionEnabled calls stub enable API', () => {
+    const fetchMock = globalThis.fetch as unknown as ReturnType<typeof mock>;
+    useShellStore.getState().setExtensionEnabled('crm', false);
+    expect(fetchMock).toHaveBeenCalled();
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toBe('/api/extensions/crm/enable');
+    expect(init.method).toBe('POST');
+    expect(JSON.parse(String(init.body))).toEqual({ enabled: false });
   });
 });

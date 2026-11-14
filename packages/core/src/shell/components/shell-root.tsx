@@ -4,6 +4,7 @@ import {
   ThemeProvider,
 } from '@agentos/ui/components/theme-provider';
 import { ActivityBar } from './activity-bar';
+import { ExtensionManagerDrawer } from './extension-manager-drawer';
 import { HiddenSlot } from './hidden-slot';
 import { HomeDashboard } from './home-dashboard';
 import { MainCanvas } from './main-canvas';
@@ -49,6 +50,7 @@ export function ShellRoot() {
         </div>
         <StatusBar />
         <HiddenSlot />
+        <ExtensionManagerDrawer />
       </div>
     </ThemeProvider>
   );
