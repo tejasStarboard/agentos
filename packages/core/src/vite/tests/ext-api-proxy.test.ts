@@ -227,7 +227,7 @@ describe('createExtApiProxyMiddleware', () => {
 });
 
 describe('agentos() gateway middleware wiring', () => {
-  test('registers enable + proxy + html middlewares on configureServer', async () => {
+  test('registers enable + agent + proxy + html middlewares on configureServer', async () => {
     const plugin = asHooks(agentos({ extensionsDir, builtinsDir }));
     await plugin.configResolved?.({ root: fixturesRoot });
 
@@ -261,7 +261,7 @@ describe('agentos() gateway middleware wiring', () => {
     } as unknown as ViteDevServer;
 
     await plugin.configureServer?.(fakeServer);
-    expect(middlewares.length).toBe(3);
+    expect(middlewares.length).toBe(4);
 
     // Enable middleware is first.
     const enableHit = mockReqRes('/api/extensions/crm/enable', {
@@ -272,15 +272,21 @@ describe('agentos() gateway middleware wiring', () => {
     await enableHit.settle();
     expect(enableHit.status).toBe(200);
 
-    // Proxy is second — disabled customer now 403.
+    // Agent control plane is second.
+    const registryHit = mockReqRes('/api/agent/registry');
+    middlewares[1]!(registryHit.req, registryHit.res, () => {});
+    await registryHit.settle();
+    expect(registryHit.status).toBe(200);
+
+    // Proxy is third — disabled customer now 403.
     const proxyHit = mockReqRes('/api/ext/crm/tools/x');
-    middlewares[1]!(proxyHit.req, proxyHit.res, () => {});
+    middlewares[2]!(proxyHit.req, proxyHit.res, () => {});
     await proxyHit.settle();
     expect(proxyHit.status).toBe(403);
 
     // HTML middleware still last.
     const htmlHit = mockReqRes('/__agentos/ext/crm/page.html');
-    middlewares[2]!(htmlHit.req, htmlHit.res, () => {});
+    middlewares[3]!(htmlHit.req, htmlHit.res, () => {});
     expect(htmlHit.status).toBe(200);
   });
 });

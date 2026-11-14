@@ -16,6 +16,13 @@ export type ExtensionEnableState = {
   setEnabled(extensionId: string, enabled: boolean): void;
 };
 
+/** True when the extension must stay enabled (driven builtins / non-toggleable). */
+export function isLockedExtension(extension: ScannedExtension): boolean {
+  return (
+    extension.driven || extension.kind === 'builtin' || !extension.toggleable
+  );
+}
+
 /** Create an empty enable map (defaults: all extensions enabled). */
 export function createExtensionEnableState(): ExtensionEnableState {
   const enabledById = new Map<string, boolean>();
@@ -23,7 +30,7 @@ export function createExtensionEnableState(): ExtensionEnableState {
   return {
     enabledById,
     isEnabled(extension) {
-      if (extension.kind === 'builtin' || !extension.toggleable) {
+      if (isLockedExtension(extension)) {
         return true;
       }
       const explicit = enabledById.get(extension.id);
@@ -50,7 +57,8 @@ export function parseExtensionEnablePath(
   }
 }
 
-function readJsonBody(req: IncomingMessage): Promise<unknown> {
+/** Read and parse a JSON request body (empty body → undefined). */
+export function readJsonBody(req: IncomingMessage): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     req.on('data', (chunk: Buffer | string) => {
@@ -72,7 +80,8 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
   });
 }
 
-function sendJson(
+/** Write a JSON response. */
+export function sendJson(
   res: ServerResponse,
   status: number,
   body: Record<string, unknown>,
@@ -82,9 +91,104 @@ function sendJson(
   res.end(JSON.stringify(body));
 }
 
+/** Extract boolean `enabled` from a JSON body, or undefined if invalid. */
+export function parseEnabledFlag(body: unknown): boolean | undefined {
+  if (
+    typeof body === 'object' &&
+    body !== null &&
+    'enabled' in body &&
+    typeof (body as { enabled: unknown }).enabled === 'boolean'
+  ) {
+    return (body as { enabled: boolean }).enabled;
+  }
+  return undefined;
+}
+
+export type ApplyEnableResult =
+  | { ok: true; id: string; enabled: boolean }
+  | { ok: false; status: number; error: string };
+
+/**
+ * Apply enable/disable against shared gateway state.
+ * Rejects disable when `driven: true` (and builtin / non-toggleable).
+ */
+export function applyExtensionEnable(
+  extension: ScannedExtension,
+  enabled: boolean,
+  state: ExtensionEnableState,
+): ApplyEnableResult {
+  if (!enabled && isLockedExtension(extension)) {
+    return {
+      ok: false,
+      status: 403,
+      error: extension.driven
+        ? `Cannot disable driven extension: ${extension.id}`
+        : `Cannot disable ${extension.kind} extension: ${extension.id}`,
+    };
+  }
+
+  if (isLockedExtension(extension)) {
+    // Locked extensions stay enabled; ignore redundant enable=true.
+    state.setEnabled(extension.id, true);
+  } else {
+    state.setEnabled(extension.id, enabled);
+  }
+
+  return {
+    ok: true,
+    id: extension.id,
+    enabled: state.isEnabled(extension),
+  };
+}
+
+/**
+ * Shared POST enable handler used by `/api/extensions/:id/enable` and
+ * `/api/agent/extensions/:id/enable`.
+ */
+export async function handleExtensionEnableRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  extensionId: string,
+  getModel: () => RegistryModel,
+  state: ExtensionEnableState,
+): Promise<void> {
+  const extension = getModel().extensions.find((ext) => ext.id === extensionId);
+  if (!extension) {
+    sendJson(res, 404, {
+      error: `Unknown extension: ${extensionId}`,
+    });
+    return;
+  }
+
+  let body: unknown;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    sendJson(res, 400, { error: 'Invalid JSON body' });
+    return;
+  }
+
+  const enabled = parseEnabledFlag(body);
+  if (enabled === undefined) {
+    sendJson(res, 400, { error: 'Body must include boolean "enabled"' });
+    return;
+  }
+
+  const result = applyExtensionEnable(extension, enabled, state);
+  if (!result.ok) {
+    sendJson(res, result.status, { error: result.error });
+    return;
+  }
+
+  sendJson(res, 200, {
+    id: result.id,
+    enabled: result.enabled,
+  });
+}
+
 /**
  * Connect middleware: `POST /api/extensions/:id/enable` with `{ enabled: boolean }`.
- * Builtins / non-toggleable extensions cannot be disabled (403).
+ * Driven / builtins / non-toggleable extensions cannot be disabled (403).
  */
 export function createExtensionEnableMiddleware(
   getModel: () => RegistryModel,
@@ -107,57 +211,13 @@ export function createExtensionEnableMiddleware(
       return;
     }
 
-    void (async () => {
-      const extension = getModel().extensions.find(
-        (ext) => ext.id === parsed.extensionId,
-      );
-      if (!extension) {
-        sendJson(res, 404, {
-          error: `Unknown extension: ${parsed.extensionId}`,
-        });
-        return;
-      }
-
-      let body: unknown;
-      try {
-        body = await readJsonBody(req);
-      } catch {
-        sendJson(res, 400, { error: 'Invalid JSON body' });
-        return;
-      }
-
-      const enabled =
-        typeof body === 'object' &&
-        body !== null &&
-        'enabled' in body &&
-        typeof (body as { enabled: unknown }).enabled === 'boolean'
-          ? (body as { enabled: boolean }).enabled
-          : undefined;
-
-      if (enabled === undefined) {
-        sendJson(res, 400, { error: 'Body must include boolean "enabled"' });
-        return;
-      }
-
-      if (!enabled && (extension.kind === 'builtin' || !extension.toggleable)) {
-        sendJson(res, 403, {
-          error: `Cannot disable ${extension.kind} extension: ${extension.id}`,
-        });
-        return;
-      }
-
-      if (extension.kind === 'builtin' || !extension.toggleable) {
-        // Builtins stay enabled; ignore redundant enable=true.
-        state.setEnabled(extension.id, true);
-      } else {
-        state.setEnabled(extension.id, enabled);
-      }
-
-      sendJson(res, 200, {
-        id: extension.id,
-        enabled: state.isEnabled(extension),
-      });
-    })().catch((err) => {
+    void handleExtensionEnableRequest(
+      req,
+      res,
+      parsed.extensionId,
+      getModel,
+      state,
+    ).catch((err) => {
       next(err);
     });
   };

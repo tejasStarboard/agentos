@@ -7,9 +7,11 @@ export {
   EXT_HTML_PREFIX,
   VIRTUAL_EXT_ENTRY_PREFIX,
   EXT_API_PREFIX,
+  createAgentControlPlaneMiddleware,
   createExtApiProxyMiddleware,
   createExtensionEnableMiddleware,
   createExtensionEnableState,
+  parseAgentExtensionEnablePath,
   parseExtApiPath,
   parseExtensionEnablePath,
   parseExtHtmlPath,
@@ -32,6 +34,7 @@ export type {
   ParsedExtApiPath,
   ProxyFetch,
 } from './agentos-plugin';
+
 export type {
   AgentDescriptors,
   AgentFileName,
