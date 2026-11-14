@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { buildEnabledAgentRegistry } from '../../agent/lib/build-enabled-agent-registry';
+import { buildEnabledAgentRegistry } from '@agentos/core/agent/lib/build-enabled-agent-registry';
 
 import type {
   ConnectMiddleware,

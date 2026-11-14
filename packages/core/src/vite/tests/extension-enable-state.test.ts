@@ -5,8 +5,11 @@ import {
   createExtensionEnableMiddleware,
   createExtensionEnableState,
   parseExtensionEnablePath,
-} from '../lib/extension-enable-state';
-import type { RegistryModel, ScannedExtension } from '../lib/types';
+} from '@agentos/core/vite/lib/extension-enable-state';
+import type {
+  RegistryModel,
+  ScannedExtension,
+} from '@agentos/core/vite/lib/types';
 
 function ext(
   partial: Pick<ScannedExtension, 'id' | 'kind' | 'toggleable'> &

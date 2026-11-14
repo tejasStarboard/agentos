@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { scanExtensions } from '../../../src/vite/lib/scan-extensions';
+import { scanExtensions } from '@agentos/core/vite/lib/scan-extensions';
 
 const builtinsDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 

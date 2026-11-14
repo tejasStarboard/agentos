@@ -50,6 +50,7 @@ Agents must never promote tickets to `done/` themselves.
 30. (Later) Next.js host adapter spike
 31. Install agent skills + ADR (pnpm workspaces / Bun runtime) — **done** (setup)
 32. `.project` docs — **done** (setup)
+33. Global + extension env config (`@t3-oss/env-core`) — keys export + app extend
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

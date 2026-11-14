@@ -17,5 +17,6 @@ Implementation is tracked as numbered tickets in [../tickets/](../tickets/). Do 
 | 10    | E2E verification                                             | 29                                                   |
 | Later | Next.js host adapter spike                                   | 30                                                   |
 | Setup | Skills + pnpm/Bun ADR                                        | **31** (docs/skills setup — may be done before code) |
+| Infra | Typed env (`@t3-oss/env-core`): platform + extension `keys`  | **33** (app extends / loads at runtime)              |
 
 **Status:** setup docs/skills can proceed before ticket 1. **Do not start ticket 1** until explicitly asked to build.

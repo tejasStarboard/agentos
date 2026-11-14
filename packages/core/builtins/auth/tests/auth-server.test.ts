@@ -7,9 +7,9 @@ import {
   DEMO_ADMIN,
   DEMO_VIEWER,
   PERMISSION_ADMIN_ONLY,
-} from '../api/lib/constants';
-import { createAuth } from '../api/lib/create-auth';
-import { handleAuthRequest } from '../api/lib/handle-request';
+} from '@agentos/core/builtins/auth/api/lib/constants';
+import { createAuth } from '@agentos/core/builtins/auth/api/lib/create-auth';
+import { handleAuthRequest } from '@agentos/core/builtins/auth/api/lib/handle-request';
 
 function cookieHeaderFrom(response: Response): string {
   const cookies =

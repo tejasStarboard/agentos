@@ -4,7 +4,7 @@ import {
   type ExtensionAPI,
   type HostAPIClient,
 } from '@agentos/core/sdk';
-import { HostContext } from '../lib/host-context';
+import { HostContext } from '@agentos/core/client/lib/host-context';
 
 export type HostProviderProps = {
   children: ReactNode;

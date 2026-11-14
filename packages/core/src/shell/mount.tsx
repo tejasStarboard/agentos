@@ -1,6 +1,6 @@
 import { createRoot, type Root } from 'react-dom/client';
 import { registry as virtualRegistry } from 'virtual:agentos-registry';
-import type { RegistryModel } from '../vite/lib/types';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
 import { ShellRoot } from './components/shell-root';
 import { applyRegistry } from './lib/apply-registry';
 

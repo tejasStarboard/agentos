@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, test } from 'bun:test';
 
-import { createDb } from '../api/lib/create-db';
-import { handleDbStoreRequest } from '../api/lib/handle-request';
+import { createDb } from '@agentos/core/builtins/db-store/api/lib/create-db';
+import { handleDbStoreRequest } from '@agentos/core/builtins/db-store/api/lib/handle-request';
 
 describe('builtin db-store server', () => {
   let ctx: Awaited<ReturnType<typeof createDb>>;

@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@agentos/core": "workspace:*",
-    "@agentos/ui": "workspace:*"
+    "@agentos/ui": "workspace:*",
+    "@t3-oss/env-core": "^0.13.11",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@agentos/typescript-config": "workspace:*",

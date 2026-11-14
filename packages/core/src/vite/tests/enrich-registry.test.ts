@@ -7,8 +7,8 @@ import {
   enrichExtension,
   enrichRegistry,
   uiEntryUrl,
-} from '../lib/enrich-registry';
-import type { RegistryModel } from '../lib/types';
+} from '@agentos/core/vite/lib/enrich-registry';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
 
 describe('enrichRegistry', () => {
   test('uiEntryUrl uses /__agentos/ext convention', () => {

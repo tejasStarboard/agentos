@@ -4,9 +4,12 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import {
   createAgentControlPlaneMiddleware,
   parseAgentExtensionEnablePath,
-} from '../lib/agent-control-plane';
-import { createExtensionEnableState } from '../lib/extension-enable-state';
-import type { RegistryModel, ScannedExtension } from '../lib/types';
+} from '@agentos/core/vite/lib/agent-control-plane';
+import { createExtensionEnableState } from '@agentos/core/vite/lib/extension-enable-state';
+import type {
+  RegistryModel,
+  ScannedExtension,
+} from '@agentos/core/vite/lib/types';
 
 function ext(
   partial: Pick<ScannedExtension, 'id' | 'kind' | 'toggleable'> &

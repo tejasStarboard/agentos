@@ -8,7 +8,7 @@ import {
   agentos,
   RESOLVED_VIRTUAL_REGISTRY_ID,
   VIRTUAL_REGISTRY_ID,
-} from '../lib/agentos-plugin';
+} from '@agentos/core/vite/lib/agentos-plugin';
 import type { Plugin, ViteDevServer } from 'vite';
 
 const fixturesRoot = fileURLToPath(new URL('./fixtures', import.meta.url));

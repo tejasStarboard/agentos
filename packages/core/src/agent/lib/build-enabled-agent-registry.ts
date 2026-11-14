@@ -2,7 +2,7 @@ import type {
   RegistryModel,
   ScannedExtension,
   ToolDescriptor,
-} from '../../vite/lib/types';
+} from '@agentos/core/vite/lib/types';
 
 /** One enabled extension's agent contributions for the control-plane registry. */
 export type AgentRegistryExtension = {

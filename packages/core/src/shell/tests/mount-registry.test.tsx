@@ -2,8 +2,8 @@ import { afterEach, describe, expect, test } from 'bun:test';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { RegistryModel } from '../../vite/lib/types';
-import { mountShell } from '../mount';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
+import { mountShell } from '@agentos/core/shell/mount';
 import { useShellStore } from '@agentos/core/shell/lib';
 
 const fixturesRoot = fileURLToPath(

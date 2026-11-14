@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { scanExtensions } from '../lib/scan-extensions';
+import { scanExtensions } from '@agentos/core/vite/lib/scan-extensions';
 
 const fixturesRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
 const extensionsDir = join(fixturesRoot, 'extensions');

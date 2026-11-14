@@ -8,7 +8,7 @@ import {
   agentos,
   resolvedVirtualExtEntryId,
   VIRTUAL_EXT_ENTRY_PREFIX,
-} from '../lib/agentos-plugin';
+} from '@agentos/core/vite/lib/agentos-plugin';
 
 const fixturesRoot = fileURLToPath(new URL('./fixtures', import.meta.url));
 const extensionsDir = join(fixturesRoot, 'extensions');

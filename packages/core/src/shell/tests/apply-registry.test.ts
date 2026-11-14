@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from 'bun:test';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { RegistryModel } from '../../vite/lib/types';
+import type { RegistryModel } from '@agentos/core/vite/lib/types';
 import {
   applyRegistry,
   mapRegistry,
