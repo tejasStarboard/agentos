@@ -13,6 +13,9 @@ function resetStore() {
     activeView: 'home',
     sidebarOpen: true,
     drawerOpen: false,
+    chatOpen: false,
+    chatMessages: [],
+    chatBusy: false,
     extensions: STUB_EXTENSION_CATALOG,
     enabledById: defaultEnabledById(),
     desiredContributions: [],
@@ -62,6 +65,33 @@ describe('createShellHostApi notifications', () => {
       const res = await host.api.fetch('/session');
       expect(calls).toEqual(['/api/ext/auth/session']);
       expect(res).toEqual({ ok: true, status: 200, body: '{"ok":true}' });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  test('ai.generateText posts to /api/ext/ai/generate-text', async () => {
+    const originalFetch = globalThis.fetch;
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
+      calls.push({ url: String(input), init });
+      return new Response(JSON.stringify({ text: 'echo:hi' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    }) as typeof fetch;
+
+    try {
+      const host = createShellHostApi('crm');
+      const res = await host.ai.generateText('hi');
+      expect(res).toEqual({ text: 'echo:hi' });
+      expect(calls).toHaveLength(1);
+      expect(calls[0]?.url).toBe('/api/ext/ai/generate-text');
+      expect(calls[0]?.init?.method).toBe('POST');
+      expect(calls[0]?.init?.body).toBe(JSON.stringify({ prompt: 'hi' }));
     } finally {
       globalThis.fetch = originalFetch;
     }

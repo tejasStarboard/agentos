@@ -27,10 +27,19 @@ function filterSkills(
   return out;
 }
 
+export type ChatMessage = {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+};
+
 export type ShellUiState = {
   activeView: ShellView;
   sidebarOpen: boolean;
   drawerOpen: boolean;
+  chatOpen: boolean;
+  chatMessages: ChatMessage[];
+  chatBusy: boolean;
   /** Catalog entries shown in Extension Manager (from registry). */
   extensions: ExtensionEntry[];
   /** Per-extension enable flag; builtins stay true. */
@@ -52,6 +61,10 @@ export type ShellUiState = {
   setActiveView: (view: ShellView) => void;
   setSidebarOpen: (open: boolean) => void;
   setDrawerOpen: (open: boolean) => void;
+  setChatOpen: (open: boolean) => void;
+  toggleChat: () => void;
+  appendChatMessage: (message: ChatMessage) => void;
+  setChatBusy: (busy: boolean) => void;
   toggleSidebar: () => void;
   toggleDrawer: () => void;
   setExtensions: (extensions: ExtensionEntry[]) => void;
@@ -71,6 +84,9 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   activeView: 'home',
   sidebarOpen: true,
   drawerOpen: false,
+  chatOpen: false,
+  chatMessages: [],
+  chatBusy: false,
   extensions: [],
   enabledById: {},
   desiredContributions: [],
@@ -83,6 +99,11 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   setActiveView: (view) => set({ activeView: view }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   setDrawerOpen: (open) => set({ drawerOpen: open }),
+  setChatOpen: (open) => set({ chatOpen: open }),
+  toggleChat: () => set((s) => ({ chatOpen: !s.chatOpen })),
+  appendChatMessage: (message) =>
+    set((s) => ({ chatMessages: [...s.chatMessages, message] })),
+  setChatBusy: (busy) => set({ chatBusy: busy }),
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   toggleDrawer: () => set((s) => ({ drawerOpen: !s.drawerOpen })),
   setExtensions: (extensions) =>

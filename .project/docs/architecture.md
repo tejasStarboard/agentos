@@ -58,3 +58,4 @@ See [builtins.md](./builtins.md). Hard rules:
 - [003 Python services outside extensions](./adr/003-python-services-outside-extensions.md)
 - [004 db-store sole SQL owner](./adr/004-db-store-sole-sql-owner.md)
 - [005 Comlink MessageChannel](./adr/005-comlink-messagechannel.md)
+- [006 Vercel AI SDK v7 owns platform AI](./adr/006-vercel-ai-sdk.md)

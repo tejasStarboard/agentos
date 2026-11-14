@@ -35,6 +35,12 @@ function pathnameOf(req: IncomingMessage): string {
   return url.split('?')[0] ?? url;
 }
 
+function searchOf(req: IncomingMessage): string {
+  const url = req.url ?? '';
+  const q = url.indexOf('?');
+  return q === -1 ? '' : url.slice(q);
+}
+
 function methodNotAllowed(res: ServerResponse, allow: string): void {
   res.statusCode = 405;
   res.setHeader('Allow', allow);
@@ -42,11 +48,8 @@ function methodNotAllowed(res: ServerResponse, allow: string): void {
   res.end('Method Not Allowed');
 }
 
-/** Stub body pointing chat/HITL at builtin extension APIs (tickets 18 / 19). */
-function sendDelegateStub(
-  res: ServerResponse,
-  extensionId: 'ai' | 'hitl',
-): void {
+/** Stub body pointing HITL at builtin extension APIs (ticket 19). */
+function sendDelegateStub(res: ServerResponse, extensionId: 'hitl'): void {
   sendJson(res, 501, {
     error: `Agent ${extensionId} control-plane stub; delegate to builtin`,
     delegate: {
@@ -60,7 +63,7 @@ function sendDelegateStub(
  * Connect middleware for thin agent control-plane routes:
  * - `GET  /api/agent/registry`
  * - `POST /api/agent/extensions/:id/enable`
- * - `POST /api/agent/chat`  → stub toward builtin `ai`
+ * - `POST /api/agent/chat`  → rewrite to `/api/ext/ai/chat` (builtin ai)
  * - `POST /api/agent/hitl`  → stub toward builtin `hitl`
  */
 export function createAgentControlPlaneMiddleware(
@@ -111,7 +114,9 @@ export function createAgentControlPlaneMiddleware(
         methodNotAllowed(res, 'POST');
         return;
       }
-      sendDelegateStub(res, 'ai');
+      // Thin alias: forward to ext-api proxy → builtin ai `/chat`.
+      req.url = `/api/ext/ai/chat${searchOf(req)}`;
+      next();
       return;
     }
 
