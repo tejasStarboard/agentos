@@ -60,7 +60,29 @@ export function createShellHostApi(extensionId: string): HostAPI {
       },
     },
     ai: {
-      generateText: async () => ({ text: '' }),
+      generateText: async (prompt, options) => {
+        const res = await fetch('/api/ext/ai/generate-text', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            prompt,
+            ...(options?.model ? { model: options.model } : {}),
+            ...(options?.temperature != null
+              ? { temperature: options.temperature }
+              : {}),
+            ...(options?.maxTokens != null
+              ? { maxTokens: options.maxTokens }
+              : {}),
+          }),
+        });
+        if (!res.ok) {
+          const detail = await res.text();
+          throw new Error(detail || `AI generateText failed (${res.status})`);
+        }
+        const body = (await res.json()) as { text?: string };
+        return { text: typeof body.text === 'string' ? body.text : '' };
+      },
     },
     hitl: {
       requestApproval: async () => ({ approved: false, id: 'stub' }),

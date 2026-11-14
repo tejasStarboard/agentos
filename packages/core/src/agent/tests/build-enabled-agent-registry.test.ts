@@ -74,6 +74,7 @@ describe('buildEnabledAgentRegistry', () => {
         driven: true,
         tools: [],
         skills: [],
+        instructions: '',
       },
       {
         id: 'crm',
@@ -82,7 +83,27 @@ describe('buildEnabledAgentRegistry', () => {
         driven: false,
         tools: [{ name: 'search' }],
         skills: ['search-contacts'],
+        instructions: '',
       },
     ]);
+  });
+
+  test('includes instructions.md contents when present', () => {
+    const instructionsPath = `${import.meta.dir}/../../vite/tests/fixtures/extensions/crm/agent/instructions.md`;
+    const model: RegistryModel = {
+      scannedAt: 1,
+      extensions: [
+        ext({
+          id: 'crm',
+          kind: 'customer',
+          toggleable: true,
+          name: 'CRM',
+          agent: { instructions: instructionsPath },
+        }),
+      ],
+    };
+
+    const result = buildEnabledAgentRegistry(model, () => true);
+    expect(result.extensions[0]?.instructions.length).toBeGreaterThan(0);
   });
 });

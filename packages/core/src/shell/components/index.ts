@@ -1,4 +1,5 @@
 export { ActivityBar } from './activity-bar';
+export { ChatPanel } from './chat-panel';
 export {
   CommandPalette,
   CommandPaletteSkills,

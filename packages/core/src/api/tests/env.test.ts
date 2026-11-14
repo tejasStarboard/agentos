@@ -9,6 +9,7 @@ import {
   extKeyPrefix,
   platformKeys,
 } from '@agentos/core/api/env';
+import { keys as aiKeys } from '@agentos/core/builtins/ai/env';
 import { keys as authKeys } from '@agentos/core/builtins/auth/env';
 import { keys as cacheStoreKeys } from '@agentos/core/builtins/cache-store/env';
 import { keys as dbStoreKeys } from '@agentos/core/builtins/db-store/env';
@@ -52,6 +53,7 @@ describe('createEnv extends keys()', () => {
         authKeys(empty),
         dbStoreKeys(empty),
         cacheStoreKeys(empty),
+        aiKeys(empty),
       ],
       server: {},
       clientPrefix: 'AGENT_OS_APP_CLIENT',
@@ -66,6 +68,7 @@ describe('createEnv extends keys()', () => {
     expect(env.AGENT_OS_EXT_AUTH_PORT).toBe(6110);
     expect(env.AGENT_OS_EXT_DB_STORE_PORT).toBe(6111);
     expect(env.AGENT_OS_EXT_CACHE_STORE_PORT).toBe(6112);
+    expect(env.AGENT_OS_EXT_AI_PORT).toBe(6113);
     expect(env.AGENT_OS_EXT_AUTH_DB).toBeUndefined();
     expect(env.AGENT_OS_GLOBAL_NODE_ENV).toBeUndefined();
   });

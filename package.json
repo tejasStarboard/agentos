@@ -5,6 +5,7 @@
   "type": "module",
   "description": "AgentOS monorepo",
   "scripts": {
+    "dev": "turbo run dev --filter=@agentos/client-app",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

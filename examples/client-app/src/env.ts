@@ -1,5 +1,6 @@
 import { createEnv } from '@t3-oss/env-core';
 import { platformKeys } from '@agentos/core/api/env';
+import { keys as aiKeys } from '@agentos/core/builtins/ai/env';
 import { keys as authKeys } from '@agentos/core/builtins/auth/env';
 import { keys as cacheStoreKeys } from '@agentos/core/builtins/cache-store/env';
 import { keys as dbStoreKeys } from '@agentos/core/builtins/db-store/env';
@@ -15,6 +16,7 @@ export const env = createEnv({
     authKeys(),
     dbStoreKeys(),
     cacheStoreKeys(),
+    aiKeys(),
     demoKeys(),
   ],
   server: {},

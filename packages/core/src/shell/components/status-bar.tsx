@@ -7,6 +7,7 @@ import {
 } from '@agentos/core/shell/lib';
 import type { NotificationType } from '@agentos/core/sdk';
 import { Badge } from '@agentos/ui/components/badge';
+import { Button } from '@agentos/ui/components/button';
 import { Switch } from '@agentos/ui/components/switch';
 import { useTheme } from '@agentos/ui/components/theme-provider';
 import { EnsureMounted } from './ensure-mounted';
@@ -65,6 +66,8 @@ export function StatusBar(props: StatusBarProps = {}) {
   } = props;
   const activeView = useShellActiveView();
   const drawerOpen = useShellStore((s) => s.drawerOpen);
+  const chatOpen = useShellStore((s) => s.chatOpen);
+  const toggleChat = useShellStore((s) => s.toggleChat);
   const storeStatusText = useShellStore((s) => s.statusText);
   const storeStatusTone = useShellStore((s) => s.statusTone);
   const storeEnabledById = useShellStore((s) => s.enabledById);
@@ -120,6 +123,17 @@ export function StatusBar(props: StatusBarProps = {}) {
           {statusText}
         </span>
       ) : null}
+      <Button
+        type="button"
+        variant={chatOpen ? 'secondary' : 'ghost'}
+        size="xs"
+        className="h-5 px-1.5 text-[11px]"
+        data-slot="status-chat-toggle"
+        aria-pressed={chatOpen}
+        onClick={() => toggleChat()}
+      >
+        Chat
+      </Button>
       <EnsureMounted>
         <ThemeToggle />
       </EnsureMounted>

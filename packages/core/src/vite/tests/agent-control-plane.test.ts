@@ -160,6 +160,7 @@ describe('createAgentControlPlaneMiddleware', () => {
           driven: true,
           tools: [],
           skills: [],
+          instructions: '',
         },
       ],
     });
@@ -200,19 +201,18 @@ describe('createAgentControlPlaneMiddleware', () => {
     expect(JSON.parse(disableAi.body).error).toContain('driven');
   });
 
-  test('chat and hitl stubs point at builtins', async () => {
+  test('chat rewrites to builtin ai; hitl remains stub', async () => {
     const registry = modelOf();
     const state = createExtensionEnableState();
     const mw = createAgentControlPlaneMiddleware(() => registry, state);
 
     const chat = mockReqRes('/api/agent/chat', { method: 'POST' });
-    mw(chat.req, chat.res, () => {});
-    await chat.settle();
-    expect(chat.status).toBe(501);
-    expect(JSON.parse(chat.body)).toEqual({
-      error: 'Agent ai control-plane stub; delegate to builtin',
-      delegate: { extensionId: 'ai', pathPrefix: '/api/ext/ai' },
+    let chatNext = false;
+    mw(chat.req, chat.res, () => {
+      chatNext = true;
     });
+    expect(chatNext).toBe(true);
+    expect(chat.req.url).toBe('/api/ext/ai/chat');
 
     const hitl = mockReqRes('/api/agent/hitl', { method: 'POST' });
     mw(hitl.req, hitl.res, () => {});

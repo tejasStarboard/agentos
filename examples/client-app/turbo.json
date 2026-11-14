@@ -5,6 +5,11 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    "dev": {
+      "with": ["@agentos/core#dev"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

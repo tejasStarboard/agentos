@@ -4,12 +4,12 @@ Shipped in `packages/core/builtins/`. Registry flags: `kind: "builtin"`, `driven
 
 ## Driving (required)
 
-| Id              | Role                                                  | Tech                               |
-| --------------- | ----------------------------------------------------- | ---------------------------------- |
-| **auth**        | Identity, sessions, **RBAC**                          | Better Auth (+ db-store as needed) |
-| **db-store**    | Sole SQL owner                                        | Drizzle (SQLite default)           |
-| **cache-store** | Sole cache owner                                      | In-memory v1                       |
-| **ai**          | generateText/Image/embed, tools/skills/agents runtime | Mock providers v1                  |
+| Id              | Role                                                  | Tech                                                                   |
+| --------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| **auth**        | Identity, sessions, **RBAC**                          | Better Auth (+ db-store as needed)                                     |
+| **db-store**    | Sole SQL owner                                        | Drizzle (SQLite default)                                               |
+| **cache-store** | Sole cache owner                                      | In-memory v1                                                           |
+| **ai**          | generateText/Image/embed, tools/skills/agents runtime | Vercel AI SDK v7 (mock default; [ADR 006](./adr/006-vercel-ai-sdk.md)) |
 
 ## Supporting (default-on)
 

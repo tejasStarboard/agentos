@@ -1,0 +1,7 @@
+{
+  "name": "AI",
+  "api": {
+    "language": "bun",
+    "port": 6113
+  }
+}

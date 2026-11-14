@@ -41,14 +41,17 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build": "tsc -p tsconfig.build.json",
+    "dev": "bun ./scripts/dev-bffs.ts",
     "auth:dev": "bun ./builtins/auth/api/server.ts",
     "db-store:dev": "bun ./builtins/db-store/api/server.ts",
-    "cache-store:dev": "bun ./builtins/cache-store/api/server.ts"
+    "cache-store:dev": "bun ./builtins/cache-store/api/server.ts",
+    "ai:dev": "bun ./builtins/ai/api/server.ts"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@t3-oss/env-core": "^0.13.11",
+    "ai": "^7",
     "better-auth": "^1.7.25",
     "comlink": "^4.4.2",
     "drizzle-orm": "^0.45.4",

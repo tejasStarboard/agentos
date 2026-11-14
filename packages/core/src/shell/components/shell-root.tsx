@@ -5,6 +5,7 @@ import {
 } from '@agentos/ui/components/theme-provider';
 import { Toaster, toast } from '@agentos/ui/components/toast';
 import { ActivityBar } from './activity-bar';
+import { ChatPanel } from './chat-panel';
 import { CommandPalette } from './command-palette';
 import { ExtensionManagerDrawer } from './extension-manager-drawer';
 import { HiddenSlot } from './hidden-slot';
@@ -52,6 +53,7 @@ export function ShellRoot() {
             </div>
           </div>
           <StatusBar />
+          <ChatPanel />
           <HiddenSlot />
           <ExtensionManagerDrawer />
           <CommandPalette />
