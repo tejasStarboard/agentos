@@ -21,13 +21,16 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "auth:dev": "bun ./builtins/auth/api/server.ts"
+    "auth:dev": "bun ./builtins/auth/api/server.ts",
+    "db-store:dev": "bun ./builtins/db-store/api/server.ts"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "better-auth": "^1.7.25",
     "comlink": "^4.4.2",
+    "drizzle-orm": "^0.45.4",
+    "postgres": "^4.1.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "zustand": "^5.1.0"
