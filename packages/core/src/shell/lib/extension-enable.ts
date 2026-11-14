@@ -1,6 +1,6 @@
 /**
- * Client call to the future gateway enable/disable API.
- * Stub: resolves OK until tickets 10–13 land a real endpoint.
+ * Client call to the Vite gateway enable/disable API
+ * (`POST /api/extensions/:id/enable`, ticket 13).
  */
 export async function requestExtensionEnable(
   extensionId: string,
@@ -13,6 +13,6 @@ export async function requestExtensionEnable(
       body: JSON.stringify({ enabled }),
     });
   } catch {
-    // Gateway not available yet — UI state already updated locally.
+    // Gateway not available (e.g. unit tests) — UI state already updated locally.
   }
 }

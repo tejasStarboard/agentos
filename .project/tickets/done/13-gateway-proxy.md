@@ -1,6 +1,6 @@
 # 13 — Gateway `/api/ext/:id` proxy
 
-**Status:** todo
+**Status:** done
 
 ## Goal
 
@@ -8,9 +8,9 @@ Vite middleware reverse-proxies to each extension’s Node API or Python service
 
 ## Done when
 
-- [ ] `ALL /api/ext/:id/*` forwards to configured port/basePath
-- [ ] Auth session cookie/header propagated
-- [ ] Disabled customer id → 403; builtins always proxied
+- [x] `ALL /api/ext/:id/*` forwards to configured port/basePath
+- [x] Auth session cookie/header propagated
+- [x] Disabled customer id → 403; builtins always proxied
 
 ## Notes
 

@@ -1,6 +1,6 @@
 # 10 — Vite plugin + filesystem scanner
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
