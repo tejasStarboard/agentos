@@ -5,6 +5,16 @@ export {
   type HostProviderProps,
 } from '../components/host-provider';
 
+export {
+  ExtensionViewApp,
+  mountExtensionView,
+  resolveThemeFromSearch,
+  type ExtensionViewAppProps,
+  type MountExtensionViewOptions,
+} from './mount-extension-view';
+
+export { createStandaloneHost, isShellIframe } from './standalone-host';
+
 export { useHostStorage } from './use-host-storage';
 export { useHostAI } from './use-host-ai';
 export { useHostHITL } from './use-host-hitl';

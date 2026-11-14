@@ -1,5 +1,6 @@
 import { useExtensionHost } from '@agentos/core/shell/hooks';
-import type { UiContribution } from '@agentos/core/shell/lib';
+import { withThemeQuery, type UiContribution } from '@agentos/core/shell/lib';
+import { useTheme } from '@agentos/ui/components/theme-provider';
 import { cn } from '@agentos/ui/lib/utils';
 
 export type ExtensionFrameProps = {
@@ -8,6 +9,11 @@ export type ExtensionFrameProps = {
   visible?: boolean;
   handshakeTimeoutMs?: number;
   rpcTimeoutMs?: number;
+  /**
+   * Override theme query param. Defaults to Shell `resolvedTheme`, then `dark`.
+   * Useful in unit tests without a ThemeProvider.
+   */
+  theme?: string;
 };
 
 /**
@@ -18,17 +24,24 @@ export function ExtensionFrame({
   visible = true,
   handshakeTimeoutMs,
   rpcTimeoutMs,
+  theme: themeProp,
 }: ExtensionFrameProps) {
   const { extensionId, view, src } = contribution;
-  const iframeRef = useExtensionHost(contribution, {
-    handshakeTimeoutMs,
-    rpcTimeoutMs,
-  });
+  const { resolvedTheme } = useTheme();
+  const theme = themeProp ?? resolvedTheme ?? 'dark';
+  const themedSrc = withThemeQuery(src, theme);
+  const iframeRef = useExtensionHost(
+    { ...contribution, src: themedSrc },
+    {
+      handshakeTimeoutMs,
+      rpcTimeoutMs,
+    },
+  );
 
   return (
     <iframe
       ref={iframeRef}
-      src={src}
+      src={themedSrc}
       title={`${extensionId} ${view}`}
       sandbox="allow-scripts allow-same-origin"
       data-extension-id={extensionId}
