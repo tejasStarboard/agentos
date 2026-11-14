@@ -6,6 +6,7 @@ import { getMigrations } from 'better-auth/db/migration';
 import { Database } from 'bun:sqlite';
 
 import { AUTH_PORT, DEMO_ADMIN, DEMO_VIEWER } from './constants';
+import type { PermissionCacheConfig } from './permission-cache';
 import {
   assignUserRole,
   ensureRbacSchema,
@@ -21,11 +22,14 @@ export type CreateAuthOptions = {
   secret?: string;
   /** When false, skip demo user seed (tests that sign up themselves). */
   seedDemoUsers?: boolean;
+  /** Optional soft-fail permission cache via cache-store. */
+  permissionCache?: PermissionCacheConfig;
 };
 
 export type AuthContext = {
   auth: Auth;
   db: AuthSqlite;
+  permissionCache?: PermissionCacheConfig;
 };
 
 const DEFAULT_SECRET = 'agentos-dev-auth-secret-min-32-chars!!';
@@ -115,5 +119,5 @@ export async function createAuth(
     await seedDemoUser(auth, db, DEMO_VIEWER);
   }
 
-  return { auth, db };
+  return { auth, db, permissionCache: options.permissionCache };
 }

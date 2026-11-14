@@ -1,6 +1,6 @@
 # 33 — Global + extension env config (`@t3-oss/env-core`)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

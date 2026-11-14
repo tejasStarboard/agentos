@@ -1,6 +1,6 @@
 # 14 — Agent control-plane routes
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
