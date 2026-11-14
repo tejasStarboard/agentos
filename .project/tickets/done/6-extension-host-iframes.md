@@ -1,6 +1,6 @@
 # 6 — Extension host (iframe lifecycle)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, mock, test } from 'bun:test';
 import {
   defaultEnabledById,
+  defaultSkillsByExtension,
   STUB_EXTENSION_CATALOG,
+  STUB_SKILLS_BY_EXTENSION,
   useShellStore,
 } from '@agentos/core/shell/lib';
 
@@ -15,7 +17,9 @@ function resetStore() {
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
-    skillsByExtension: {},
+    skillsByExtension: defaultSkillsByExtension(),
+    statusText: null,
+    statusTone: null,
   });
 }
 
@@ -39,6 +43,8 @@ describe('useShellStore', () => {
     expect(state.extensions.map((e) => e.id)).toContain('crm');
     expect(state.enabledById.auth).toBe(true);
     expect(state.enabledById.crm).toBe(true);
+    expect(state.skillsByExtension.crm).toEqual(STUB_SKILLS_BY_EXTENSION.crm);
+    expect(state.statusText).toBeNull();
   });
 
   test('setContributions and setRuntimeStatus track iframe host state', () => {
@@ -104,17 +110,30 @@ describe('useShellStore', () => {
     expect(state.runtimeStatus['crm:page']).toBeUndefined();
   });
 
-  test('customer re-enable restores contributions from desired list', () => {
+  test('customer re-enable restores contributions and stub skills', () => {
     useShellStore.getState().setContributions([
       { extensionId: 'crm', view: 'page', src: '/crm.html' },
       { extensionId: 'invoices', view: 'page', src: '/inv.html' },
     ]);
     useShellStore.getState().setExtensionEnabled('crm', false);
     expect(useShellStore.getState().contributions).toHaveLength(1);
+    expect(useShellStore.getState().skillsByExtension.crm).toBeUndefined();
 
     useShellStore.getState().setExtensionEnabled('crm', true);
     expect(useShellStore.getState().enabledById.crm).toBe(true);
     expect(useShellStore.getState().contributions).toHaveLength(2);
+    expect(useShellStore.getState().skillsByExtension.crm).toEqual(
+      STUB_SKILLS_BY_EXTENSION.crm,
+    );
+  });
+
+  test('setStatusText updates status bar fields', () => {
+    useShellStore.getState().setStatusText('ok', 'success');
+    expect(useShellStore.getState().statusText).toBe('ok');
+    expect(useShellStore.getState().statusTone).toBe('success');
+    useShellStore.getState().setStatusText(null);
+    expect(useShellStore.getState().statusText).toBeNull();
+    expect(useShellStore.getState().statusTone).toBeNull();
   });
 
   test('builtins cannot be toggled off', () => {

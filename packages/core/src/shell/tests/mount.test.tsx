@@ -4,6 +4,7 @@ import { createElement } from 'react';
 import { ShellRoot } from '@agentos/core/shell/components';
 import {
   defaultEnabledById,
+  defaultSkillsByExtension,
   STUB_EXTENSION_CATALOG,
   useShellStore,
 } from '@agentos/core/shell/lib';
@@ -20,7 +21,9 @@ function resetStore(
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
-    skillsByExtension: {},
+    skillsByExtension: defaultSkillsByExtension(),
+    statusText: null,
+    statusTone: null,
     ...overrides,
   });
 }
@@ -36,6 +39,8 @@ describe('mountShell / ShellRoot', () => {
     expect(html).toContain('data-slot="main"');
     expect(html).toContain('data-slot="widgets"');
     expect(html).toContain('data-slot="hidden"');
+    expect(html).toContain('data-slot="status-bar"');
+    expect(html).toContain('Command Palette');
   });
 
   test('non-home view keeps main slot active', () => {

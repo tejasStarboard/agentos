@@ -1,6 +1,6 @@
 # 9 — Command palette, toasts, status bar
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Cmd+K aggregates skills/commands; toast system for notifications; status bar bad
 
 ## Done when
 
-- [ ] ⌘K / Ctrl+K opens palette
-- [ ] Skills from enabled extensions appear
-- [ ] `notifications.show` and status text render in Shell
+- [x] ⌘K / Ctrl+K opens palette
+- [x] Skills from enabled extensions appear
+- [x] `notifications.show` and status text render in Shell
 
 ## Notes
 

@@ -3,7 +3,9 @@ import {
   AGENTOS_THEMES,
   ThemeProvider,
 } from '@agentos/ui/components/theme-provider';
+import { Toaster, toast } from '@agentos/ui/components/toast';
 import { ActivityBar } from './activity-bar';
+import { CommandPalette } from './command-palette';
 import { ExtensionManagerDrawer } from './extension-manager-drawer';
 import { HiddenSlot } from './hidden-slot';
 import { HomeDashboard } from './home-dashboard';
@@ -24,34 +26,37 @@ export function ShellRoot() {
       storageKey="agentos-theme"
       themes={[...AGENTOS_THEMES]}
     >
-      <div
-        className="flex h-full min-h-screen w-full flex-col bg-background text-foreground"
-        data-agentos-shell
-      >
-        <div className="flex min-h-0 flex-1">
-          <ActivityBar />
-          <SidebarSlot />
-          <div className="relative min-h-0 min-w-0 flex-1 bg-background">
-            <div
-              className="h-full w-full overflow-auto"
-              data-active={isHome ? 'true' : 'false'}
-              hidden={!isHome}
-            >
-              <HomeDashboard />
-            </div>
-            <div
-              className="h-full w-full overflow-auto"
-              data-active={isHome ? 'false' : 'true'}
-              hidden={isHome}
-            >
-              <MainCanvas />
+      <Toaster toastManager={toast} position="top-center">
+        <div
+          className="flex h-full min-h-screen w-full flex-col bg-background text-foreground"
+          data-agentos-shell
+        >
+          <div className="flex min-h-0 flex-1">
+            <ActivityBar />
+            <SidebarSlot />
+            <div className="relative min-h-0 min-w-0 flex-1 bg-background">
+              <div
+                className="h-full w-full overflow-auto"
+                data-active={isHome ? 'true' : 'false'}
+                hidden={!isHome}
+              >
+                <HomeDashboard />
+              </div>
+              <div
+                className="h-full w-full overflow-auto"
+                data-active={isHome ? 'false' : 'true'}
+                hidden={isHome}
+              >
+                <MainCanvas />
+              </div>
             </div>
           </div>
+          <StatusBar />
+          <HiddenSlot />
+          <ExtensionManagerDrawer />
+          <CommandPalette />
         </div>
-        <StatusBar />
-        <HiddenSlot />
-        <ExtensionManagerDrawer />
-      </div>
+      </Toaster>
     </ThemeProvider>
   );
 }

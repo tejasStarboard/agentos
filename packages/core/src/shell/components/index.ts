@@ -1,4 +1,12 @@
 export { ActivityBar } from './activity-bar';
+export {
+  CommandPalette,
+  CommandPaletteSkills,
+  groupPaletteSkills,
+  isCommandPaletteHotkey,
+  type CommandPaletteProps,
+} from './command-palette';
+export { type StatusBarProps } from './status-bar';
 export { EnsureMounted } from './ensure-mounted';
 export { ExtensionFrame } from './extension-frame';
 export {

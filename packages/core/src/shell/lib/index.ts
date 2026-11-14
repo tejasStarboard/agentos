@@ -9,11 +9,15 @@ export {
   resetShellHostApiStorage,
 } from './create-shell-host-api';
 export {
+  collectEnabledSkills,
   defaultEnabledById,
+  defaultSkillsByExtension,
   STUB_EXTENSION_CATALOG,
+  STUB_SKILLS_BY_EXTENSION,
   type ExtensionEntry,
   type ExtensionKind,
   type ExtensionManagerStatus,
+  type PaletteSkill,
 } from './extension-catalog';
 export { requestExtensionEnable } from './extension-enable';
 export {

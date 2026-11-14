@@ -1,4 +1,10 @@
-import type { HostAPI, StorageValue } from '@agentos/core/sdk';
+import type {
+  HostAPI,
+  NotificationType,
+  StorageValue,
+} from '@agentos/core/sdk';
+import { toast } from '@agentos/ui/components/toast';
+import { useShellStore } from './store';
 
 /** In-memory storage shared across stub HostAPI instances (keyed by extension). */
 const storageByExtension = new Map<string, Map<string, StorageValue>>();
@@ -17,9 +23,20 @@ export function resetShellHostApiStorage(): void {
   storageByExtension.clear();
 }
 
+function showNotification(
+  message: string,
+  type: NotificationType = 'info',
+): void {
+  toast.add({
+    title: message,
+    type,
+  });
+  useShellStore.getState().setStatusText(message, type);
+}
+
 /**
  * Stub HostAPI for shell iframe hosting until builtins back these namespaces.
- * Storage is scoped per `extensionId`; other methods are no-ops / stubs.
+ * Storage is scoped per `extensionId`; notifications fan out to Shell toasts.
  */
 export function createShellHostApi(extensionId: string): HostAPI {
   const store = storageFor(extensionId);
@@ -38,7 +55,9 @@ export function createShellHostApi(extensionId: string): HostAPI {
       },
     },
     notifications: {
-      show: async () => {},
+      show: async (message, type = 'info') => {
+        showNotification(message, type);
+      },
     },
     ai: {
       generateText: async () => ({ text: '' }),
