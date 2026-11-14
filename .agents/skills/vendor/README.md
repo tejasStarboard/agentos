@@ -2,14 +2,14 @@
 
 Copies of upstream `SKILL.md` files for offline/agent discovery. Prefer upstream updates periodically.
 
-| Folder | Upstream |
-|--------|----------|
-| `react-best-practices` | vercel-labs/agent-skills |
-| `bun-cli` | dmythro/agent-skills |
-| `ui-ux-kit` | arham777/ui-ux-kit |
-| `impeccable` | pbakaus/impeccable |
+| Folder                 | Upstream                           |
+| ---------------------- | ---------------------------------- |
+| `react-best-practices` | vercel-labs/agent-skills           |
+| `bun-cli`              | dmythro/agent-skills               |
+| `ui-ux-kit`            | arham777/ui-ux-kit                 |
+| `impeccable`           | pbakaus/impeccable                 |
 | `parallel-code-review` | spencerpauly/awesome-cursor-skills |
-| `anti-ui-slop` | uizze/uizze |
+| `anti-ui-slop`         | uizze/uizze                        |
 
 **Always also load** repo custom skills:
 

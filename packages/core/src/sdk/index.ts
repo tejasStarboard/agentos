@@ -1,2 +1,60 @@
-/** @agentos/core/sdk — low-level Comlink (stub). */
-export {};
+/** @agentos/core/sdk — low-level Comlink (dual MessageChannel, ADR 005). */
+
+export {
+  fromDomMessageEvent,
+  isPlainObject,
+  toError,
+  type AiGenerateOptions,
+  type CatchValue,
+  type EventPayload,
+  type ExtensionContentWindow,
+  type HandshakeIncomingMessage,
+  type HandshakeMessageSource,
+  type HandshakeMessageTarget,
+  type HandshakeTimerId,
+  type HitlMetadata,
+  type JsonObject,
+  type JsonPrimitive,
+  type JsonValue,
+  type StorageValue,
+  type WireMessageData,
+} from './contracts';
+
+export {
+  HANDSHAKE,
+  isHandshakeMessage,
+  isHandshakeType,
+  type HandshakeMessage,
+  type HandshakeType,
+} from './handshake';
+
+export {
+  ExtensionRpcTimeoutError,
+  HandshakeTimeoutError,
+  type AiGenerateResult,
+  type ExtensionAPI,
+  type HostAPI,
+  type HostAPIClient,
+  type HostFetchInit,
+  type HostFetchResponse,
+  type HitlApprovalRequest,
+  type HitlApprovalResult,
+  type NotificationType,
+} from './types';
+
+export { withRpcTimeout } from './timeout';
+
+export { proxyHostApi } from './proxy';
+
+export {
+  createExtensionClient,
+  hostApiFromRemote,
+  type ExtensionClient,
+  type ExtensionClientOptions,
+} from './client';
+
+export {
+  connectExtensionHost,
+  type ConnectExtensionHostOptions,
+  type ExtensionHostConnection,
+} from './host';

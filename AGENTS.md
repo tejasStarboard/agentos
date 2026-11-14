@@ -4,8 +4,8 @@ This repository is the **AgentOS** experiment. Coding agents must follow project
 
 ## Required reading
 
-1. [`.project/docs/concepts.md`](.project/docs/concepts.md) — extension vs service vs packages  
-2. [`.project/docs/architecture.md`](.project/docs/architecture.md)  
+1. [`.project/docs/concepts.md`](.project/docs/concepts.md) — extension vs service vs packages
+2. [`.project/docs/architecture.md`](.project/docs/architecture.md)
 3. Skills:
    - [`.agents/skills/agentos-architecture/SKILL.md`](.agents/skills/agentos-architecture/SKILL.md)
    - [`.agents/skills/agentos-ticket-planner/SKILL.md`](.agents/skills/agentos-ticket-planner/SKILL.md)

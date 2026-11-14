@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-We need a JS monorepo and a fast TS runtime. Using Bun for *everything* (including install) conflicts with existing pnpm workspace habits; using Node to run services is explicitly undesired.
+We need a JS monorepo and a fast TS runtime. Using Bun for _everything_ (including install) conflicts with existing pnpm workspace habits; using Node to run services is explicitly undesired.
 
 ## Decision
 

@@ -26,13 +26,13 @@ run `bun --version` before relying on a version-tagged item.
 
 ## Version Guide: What Each 1.4.x Release Changes
 
-| Release | Adds | Changes under existing projects | Upgrade to it when |
-|---|---|---|---|
-| **1.4.0** (2026-08-20) | `bun audit fix`, `bun dedupe`, `bun prune`, `bun why`, `bun pm licenses` / `diff`, `--filter` on `add` / `remove` / `update`, `--catalog`, `bun test --timings`, `--react-compiler`, `--asset` | `bun.lock` v2 / v3 (Bun 1.3 cannot read v3), strict-TOML `bunfig.toml`, `bun update` moves transitive dependencies, `resetAllMocks()` drops implementations | You want the 1.4 tooling -- check every CI Bun pin and `bunfig.toml` first |
-| **1.4.1** (2026-09-04) | `--offline` / `--prefer-offline`, self-contained workspaces, `--min-chunk-size`, `--bytecode-depth`, `--env-file` from pipes, `--no-ffi-cc` | Fewer, smaller split chunks plus `modulepreload` links (build snapshots change) | Never as a target: its bundler can rename a nested `var` onto a `let`, so Elysia bundles fail to load -- go to 1.4.2 or later |
-| **1.4.2** (2026-09-05) | Nothing (bugfix release) | -- | You are on 1.4.1, or `bun install` panics with `range end index out of range` |
-| **1.4.3** (2026-10-10) | `bun check` / `--check`, `--bytecode-order`, `--compile-jit-policy`, `[hash9]`-`[hash13]` | Installs cache only what they place (an `--offline` cache needs a full warm-up install), `--disallow-code-generation-from-strings` enforced, `Bun.build({ tsconfig })` honored, `--coverage-reporter` implies `--coverage` | You want type checking without `tsc`, or large `--splitting` builds fail with `Multiple files share the same output path` |
-| **1.4.4** (2026-10-22) | `bun fmt`, `bun pm fetch`, `bun pm cache pack` / `unpack` / `prune`, `bun publish --recursive`, `packageExtensions`, `link:./path`, `--libc`, `bun check --no-script`, Yarn Berry lockfile migration | Unknown package-manager flags exit 1 and npm/Yarn/pnpm flags are translated, pnpm-style peer resolution, stricter coverage counts, the hoisted linker removes dependencies dropped from `package.json` | You want a built-in formatter, a Berry migration, `bun install` retries that survive registry blips, or the fixes for 133 closed `bun install` issues -- run CI once to catch flag errors and `coverageThreshold` drops |
+| Release                | Adds                                                                                                                                                                                                 | Changes under existing projects                                                                                                                                                                                            | Upgrade to it when                                                                                                                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.4.0** (2026-08-20) | `bun audit fix`, `bun dedupe`, `bun prune`, `bun why`, `bun pm licenses` / `diff`, `--filter` on `add` / `remove` / `update`, `--catalog`, `bun test --timings`, `--react-compiler`, `--asset`       | `bun.lock` v2 / v3 (Bun 1.3 cannot read v3), strict-TOML `bunfig.toml`, `bun update` moves transitive dependencies, `resetAllMocks()` drops implementations                                                                | You want the 1.4 tooling -- check every CI Bun pin and `bunfig.toml` first                                                                                                                                              |
+| **1.4.1** (2026-09-04) | `--offline` / `--prefer-offline`, self-contained workspaces, `--min-chunk-size`, `--bytecode-depth`, `--env-file` from pipes, `--no-ffi-cc`                                                          | Fewer, smaller split chunks plus `modulepreload` links (build snapshots change)                                                                                                                                            | Never as a target: its bundler can rename a nested `var` onto a `let`, so Elysia bundles fail to load -- go to 1.4.2 or later                                                                                           |
+| **1.4.2** (2026-09-05) | Nothing (bugfix release)                                                                                                                                                                             | --                                                                                                                                                                                                                         | You are on 1.4.1, or `bun install` panics with `range end index out of range`                                                                                                                                           |
+| **1.4.3** (2026-10-10) | `bun check` / `--check`, `--bytecode-order`, `--compile-jit-policy`, `[hash9]`-`[hash13]`                                                                                                            | Installs cache only what they place (an `--offline` cache needs a full warm-up install), `--disallow-code-generation-from-strings` enforced, `Bun.build({ tsconfig })` honored, `--coverage-reporter` implies `--coverage` | You want type checking without `tsc`, or large `--splitting` builds fail with `Multiple files share the same output path`                                                                                               |
+| **1.4.4** (2026-10-22) | `bun fmt`, `bun pm fetch`, `bun pm cache pack` / `unpack` / `prune`, `bun publish --recursive`, `packageExtensions`, `link:./path`, `--libc`, `bun check --no-script`, Yarn Berry lockfile migration | Unknown package-manager flags exit 1 and npm/Yarn/pnpm flags are translated, pnpm-style peer resolution, stricter coverage counts, the hoisted linker removes dependencies dropped from `package.json`                     | You want a built-in formatter, a Berry migration, `bun install` retries that survive registry blips, or the fixes for 133 closed `bun install` issues -- run CI once to catch flag errors and `coverageThreshold` drops |
 
 **Default to the newest patch.** Each patch fixes regressions from the ones before it (listed per
 release in `references/migration-1.4.md`), so pinning an older "known good" 1.4.x keeps known bugs.
@@ -67,6 +67,7 @@ node_modules/bun-types/CLAUDE.md             # Bun's own agent rules
    ```
 
    Compare `bun --version` with `node_modules/bun-types/package.json` before trusting either.
+
 2. **Open by explicit path.** With the global virtual store enabled, `node_modules/bun-types`
    is a symlink, so `find node_modules -name '*.mdx'` and `rg <pattern> node_modules` return
    nothing. `find node_modules/bun-types/docs -name '*.mdx'` works.
@@ -79,21 +80,22 @@ node_modules/bun-types/CLAUDE.md             # Bun's own agent rules
    1.4.4 treats `bun lint` as `bun run lint`, so it runs the project's `lint` script or fails with
    `Script not found "lint"`. Keep the project's linter.
 
-| Task | Doc path (under `node_modules/bun-types/docs/`) |
-|---|---|
-| Install behavior, lockfile, linkers | `pm/cli/install.mdx`, `pm/lockfile.mdx`, `pm/isolated-installs.mdx`, `pm/global-store.mdx` |
-| Workspaces, catalogs, filters, overrides | `pm/workspaces.mdx`, `pm/catalogs.mdx`, `pm/filter.mdx`, `pm/overrides.mdx`, `pm/package-extensions.mdx` (v1.4.4+) |
-| Registries, auth, lifecycle scripts | `pm/scopes-registries.mdx`, `pm/npmrc.mdx`, `pm/lifecycle.mdx` |
-| Type checking (`bun check`, `--check`) | `runtime/check.mdx` |
-| Formatting (`bun fmt`, v1.4.4+) | `format/index.mdx`, `guides/format/migrate-from-prettier.mdx`, `guides/format/migrate-from-oxfmt.mdx` |
-| Test runner | `test/index.mdx`, `test/discovery.mdx`, `test/configuration.mdx`, `test/code-coverage.mdx`, `test/reporters.mdx`, `test/mocks.mdx` |
-| Bundler, executables, loaders | `bundler/index.mdx`, `bundler/executables.mdx`, `bundler/loaders.mdx`, `bundler/plugins.mdx` |
-| Config | `runtime/bunfig.mdx` |
-| Migrating from npm/yarn/pnpm | `guides/install/from-npm-install-to-bun-install.mdx` |
+| Task                                     | Doc path (under `node_modules/bun-types/docs/`)                                                                                    |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Install behavior, lockfile, linkers      | `pm/cli/install.mdx`, `pm/lockfile.mdx`, `pm/isolated-installs.mdx`, `pm/global-store.mdx`                                         |
+| Workspaces, catalogs, filters, overrides | `pm/workspaces.mdx`, `pm/catalogs.mdx`, `pm/filter.mdx`, `pm/overrides.mdx`, `pm/package-extensions.mdx` (v1.4.4+)                 |
+| Registries, auth, lifecycle scripts      | `pm/scopes-registries.mdx`, `pm/npmrc.mdx`, `pm/lifecycle.mdx`                                                                     |
+| Type checking (`bun check`, `--check`)   | `runtime/check.mdx`                                                                                                                |
+| Formatting (`bun fmt`, v1.4.4+)          | `format/index.mdx`, `guides/format/migrate-from-prettier.mdx`, `guides/format/migrate-from-oxfmt.mdx`                              |
+| Test runner                              | `test/index.mdx`, `test/discovery.mdx`, `test/configuration.mdx`, `test/code-coverage.mdx`, `test/reporters.mdx`, `test/mocks.mdx` |
+| Bundler, executables, loaders            | `bundler/index.mdx`, `bundler/executables.mdx`, `bundler/loaders.mdx`, `bundler/plugins.mdx`                                       |
+| Config                                   | `runtime/bunfig.mdx`                                                                                                               |
+| Migrating from npm/yarn/pnpm             | `guides/install/from-npm-install-to-bun-install.mdx`                                                                               |
 
 ## Detecting Bun Projects
 
 A project uses Bun if any of these are present:
+
 - `bun.lock` or `bun.lockb` in the project root
 - `bunfig.toml` in the project root
 - `bun` field in `package.json` (e.g., `"bun": { "install": { ... } }`)
@@ -114,60 +116,60 @@ A project uses Bun if any of these are present:
 
 ## Read-Only Commands (safe, no side effects)
 
-| Command | Purpose |
-|---------|---------|
-| `bun --version` | Runtime version |
-| `bun info <pkg>` | Package metadata, available versions |
-| `bun info <pkg> versions` | List all published versions |
-| `bun pm ls` | List installed packages (alias: `bun list`) |
-| `bun pm ls --all` | List all (including transitive) |
-| `bun pm ls --trusted` | List only packages allowed to run lifecycle scripts (v1.4+) |
-| `bun pm ls <name>` | Every installed copy of one package (v1.4.4+) |
-| `bun pm hash` | Print lockfile hash |
-| `bun pm cache` | Show cache directory |
-| `bun pm bin` | Print the bin directory (`-g` for global) |
-| `bun pm licenses` | List dependencies grouped by license (v1.4+; `--json`, `--prod`) |
-| `bun pm diff <pkg>` | Diff two versions of a package (v1.4+) |
-| `bun pm untrusted` | List packages whose lifecycle scripts were blocked |
-| `bun why <pkg>` | Explain why a package is installed |
-| `bun outdated` | Check for outdated dependencies |
-| `bun audit` | Security vulnerability audit |
-| `bun dedupe --check` | Exit 1 if the lockfile has removable duplicates (v1.4+) |
-| `bun prune --dry-run` | Show what would be removed from `node_modules` (v1.4+) |
-| `bun prune --check` | Exit 1 if `node_modules` holds removable packages; deletes nothing (v1.4.4+) |
-| `bun install --frozen-lockfile --dry-run` | Exit 1 if `bun.lock` disagrees with `package.json`; installs nothing. Before v1.4.4, `--dry-run` still ran the project's lifecycle scripts |
-| `bun test` | Run test suite |
-| `bun --check` | Type check the whole project and exit; never writes files or runs a script (v1.4.3+). `bun check` does the same unless `package.json` defines a `check` script, which it runs instead; `bun check --no-script` (v1.4.4+) never runs it |
-| `bun fmt --no-script --check` | List files that need formatting, exit 1 if any; writes nothing (v1.4.4+). Without `--no-script`, a `fmt` script in `package.json` runs instead |
-| `bun run lint` | Run linter (project-specific) |
-| `bun run check-types` | Type checking (project-specific) |
+| Command                                   | Purpose                                                                                                                                                                                                                                |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun --version`                           | Runtime version                                                                                                                                                                                                                        |
+| `bun info <pkg>`                          | Package metadata, available versions                                                                                                                                                                                                   |
+| `bun info <pkg> versions`                 | List all published versions                                                                                                                                                                                                            |
+| `bun pm ls`                               | List installed packages (alias: `bun list`)                                                                                                                                                                                            |
+| `bun pm ls --all`                         | List all (including transitive)                                                                                                                                                                                                        |
+| `bun pm ls --trusted`                     | List only packages allowed to run lifecycle scripts (v1.4+)                                                                                                                                                                            |
+| `bun pm ls <name>`                        | Every installed copy of one package (v1.4.4+)                                                                                                                                                                                          |
+| `bun pm hash`                             | Print lockfile hash                                                                                                                                                                                                                    |
+| `bun pm cache`                            | Show cache directory                                                                                                                                                                                                                   |
+| `bun pm bin`                              | Print the bin directory (`-g` for global)                                                                                                                                                                                              |
+| `bun pm licenses`                         | List dependencies grouped by license (v1.4+; `--json`, `--prod`)                                                                                                                                                                       |
+| `bun pm diff <pkg>`                       | Diff two versions of a package (v1.4+)                                                                                                                                                                                                 |
+| `bun pm untrusted`                        | List packages whose lifecycle scripts were blocked                                                                                                                                                                                     |
+| `bun why <pkg>`                           | Explain why a package is installed                                                                                                                                                                                                     |
+| `bun outdated`                            | Check for outdated dependencies                                                                                                                                                                                                        |
+| `bun audit`                               | Security vulnerability audit                                                                                                                                                                                                           |
+| `bun dedupe --check`                      | Exit 1 if the lockfile has removable duplicates (v1.4+)                                                                                                                                                                                |
+| `bun prune --dry-run`                     | Show what would be removed from `node_modules` (v1.4+)                                                                                                                                                                                 |
+| `bun prune --check`                       | Exit 1 if `node_modules` holds removable packages; deletes nothing (v1.4.4+)                                                                                                                                                           |
+| `bun install --frozen-lockfile --dry-run` | Exit 1 if `bun.lock` disagrees with `package.json`; installs nothing. Before v1.4.4, `--dry-run` still ran the project's lifecycle scripts                                                                                             |
+| `bun test`                                | Run test suite                                                                                                                                                                                                                         |
+| `bun --check`                             | Type check the whole project and exit; never writes files or runs a script (v1.4.3+). `bun check` does the same unless `package.json` defines a `check` script, which it runs instead; `bun check --no-script` (v1.4.4+) never runs it |
+| `bun fmt --no-script --check`             | List files that need formatting, exit 1 if any; writes nothing (v1.4.4+). Without `--no-script`, a `fmt` script in `package.json` runs instead                                                                                         |
+| `bun run lint`                            | Run linter (project-specific)                                                                                                                                                                                                          |
+| `bun run check-types`                     | Type checking (project-specific)                                                                                                                                                                                                       |
 
 > **Reference**: See `references/allowlist.md` for copy-paste `Bash(command:*)` patterns for Claude Code / OpenCode settings.
 
 ## npm/npx/node to Bun Translation
 
-| npm/npx/node | Bun equivalent |
-|---|---|
-| `npm install` | `bun install` |
-| `npm install pkg` | `bun add pkg` |
-| `npm install -D pkg` | `bun add -d pkg` |
-| `npm install -g pkg` | `bun add -g pkg` |
-| `npm uninstall pkg` | `bun remove pkg` |
-| `npm update` | `bun update` |
-| `npm run script` | `bun run script` |
-| `npx command` | `bunx command` |
-| `node file.js` | `bun file.js` |
-| `node --watch file.js` | `bun --watch file.js` |
-| `npm test` | `bun test` |
-| `tsc --noEmit` | `bun check` (v1.4.3+) |
-| `prettier --write .` | `bun fmt --no-script` (v1.4.4+; plain `bun fmt` runs a `fmt` script when `package.json` has one) |
-| `prettier --check .` | `bun fmt --no-script --check` (v1.4.4+) |
-| `npm pack` | `bun pm pack` |
-| `npm publish` | `bun publish` |
-| `npm info pkg` | `bun info pkg` |
-| `npm outdated` | `bun outdated` |
-| `npm audit` | `bun audit` |
-| `npm link` | `bun link` |
+| npm/npx/node           | Bun equivalent                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| `npm install`          | `bun install`                                                                                    |
+| `npm install pkg`      | `bun add pkg`                                                                                    |
+| `npm install -D pkg`   | `bun add -d pkg`                                                                                 |
+| `npm install -g pkg`   | `bun add -g pkg`                                                                                 |
+| `npm uninstall pkg`    | `bun remove pkg`                                                                                 |
+| `npm update`           | `bun update`                                                                                     |
+| `npm run script`       | `bun run script`                                                                                 |
+| `npx command`          | `bunx command`                                                                                   |
+| `node file.js`         | `bun file.js`                                                                                    |
+| `node --watch file.js` | `bun --watch file.js`                                                                            |
+| `npm test`             | `bun test`                                                                                       |
+| `tsc --noEmit`         | `bun check` (v1.4.3+)                                                                            |
+| `prettier --write .`   | `bun fmt --no-script` (v1.4.4+; plain `bun fmt` runs a `fmt` script when `package.json` has one) |
+| `prettier --check .`   | `bun fmt --no-script --check` (v1.4.4+)                                                          |
+| `npm pack`             | `bun pm pack`                                                                                    |
+| `npm publish`          | `bun publish`                                                                                    |
+| `npm info pkg`         | `bun info pkg`                                                                                   |
+| `npm outdated`         | `bun outdated`                                                                                   |
+| `npm audit`            | `bun audit`                                                                                      |
+| `npm link`             | `bun link`                                                                                       |
 
 ### Key Behavioral Differences
 
@@ -396,11 +398,11 @@ Two settings decide how `node_modules` is laid out. Both matter more than they l
 
 ### Linker
 
-| | `hoisted` | `isolated` |
-|---|---|---|
-| Layout | npm-style flat `node_modules` | symlinks into `node_modules/.bun/` (pnpm-style) |
-| Phantom dependencies | resolve silently | fail, as they should |
-| Default when | `configVersion = 0` (any project), or `configVersion = 1` without workspaces | `configVersion = 1` **and** the project uses workspaces |
+|                      | `hoisted`                                                                    | `isolated`                                              |
+| -------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Layout               | npm-style flat `node_modules`                                                | symlinks into `node_modules/.bun/` (pnpm-style)         |
+| Phantom dependencies | resolve silently                                                             | fail, as they should                                    |
+| Default when         | `configVersion = 0` (any project), or `configVersion = 1` without workspaces | `configVersion = 1` **and** the project uses workspaces |
 
 The default depends on the lockfile's `configVersion`, not on the Bun version: isolated only
 when `configVersion = 1` **and** the project uses workspaces. Lockfiles created before v1.3.2
@@ -452,7 +454,12 @@ every dependency physically under it. List such workspaces in the root `package.
 Yarn's `"installConfig": { "hoistingLimits": "workspaces" }` in the workspace's own file:
 
 ```json
-{ "workspaces": { "packages": ["apps/*", "packages/*"], "selfContained": ["apps/desktop"] } }
+{
+  "workspaces": {
+    "packages": ["apps/*", "packages/*"],
+    "selfContained": ["apps/desktop"]
+  }
+}
 ```
 
 Nothing that workspace depends on, directly or transitively, is hoisted above
@@ -743,6 +750,7 @@ bun build ./src/cli.ts --compile --minify           # Minified executable
 Available compilation targets: `bun-linux-x64`, `bun-linux-arm64`, `bun-darwin-x64`, `bun-darwin-arm64`, `bun-windows-x64`.
 
 Browser target (v1.3.10+) -- compile to a self-contained HTML file:
+
 ```bash
 bun build --compile --target=browser ./app.tsx --outfile ./dist/app.html
 ```
@@ -897,15 +905,19 @@ Bun auto-loads `.env`, `.env.production`, `.env.local`, `.env.production.local` 
 Bun has many capabilities built in that eliminate the need for external packages or tooling:
 
 ### Native TypeScript
+
 Bun runs `.ts`, `.tsx` files directly — no `tsc`, `ts-node`, or `tsx` needed. The transpiler is built into the runtime. Use `bun file.ts` to run any TypeScript file immediately.
 
 ### Built-in Type Checker
+
 `bun check` (v1.4.3+) replaces `tsc --noEmit`, and `--check` gates `bun <file>`, `bun test`, and `bun build` on a clean type check — no `typescript` package needed. Keep `tsc` only to emit `.d.ts` files.
 
 ### Built-in Formatter
+
 `bun fmt` (v1.4.4+) replaces `prettier`, `oxfmt`, and `lint-staged` for formatting, plus Prettier's import-sorting, Tailwind, `package.json`, and Svelte plugins. It reads the existing Prettier or oxfmt config.
 
 ### Workspace Catalogs
+
 Bun supports `catalog:` protocol in `package.json` for centralized dependency version management across monorepo workspaces — no need for tools like `syncpack` or `manypkg`:
 
 ```json
@@ -927,39 +939,51 @@ Bun supports `catalog:` protocol in `package.json` for centralized dependency ve
 ```
 
 ### Built-in Test Runner
+
 `bun test` is a full Jest-compatible test runner with snapshot testing, mocking, coverage — no need for `jest`, `vitest`, or `mocha`.
 
 ### Built-in Bundler
+
 `bun build` replaces `esbuild`, `webpack`, `rollup` for many use cases. Supports code splitting, tree shaking, minification, and standalone executable compilation.
 
 ### Built-in SQLite
+
 `import { Database } from 'bun:sqlite'` — zero-dependency SQLite3 with prepared statements and transactions. No need for `better-sqlite3` or `sql.js`.
 
 ### Built-in Shell
+
 `Bun.$` tagged template — cross-platform shell execution with automatic escaping. Replaces `execa`, `shelljs`, `zx`.
 
 ### Built-in File I/O
+
 `Bun.file()` and `Bun.write()` — fast file operations without importing `fs`. Auto-detects MIME types.
 
 ### Built-in Glob
+
 `new Bun.Glob(pattern)` — fast glob matching and file scanning. Replaces `glob`, `fast-glob`, `minimatch`.
 
 ### Built-in Password Hashing
+
 `Bun.password.hash()` and `.verify()` with bcrypt and argon2id. Replaces `bcrypt`, `argon2` packages.
 
 ### Built-in Compression
+
 `Bun.gzipSync()`, `Bun.deflateSync()`, `Bun.zstdCompressSync()` — no need for `zlib` wrapper packages.
 
 ### Built-in Semver
+
 `Bun.semver.satisfies()`, `.order()` — replaces `semver` package.
 
 ### Built-in Runtime APIs
+
 For Bun's built-in runtime helpers (`Bun.s3`, `Bun.redis`, `Bun.Archive`, `JSONC`, `JSON5`, `JSONL`, `markdown`, `cron`), see the `bun-api` skill.
 
 ### Zero-Config Frontend Dev Server
+
 `bun ./index.html` — serve HTML with auto-bundling of JS/TS/CSS, HMR, and React Fast Refresh. Replaces Vite/Webpack dev server for simple projects.
 
 ### ES Decorators
+
 TC39 standard ES decorators supported natively (v1.3.10+) — no `experimentalDecorators` tsconfig needed.
 
 ## Key Gotchas

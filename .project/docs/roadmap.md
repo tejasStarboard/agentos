@@ -2,20 +2,20 @@
 
 Implementation is tracked as numbered tickets in [../tickets/](../tickets/). Do them in order.
 
-| Phase | Focus | Tickets (approx) |
-|-------|--------|------------------|
-| 0 | Reset legacy `@app/*` workspace | 1 |
-| 1 | Scaffold monorepo + core exports | 2–3 |
-| 2 | Comlink SDK + Shell + host + client + manager + Cmd+K | 4–9 |
-| 3 | Vite scanner, registry, iframe entries, gateway, agent plane | 10–14 |
-| 4 | Driving builtins: auth, db-store, cache-store, ai | 15–18 |
-| 5 | Supporting builtins | 19 |
-| 6 | `@agentos/core/api/*` + file routes + Python `agentos` | 20–24 |
-| 7 | Samples: crm-helper, invoice-bot | 25–26 |
-| 8 | CLI `agentos dev` | 27 |
-| 9 | Docs polish (if gaps) | 28 |
-| 10 | E2E verification | 29 |
-| Later | Next.js host adapter spike | 30 |
-| Setup | Skills + pnpm/Bun ADR | **31** (docs/skills setup — may be done before code) |
+| Phase | Focus                                                        | Tickets (approx)                                     |
+| ----- | ------------------------------------------------------------ | ---------------------------------------------------- |
+| 0     | Reset legacy `@app/*` workspace                              | 1                                                    |
+| 1     | Scaffold monorepo + core exports                             | 2–3                                                  |
+| 2     | Comlink SDK + Shell + host + client + manager + Cmd+K        | 4–9                                                  |
+| 3     | Vite scanner, registry, iframe entries, gateway, agent plane | 10–14                                                |
+| 4     | Driving builtins: auth, db-store, cache-store, ai            | 15–18                                                |
+| 5     | Supporting builtins                                          | 19                                                   |
+| 6     | `@agentos/core/api/*` + file routes + Python `agentos`       | 20–24                                                |
+| 7     | Samples: crm-helper, invoice-bot                             | 25–26                                                |
+| 8     | CLI `agentos dev`                                            | 27                                                   |
+| 9     | Docs polish (if gaps)                                        | 28                                                   |
+| 10    | E2E verification                                             | 29                                                   |
+| Later | Next.js host adapter spike                                   | 30                                                   |
+| Setup | Skills + pnpm/Bun ADR                                        | **31** (docs/skills setup — may be done before code) |
 
 **Status:** setup docs/skills can proceed before ticket 1. **Do not start ticket 1** until explicitly asked to build.

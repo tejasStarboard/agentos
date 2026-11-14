@@ -1,0 +1,111 @@
+import type {
+  AiGenerateOptions,
+  EventPayload,
+  HitlMetadata,
+  StorageValue,
+} from './contracts';
+
+/** Toast / notification severity. */
+export type NotificationType = 'info' | 'success' | 'error';
+
+export interface HostFetchInit {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+}
+
+export interface HostFetchResponse {
+  ok: boolean;
+  status: number;
+  body: string;
+}
+
+export interface HitlApprovalRequest {
+  title: string;
+  body?: string;
+  metadata?: HitlMetadata;
+}
+
+export interface HitlApprovalResult {
+  approved: boolean;
+  id: string;
+}
+
+export interface AiGenerateResult {
+  text: string;
+}
+
+/**
+ * Host → extension RPC surface (exposed by the shell via Comlink).
+ * Nested namespaces must be wrapped with `Comlink.proxy` on the host.
+ */
+export interface HostAPI {
+  storage: {
+    get<T extends StorageValue>(key: string): Promise<T | null>;
+    set<T extends StorageValue>(key: string, value: T): Promise<void>;
+    remove(key: string): Promise<void>;
+  };
+  notifications: {
+    show(message: string, type?: NotificationType): Promise<void>;
+  };
+  ai: {
+    generateText(
+      prompt: string,
+      options?: AiGenerateOptions,
+    ): Promise<AiGenerateResult>;
+  };
+  hitl: {
+    requestApproval(input: HitlApprovalRequest): Promise<HitlApprovalResult>;
+  };
+  api: {
+    fetch(path: string, init?: HostFetchInit): Promise<HostFetchResponse>;
+  };
+  events: {
+    publish(topic: string, payload: EventPayload): Promise<void>;
+  };
+}
+
+/**
+ * Extension → host RPC surface (exposed by the extension via Comlink).
+ */
+export interface ExtensionAPI {
+  onActivate(): Promise<void>;
+  onDeactivate(): Promise<void>;
+  onEvent(topic: string, payload: EventPayload): Promise<void>;
+}
+
+/**
+ * Live HostAPI as seen from the extension after dual-channel handshake.
+ *
+ * Comlink.Remote<> types nested objects as Promise-wrapped; because we mark
+ * namespaces with Comlink.proxy, the runtime shape matches HostAPI.
+ * `hostApiFromRemote` awaits namespaces so both proxied and cloned shapes work.
+ */
+export type HostAPIClient = HostAPI;
+
+export class ExtensionRpcTimeoutError extends Error {
+  readonly code = 'RPC_TIMEOUT' as const;
+
+  constructor(
+    public readonly extensionId: string,
+    public readonly method: string,
+    public readonly timeoutMs: number,
+  ) {
+    super(
+      `Extension "${extensionId}" timed out on ${method} after ${timeoutMs}ms`,
+    );
+    this.name = 'ExtensionRpcTimeoutError';
+  }
+}
+
+export class HandshakeTimeoutError extends Error {
+  readonly code = 'HANDSHAKE_TIMEOUT' as const;
+
+  constructor(
+    public readonly side: 'client' | 'host',
+    public readonly timeoutMs: number,
+  ) {
+    super(`Extension handshake (${side}) timed out after ${timeoutMs}ms`);
+    this.name = 'HandshakeTimeoutError';
+  }
+}

@@ -9,10 +9,10 @@ description: >-
 
 ## Branches
 
-| Branch | Role |
-|--------|------|
-| **`dev`** | Primary integration branch (default). Open ticket PRs **into `dev`**. |
-| **`main`** | Production. Do not land ticket work here directly. |
+| Branch     | Role                                                                  |
+| ---------- | --------------------------------------------------------------------- |
+| **`dev`**  | Primary integration branch (default). Open ticket PRs **into `dev`**. |
+| **`main`** | Production. Do not land ticket work here directly.                    |
 
 Never push commits straight to `dev` or `main`. Land changes only via pull requests.
 
@@ -34,10 +34,10 @@ fix(16): correct db-store migration path
 
 ### Type picker
 
-| Type | When |
-|------|------|
-| `feat` | New capability or scaffold that advances the platform |
-| `fix` | Bug fix |
+| Type    | When                                                                  |
+| ------- | --------------------------------------------------------------------- |
+| `feat`  | New capability or scaffold that advances the platform                 |
+| `fix`   | Bug fix                                                               |
 | `chore` | Cleanup, reset, tooling, docs/skills hygiene without product behavior |
 
 Use the **ticket number** from `.project/tickets/` (e.g. `1`, `2`). One ticket per commit/PR when practical.
@@ -61,9 +61,11 @@ feat(2): scaffold monorepo
 
 ```markdown
 ## Summary
+
 - <1–3 bullets of why / what landed>
 
 ## Test plan
+
 - [ ] <QA / verify steps — prefer pnpm install + bun run checks from the ticket>
 ```
 
