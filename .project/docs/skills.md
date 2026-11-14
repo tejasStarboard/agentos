@@ -9,6 +9,7 @@ Skills teach Cursor/Claude how to plan and implement against AgentOS.
 | **agentos-architecture** | `.agents/skills/agentos-architecture/` | Any AgentOS design, ticket planning, or implementation |
 | **agentos-ticket-planner** | `.agents/skills/agentos-ticket-planner/` | Planning or breaking down a `.project/tickets/*` item |
 | **agentos-bun-runtime** | `.agents/skills/agentos-bun-runtime/` | Scripts/runtime: pnpm install + Bun execute (overrides “never pnpm” from bun-cli) |
+| **agentos-git-workflow** | `.agents/skills/agentos-git-workflow/` | Commit/PR titles, `dev` vs `main`, no direct pushes to protected branches |
 
 Agents **must** read `.project/docs/concepts.md` (via these skills) before planning code changes.
 
