@@ -1,6 +1,6 @@
 # 11 — `virtual:agentos-registry`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

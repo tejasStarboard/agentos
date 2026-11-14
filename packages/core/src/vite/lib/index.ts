@@ -6,6 +6,12 @@ export {
   RESOLVED_VIRTUAL_REGISTRY_ID,
   EXT_HTML_PREFIX,
   VIRTUAL_EXT_ENTRY_PREFIX,
+  EXT_API_PREFIX,
+  createExtApiProxyMiddleware,
+  createExtensionEnableMiddleware,
+  createExtensionEnableState,
+  parseExtApiPath,
+  parseExtensionEnablePath,
   parseExtHtmlPath,
   parseVirtualExtEntryId,
   renderExtHtmlEntry,
@@ -21,6 +27,11 @@ export {
   serializeRegistryModule,
   skillsBindingName,
 } from './serialize-registry';
+export type {
+  ExtensionEnableState,
+  ParsedExtApiPath,
+  ProxyFetch,
+} from './agentos-plugin';
 export type {
   AgentDescriptors,
   AgentFileName,

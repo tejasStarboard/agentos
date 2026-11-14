@@ -5,7 +5,12 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { Plugin, ViteDevServer } from 'vite';
 
+import { createExtApiProxyMiddleware } from './ext-api-proxy';
 import { serializeExtEntryModule } from './ext-entry-module';
+import {
+  createExtensionEnableMiddleware,
+  createExtensionEnableState,
+} from './extension-enable-state';
 import {
   parseExtHtmlPath,
   parseVirtualExtEntryId,
@@ -22,6 +27,19 @@ import type {
   ScannedExtension,
   UiViewName,
 } from './types';
+
+export {
+  EXT_API_PREFIX,
+  createExtApiProxyMiddleware,
+  parseExtApiPath,
+} from './ext-api-proxy';
+export type { ParsedExtApiPath, ProxyFetch } from './ext-api-proxy';
+export {
+  createExtensionEnableMiddleware,
+  createExtensionEnableState,
+  parseExtensionEnablePath,
+} from './extension-enable-state';
+export type { ExtensionEnableState } from './extension-enable-state';
 
 /** Public virtual module id imported by the Shell (ticket 11). */
 export const VIRTUAL_REGISTRY_ID = 'virtual:agentos-registry';
@@ -132,6 +150,7 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
   let builtinsDir = '';
   let model: RegistryModel = { extensions: [], scannedAt: 0 };
   let server: ViteDevServer | undefined;
+  const enableState = createExtensionEnableState();
   /** Rollup entry name → `{ extensionId, view }` for generateBundle HTML emit. */
   const buildEntryNames = new Map<
     string,
@@ -141,6 +160,20 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
   const rescan = (): RegistryModel => {
     model = scanExtensions({ extensionsDir, builtinsDir });
     return model;
+  };
+
+  const getModel = (): RegistryModel => model;
+
+  const mountGatewayMiddlewares = (middlewares: {
+    use: (fn: ConnectMiddleware) => void;
+  }): void => {
+    middlewares.use(createExtensionEnableMiddleware(getModel, enableState));
+    middlewares.use(createExtApiProxyMiddleware(getModel, enableState));
+    middlewares.use(
+      createExtHtmlMiddleware(getModel, (extensionId, view) =>
+        virtualExtEntryScriptSrc(extensionId, view),
+      ),
+    );
   };
 
   const eachUiView = (
@@ -276,23 +309,13 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
       // meta.json / agent file edits should also refresh the model
       devServer.watcher.on('change', onFsChange);
 
-      devServer.middlewares.use(
-        createExtHtmlMiddleware(
-          () => model,
-          (extensionId, view) => virtualExtEntryScriptSrc(extensionId, view),
-        ),
-      );
+      mountGatewayMiddlewares(devServer.middlewares);
     },
 
     configurePreviewServer(previewServer) {
       // Post-hook: prefer `generateBundle` HTML assets from dist; fall back here.
       return () => {
-        previewServer.middlewares.use(
-          createExtHtmlMiddleware(
-            () => model,
-            (extensionId, view) => virtualExtEntryScriptSrc(extensionId, view),
-          ),
-        );
+        mountGatewayMiddlewares(previewServer.middlewares);
       };
     },
 
