@@ -5,5 +5,8 @@
   "type": "module",
   "dependencies": {
     "@agentos/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@agentos/typescript-config": "workspace:*"
   }
 }
