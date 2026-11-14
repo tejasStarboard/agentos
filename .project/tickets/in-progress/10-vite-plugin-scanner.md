@@ -1,6 +1,6 @@
 # 10 — Vite plugin + filesystem scanner
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Implement `agentos()` Vite plugin that watches `extensions/` and `packages/core/
 
 ## Done when
 
-- [ ] `@agentos/core/vite` exports `agentos()`
-- [ ] Discovers `ui/*`, `agent/*`, `api/routes`, `meta.json`, and Python `services/` links
-- [ ] HMR / watch invalidates registry when files are added/removed
+- [x] `@agentos/core/vite` exports `agentos()`
+- [x] Discovers `ui/*`, `agent/*`, `api/routes`, `meta.json`, and Python `services/` links
+- [x] HMR / watch invalidates registry when files are added/removed
 
 ## Notes
 

@@ -4,3 +4,5 @@ dist
 pnpm-lock.yaml
 coverage
 *.tsbuildinfo
+# Intentionally invalid JSON for scanner tolerance tests
+packages/core/src/vite/tests/fixtures/extensions/broken/meta.json
