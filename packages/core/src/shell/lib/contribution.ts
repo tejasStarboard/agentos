@@ -6,7 +6,8 @@ export type ContributionRuntimeStatus = 'loading' | 'active' | 'crashed';
 
 /**
  * Declares a sandboxed iframe the Shell should mount.
- * `src` is a URL (fixture or future `/__agentos/ext/...` entry).
+ * `src` is typically `/__agentos/ext/<id>/<view>.html` (ticket 12);
+ * `ExtensionFrame` appends `?theme=` from the Shell theme.
  */
 export type UiContribution = {
   extensionId: string;

@@ -108,6 +108,9 @@ describe('agentos()', () => {
           reloads.push(payload);
         },
       },
+      middlewares: {
+        use() {},
+      },
     } as unknown as ViteDevServer;
 
     await plugin.configureServer?.(fakeServer);

@@ -34,12 +34,24 @@ describe('ExtensionFrame slot placement', () => {
       createElement(ExtensionFrame, {
         contribution: crmContributions[0]!,
         visible: true,
+        theme: 'dark',
       }),
     );
     expect(html).toContain('sandbox="allow-scripts allow-same-origin"');
     expect(html).toContain('data-extension-id="crm"');
     expect(html).toContain('data-view="page"');
-    expect(html).toContain('src="/__agentos/ext/crm/page.html"');
+    expect(html).toContain('src="/__agentos/ext/crm/page.html?theme=dark"');
+  });
+
+  test('passes light theme into iframe query', () => {
+    const html = renderToStaticMarkup(
+      createElement(ExtensionFrame, {
+        contribution: crmContributions[0]!,
+        visible: true,
+        theme: 'light',
+      }),
+    );
+    expect(html).toContain('src="/__agentos/ext/crm/page.html?theme=light"');
   });
 
   test('sandboxed iframes mount into main / sidebar / widgets slots', () => {
@@ -91,8 +103,8 @@ describe('ExtensionFrame slot placement', () => {
     );
     expect(main).toContain('data-extension-id="crm"');
     expect(main).toContain('data-extension-id="invoices"');
-    expect(main).toContain('src="/crm.html"');
-    expect(main).toContain('src="/invoices.html"');
+    expect(main).toContain('src="/crm.html?theme=dark"');
+    expect(main).toContain('src="/invoices.html?theme=dark"');
     expect(main).toContain('data-visible="false"');
 
     expect(useShellStore.getState().contributions).toHaveLength(2);

@@ -34,3 +34,4 @@ export {
 } from './extension-runtime';
 export { deriveExtensionManagerStatus } from './extension-status';
 export { useShellStore, type ShellUiState, type ShellView } from './store';
+export { withThemeQuery } from './with-theme-query';

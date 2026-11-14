@@ -1,4 +1,4 @@
-import { HouseIcon, SquaresFourIcon } from '@phosphor-icons/react';
+import { CubeIcon, HouseIcon, SquaresFourIcon } from '@phosphor-icons/react';
 import { useShellActiveView } from '@agentos/core/shell/hooks';
 import { useShellStore, type ShellView } from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
@@ -10,21 +10,24 @@ import {
 } from '@agentos/ui/components/tooltip';
 import { cn } from '@agentos/ui/lib/utils';
 
-const ITEMS: {
+type ActivityItem = {
   id: ShellView | 'extensions';
   label: string;
   Icon: typeof HouseIcon;
   /** Opens Extension Manager instead of switching canvas view. */
   opensManager?: boolean;
-}[] = [
+};
+
+const FIXED_ITEMS: ActivityItem[] = [
   { id: 'home', label: 'Home', Icon: HouseIcon },
-  {
-    id: 'extensions',
-    label: 'Extensions',
-    Icon: SquaresFourIcon,
-    opensManager: true,
-  },
 ];
+
+const MANAGER_ITEM: ActivityItem = {
+  id: 'extensions',
+  label: 'Extensions',
+  Icon: SquaresFourIcon,
+  opensManager: true,
+};
 
 export function ActivityBar() {
   const activeView = useShellActiveView();
@@ -32,6 +35,25 @@ export function ActivityBar() {
   const setActiveView = useShellStore((s) => s.setActiveView);
   const setDrawerOpen = useShellStore((s) => s.setDrawerOpen);
   const toggleSidebar = useShellStore((s) => s.toggleSidebar);
+  const extensions = useShellStore((s) => s.extensions);
+  const enabledById = useShellStore((s) => s.enabledById);
+  const contributions = useShellStore((s) => s.contributions);
+
+  const pageExtensionIds = new Set(
+    contributions.filter((c) => c.view === 'page').map((c) => c.extensionId),
+  );
+
+  const extensionItems: ActivityItem[] = extensions
+    .filter(
+      (ext) => enabledById[ext.id] !== false && pageExtensionIds.has(ext.id),
+    )
+    .map((ext) => ({
+      id: ext.id,
+      label: ext.name,
+      Icon: CubeIcon,
+    }));
+
+  const items = [...FIXED_ITEMS, ...extensionItems, MANAGER_ITEM];
 
   return (
     <TooltipProvider>
@@ -39,7 +61,7 @@ export function ActivityBar() {
         className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2"
         aria-label="Activity bar"
       >
-        {ITEMS.map(({ id, label, Icon, opensManager }) => {
+        {items.map(({ id, label, Icon, opensManager }) => {
           const current = opensManager ? drawerOpen : activeView === id;
           return (
             <Tooltip key={id}>
