@@ -17,6 +17,7 @@ function resetStore() {
     desiredContributions: [],
     contributions: [],
     runtimeStatus: {},
+    desiredSkillsByExtension: { ...STUB_SKILLS_BY_EXTENSION },
     skillsByExtension: defaultSkillsByExtension(),
     statusText: null,
     statusTone: null,
@@ -32,7 +33,7 @@ describe('useShellStore', () => {
     ) as unknown as typeof fetch;
   });
 
-  test('defaults to home with sidebar open and stub catalog', () => {
+  test('fixture catalog seeds manager and skills', () => {
     const state = useShellStore.getState();
     expect(state.activeView).toBe('home');
     expect(state.sidebarOpen).toBe(true);
@@ -110,7 +111,7 @@ describe('useShellStore', () => {
     expect(state.runtimeStatus['crm:page']).toBeUndefined();
   });
 
-  test('customer re-enable restores contributions and stub skills', () => {
+  test('customer re-enable restores contributions and desired skills', () => {
     useShellStore.getState().setContributions([
       { extensionId: 'crm', view: 'page', src: '/crm.html' },
       { extensionId: 'invoices', view: 'page', src: '/inv.html' },

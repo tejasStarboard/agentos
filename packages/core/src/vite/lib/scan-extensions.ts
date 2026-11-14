@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
+import { enrichExtension } from './enrich-registry';
 import type {
   AgentFileName,
   ApiLanguage,
@@ -12,6 +13,12 @@ import type {
   ScanExtensionsOptions,
   UiViewName,
 } from './types';
+
+/** Scan output before Shell-facing enrichment. */
+type RawScannedExtension = Omit<
+  ScannedExtension,
+  'driven' | 'toggleable' | 'uiEntries' | 'agentDescriptors'
+>;
 
 const UI_VIEWS: UiViewName[] = ['page', 'sidebar', 'widget'];
 const UI_EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js'] as const;
@@ -92,7 +99,7 @@ function scanOneExtension(
   id: string,
   rootDir: string,
   kind: ExtensionKind,
-): ScannedExtension {
+): RawScannedExtension {
   const metaPath = join(rootDir, 'meta.json');
   const hasMeta = existsSync(metaPath) && !isDirectory(metaPath);
   const meta = hasMeta ? (readMeta(metaPath) ?? {}) : {};
@@ -121,7 +128,7 @@ function scanOneExtension(
   const apiRoutesDir = join(rootDir, routesDirName);
   const hasApiRoutes = isDirectory(apiRoutesDir);
 
-  const extension: ScannedExtension = {
+  const extension: RawScannedExtension = {
     id,
     kind,
     rootDir,
@@ -152,7 +159,7 @@ function scanOneExtension(
   return extension;
 }
 
-function scanRoot(root: string, kind: ExtensionKind): ScannedExtension[] {
+function scanRoot(root: string, kind: ExtensionKind): RawScannedExtension[] {
   return listChildDirs(root).map((id) =>
     scanOneExtension(id, join(root, id), kind),
   );
@@ -165,7 +172,7 @@ export function scanExtensions(options: ScanExtensionsOptions): RegistryModel {
   const customer = scanRoot(options.extensionsDir, 'customer');
   const builtins = scanRoot(options.builtinsDir, 'builtin');
 
-  const byId = new Map<string, ScannedExtension>();
+  const byId = new Map<string, RawScannedExtension>();
   // Builtins first so customer ids with the same name do not overwrite platform.
   for (const ext of builtins) byId.set(ext.id, ext);
   for (const ext of customer) {
@@ -178,10 +185,12 @@ export function scanExtensions(options: ScanExtensionsOptions): RegistryModel {
     byId.set(ext.id, ext);
   }
 
-  const extensions = [...byId.values()].sort((a, b) => {
-    if (a.kind !== b.kind) return a.kind === 'builtin' ? -1 : 1;
-    return a.id.localeCompare(b.id);
-  });
+  const extensions = [...byId.values()]
+    .map((ext) => enrichExtension(ext))
+    .sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === 'builtin' ? -1 : 1;
+      return a.id.localeCompare(b.id);
+    });
 
   return {
     extensions,

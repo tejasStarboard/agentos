@@ -23,10 +23,34 @@ export type ExtensionMeta = {
 export type UiViewName = 'page' | 'sidebar' | 'widget';
 export type AgentFileName = 'tools' | 'skills' | 'instructions';
 
-/** One discovered extension after a filesystem scan. */
+/**
+ * Tool descriptor from `agent/tools.json`.
+ * Shape is extension-defined; registry keeps parsed JSON objects.
+ */
+export type ToolDescriptor = Record<string, unknown>;
+
+/** Parsed agent contributions for Shell / Cmd+K / agent plane. */
+export type AgentDescriptors = {
+  /** Parsed entries from `tools.json` (empty when missing/invalid). */
+  tools: ToolDescriptor[];
+  /**
+   * Skill ids from `skills.ts` (`export const skills = [...]`).
+   * Filled when the virtual module statically imports the skills file.
+   */
+  skills: string[];
+};
+
+/** One discovered extension after a filesystem scan + enrichment. */
 export type ScannedExtension = {
   id: string;
   kind: ExtensionKind;
+  /**
+   * Driving platform extensions (all builtins per builtins.md).
+   * Agent plane rejects disable when true (ticket 14).
+   */
+  driven: boolean;
+  /** Customer extensions only; builtins are locked. */
+  toggleable: boolean;
   /** Absolute path to the extension root. */
   rootDir: string;
   /** Display name from meta.json, falling back to folder id. */
@@ -36,8 +60,15 @@ export type ScannedExtension = {
   meta: ExtensionMeta;
   /** Absolute paths to discovered UI entry files. */
   ui: Partial<Record<UiViewName, string>>;
+  /**
+   * Iframe / Shell URLs for discovered views.
+   * Convention: `/__agentos/ext/<id>/<view>.html` (served by ticket 12).
+   */
+  uiEntries: Partial<Record<UiViewName, string>>;
   /** Absolute paths to discovered agent declaration files. */
   agent: Partial<Record<AgentFileName, string>>;
+  /** Parsed tools + skills for Shell consumption. */
+  agentDescriptors: AgentDescriptors;
   /** Absolute path to `api/routes` when present. */
   apiRoutesDir?: string;
   /** Resolved Python service link when `meta.api.language === 'python'`. */
@@ -49,7 +80,7 @@ export type ScannedExtension = {
   };
 };
 
-/** In-memory registry model produced by the scanner. */
+/** In-memory registry model produced by the scanner + enrichment. */
 export type RegistryModel = {
   extensions: ScannedExtension[];
   scannedAt: number;

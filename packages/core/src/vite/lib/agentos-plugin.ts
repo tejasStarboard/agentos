@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin, ViteDevServer } from 'vite';
 
 import { scanExtensions } from './scan-extensions';
+import { serializeRegistryModule } from './serialize-registry';
 import type { AgentosPluginOptions, RegistryModel } from './types';
 
 /** Public virtual module id imported by the Shell (ticket 11). */
@@ -32,10 +33,6 @@ function ensureDir(path: string): void {
 function pathUnderRoot(file: string, root: string): boolean {
   const normalizedRoot = root.endsWith('/') ? root : `${root}/`;
   return file === root || file.startsWith(normalizedRoot);
-}
-
-function serializeRegistryModule(model: RegistryModel): string {
-  return `export const registry = ${JSON.stringify(model, null, 2)};\n`;
 }
 
 /**

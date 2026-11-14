@@ -56,6 +56,11 @@ describe('agentos()', () => {
     expect(source).toContain('"id": "crm"');
     expect(source).toContain('"id": "auth"');
     expect(source).toContain('"kind": "builtin"');
+    expect(source).toContain('"driven": true');
+    expect(source).toContain('"toggleable": true');
+    expect(source).toContain('/__agentos/ext/crm/page.html');
+    expect(source).toContain('import { skills as __agentos_skills_crm }');
+    expect(source).toMatch(/"skills":\s*__agentos_skills_crm/);
   });
 
   test('rescans and invalidates registry on watched file changes', async () => {

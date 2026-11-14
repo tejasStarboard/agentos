@@ -61,6 +61,25 @@ describe('scanExtensions', () => {
     );
   });
 
+  test('enriches driven, toggleable, uiEntries, and tool descriptors', () => {
+    const model = scanExtensions({ extensionsDir, builtinsDir });
+    const auth = model.extensions.find((e) => e.id === 'auth');
+    const crm = model.extensions.find((e) => e.id === 'crm');
+
+    expect(auth?.driven).toBe(true);
+    expect(auth?.toggleable).toBe(false);
+    expect(auth?.uiEntries.page).toBe('/__agentos/ext/auth/page.html');
+
+    expect(crm?.driven).toBe(false);
+    expect(crm?.toggleable).toBe(true);
+    expect(crm?.uiEntries).toEqual({
+      page: '/__agentos/ext/crm/page.html',
+      sidebar: '/__agentos/ext/crm/sidebar.html',
+    });
+    expect(crm?.agentDescriptors.tools).toEqual([]);
+    expect(crm?.agentDescriptors.skills).toEqual([]);
+  });
+
   test('resolves python service links', () => {
     const model = scanExtensions({ extensionsDir, builtinsDir });
     const invoices = model.extensions.find((e) => e.id === 'invoices');
