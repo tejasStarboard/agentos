@@ -1,8 +1,9 @@
 import { MoonIcon, SunIcon } from '@phosphor-icons/react';
+import { useShellActiveView } from '@agentos/core/shell/hooks';
+import { useShellStore } from '@agentos/core/shell/lib';
 import { Badge } from '@agentos/ui/components/badge';
 import { Switch } from '@agentos/ui/components/switch';
 import { useTheme } from '@agentos/ui/components/theme-provider';
-import { useShellStore } from '../lib/store';
 import { EnsureMounted } from './ensure-mounted';
 
 function ThemeToggle() {
@@ -34,7 +35,7 @@ function ThemeToggle() {
 
 /** Status bar chrome — richer badges land in ticket 9. */
 export function StatusBar() {
-  const activeView = useShellStore((s) => s.activeView);
+  const activeView = useShellActiveView();
   const drawerOpen = useShellStore((s) => s.drawerOpen);
 
   return (

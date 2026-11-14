@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
-import { ShellRoot } from '../components/shell-root';
-import { useShellStore } from '../lib/store';
+import { ShellRoot } from '@agentos/core/shell/components';
+import { useShellStore } from '@agentos/core/shell/lib';
 
 describe('mountShell / ShellRoot', () => {
   test('renders workspace with required slots', () => {
@@ -10,6 +10,8 @@ describe('mountShell / ShellRoot', () => {
       activeView: 'home',
       sidebarOpen: true,
       drawerOpen: false,
+      contributions: [],
+      runtimeStatus: {},
     });
 
     const html = renderToStaticMarkup(createElement(ShellRoot));

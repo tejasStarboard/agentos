@@ -1,4 +1,6 @@
 import { HouseIcon, SquaresFourIcon } from '@phosphor-icons/react';
+import { useShellActiveView } from '@agentos/core/shell/hooks';
+import { useShellStore, type ShellView } from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
 import {
   Tooltip,
@@ -7,7 +9,6 @@ import {
   TooltipTrigger,
 } from '@agentos/ui/components/tooltip';
 import { cn } from '@agentos/ui/lib/utils';
-import { useShellStore, type ShellView } from '../lib/store';
 
 const ITEMS: {
   id: ShellView;
@@ -19,7 +20,7 @@ const ITEMS: {
 ];
 
 export function ActivityBar() {
-  const activeView = useShellStore((s) => s.activeView);
+  const activeView = useShellActiveView();
   const setActiveView = useShellStore((s) => s.setActiveView);
   const toggleSidebar = useShellStore((s) => s.toggleSidebar);
 

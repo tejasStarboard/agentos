@@ -14,7 +14,9 @@
     "./api": "./src/api/index.ts",
     "./api/*": "./src/api/lib/*.ts",
     "./vite": "./src/vite/index.ts",
-    "./sdk": "./src/sdk/index.ts"
+    "./sdk": "./src/sdk/index.ts",
+    "./shell": "./src/shell/index.ts",
+    "./shell/*": "./src/shell/*/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",

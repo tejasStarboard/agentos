@@ -3,7 +3,7 @@ import {
   HANDSHAKE,
   isHandshakeMessage,
   isHandshakeType,
-} from '../lib/handshake';
+} from '@agentos/core/sdk';
 
 describe('handshake guards', () => {
   test('HANDSHAKE constants match ADR sequence names', () => {

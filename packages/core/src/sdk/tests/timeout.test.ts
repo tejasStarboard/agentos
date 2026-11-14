@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { withRpcTimeout } from '../lib/timeout';
-import { ExtensionRpcTimeoutError } from '../lib/types';
+import { ExtensionRpcTimeoutError, withRpcTimeout } from '@agentos/core/sdk';
 
 describe('withRpcTimeout', () => {
   test('resolves when the promise settles in time', async () => {

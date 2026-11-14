@@ -1,6 +1,6 @@
 # 5 — Shell UI skeleton
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
@@ -23,6 +23,6 @@ Build dark-mode Core Shell layout: activity bar, sidebar slot, main canvas, home
 
 ## Notes
 
-No real extension loading yet — placeholders fine. Ticket stays **in-progress** until reconciliation; do not move to `done/` here.
+Reconciled to **done** (authorized when starting ticket 6).
 
 **PR:** https://github.com/tejasStarboard/agentos/pull/4
