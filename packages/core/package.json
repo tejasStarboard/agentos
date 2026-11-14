@@ -42,7 +42,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "auth:dev": "bun ./builtins/auth/api/server.ts",
-    "db-store:dev": "bun ./builtins/db-store/api/server.ts"
+    "db-store:dev": "bun ./builtins/db-store/api/server.ts",
+    "cache-store:dev": "bun ./builtins/cache-store/api/server.ts"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",

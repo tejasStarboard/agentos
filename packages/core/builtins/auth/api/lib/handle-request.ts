@@ -1,6 +1,7 @@
 import { isAPIError } from 'better-auth/api';
 
 import type { AuthContext } from './create-auth';
+import { cacheGetAllowed, cacheSetAllowed } from './permission-cache';
 import { listRolesForUser, userHasPermission } from './rbac-store';
 
 function json(data: unknown, init: ResponseInit = {}): Response {
@@ -182,7 +183,29 @@ export async function handleAuthRequest(
     if (!permission) {
       return json({ error: 'permission required' }, { status: 400 });
     }
+
+    if (ctx.permissionCache) {
+      const cached = await cacheGetAllowed(
+        ctx.permissionCache,
+        session.user.id,
+        permission,
+      );
+      if (typeof cached === 'boolean') {
+        return json({ allowed: cached, permission });
+      }
+    }
+
     const allowed = userHasPermission(ctx.db, session.user.id, permission);
+
+    if (ctx.permissionCache) {
+      await cacheSetAllowed(
+        ctx.permissionCache,
+        session.user.id,
+        permission,
+        allowed,
+      );
+    }
+
     return json({ allowed, permission });
   }
 

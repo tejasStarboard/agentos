@@ -1,6 +1,6 @@
 # 16 — Builtin `db-store` (Drizzle)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

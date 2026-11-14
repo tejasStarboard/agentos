@@ -1,6 +1,6 @@
 # 15 — Builtin `auth` (Better Auth + RBAC)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

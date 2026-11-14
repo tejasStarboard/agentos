@@ -1,0 +1,7 @@
+{
+  "name": "Cache Store",
+  "api": {
+    "language": "bun",
+    "port": 6112
+  }
+}

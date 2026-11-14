@@ -1,6 +1,6 @@
 # 17 — Builtin `cache-store`
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Sole cache owner: get/set/del/ttl HTTP API. In-memory for v1; same interface for
 
 ## Done when
 
-- [ ] `/api/ext/cache-store/*` works
-- [ ] No direct Redis/memory cache in customer BFFs
-- [ ] Optional use from auth permission-check caching
+- [x] `/api/ext/cache-store/*` works
+- [x] No direct Redis/memory cache in customer BFFs
+- [x] Optional use from auth permission-check caching
 
 ## Notes
 
