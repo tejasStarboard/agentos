@@ -10,6 +10,7 @@ This repository is the **AgentOS** experiment. Coding agents must follow project
    - [`.agents/skills/agentos-architecture/SKILL.md`](.agents/skills/agentos-architecture/SKILL.md)
    - [`.agents/skills/agentos-ticket-planner/SKILL.md`](.agents/skills/agentos-ticket-planner/SKILL.md)
    - [`.agents/skills/agentos-bun-runtime/SKILL.md`](.agents/skills/agentos-bun-runtime/SKILL.md)
+   - [`.agents/skills/agentos-git-workflow/SKILL.md`](.agents/skills/agentos-git-workflow/SKILL.md) — commits/PRs (`dev`/`main`)
 
 ## Hard rules
 
