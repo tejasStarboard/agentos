@@ -1,0 +1,7 @@
+{
+  "name": "DB Store",
+  "api": {
+    "language": "bun",
+    "port": 6111
+  }
+}

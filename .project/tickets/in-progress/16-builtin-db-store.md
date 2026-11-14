@@ -1,6 +1,6 @@
 # 16 — Builtin `db-store` (Drizzle)
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,10 +8,10 @@ Sole SQL owner: Drizzle-backed HTTP API for query/insert/update/delete. Only thi
 
 ## Done when
 
-- [ ] Collection/table-style API over HTTP
-- [ ] SQLite default; Postgres via env optional
-- [ ] Other packages must not import Drizzle drivers for app data
-- [ ] Health endpoint OK
+- [x] Collection/table-style API over HTTP
+- [x] SQLite default; Postgres via env optional
+- [x] Other packages must not import Drizzle drivers for app data
+- [x] Health endpoint OK
 
 ## Notes
 

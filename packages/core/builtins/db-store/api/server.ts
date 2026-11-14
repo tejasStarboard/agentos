@@ -1,0 +1,18 @@
+import { DB_STORE_PORT } from './lib/constants';
+import { createDb } from './lib/create-db';
+import { handleDbStoreRequest } from './lib/handle-request';
+
+const port = Number(Bun.env.AGENTOS_DB_STORE_PORT ?? DB_STORE_PORT);
+
+const ctx = await createDb();
+
+const server = Bun.serve({
+  port,
+  async fetch(request) {
+    return handleDbStoreRequest(ctx, request);
+  },
+});
+
+console.log(
+  `[agentos db-store] listening on http://127.0.0.1:${server.port} (proxy /api/ext/db-store/*) dialect=${ctx.dialect}`,
+);

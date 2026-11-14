@@ -1,0 +1,131 @@
+import {
+  CollectionError,
+  deleteDocuments,
+  insertDocument,
+  queryCollection,
+  updateDocument,
+} from './collections';
+import type { DbStoreContext } from './create-db';
+
+function json(data: unknown, init: ResponseInit = {}): Response {
+  const headers = new Headers(init.headers);
+  if (!headers.has('content-type')) {
+    headers.set('content-type', 'application/json; charset=utf-8');
+  }
+  return new Response(JSON.stringify(data), { ...init, headers });
+}
+
+async function readJsonBody(
+  request: Request,
+): Promise<Record<string, unknown> | null> {
+  try {
+    const body = (await request.json()) as unknown;
+    if (body && typeof body === 'object' && !Array.isArray(body)) {
+      return body as Record<string, unknown>;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** `/collections/:name/(query|insert|update|delete)` */
+function parseCollectionPath(
+  path: string,
+): { name: string; action: string } | null {
+  const match = path.match(
+    /^\/collections\/([^/]+)\/(query|insert|update|delete)$/,
+  );
+  if (!match) return null;
+  const name = decodeURIComponent(match[1]!);
+  const action = match[2]!;
+  if (!name) return null;
+  return { name, action };
+}
+
+/**
+ * Thin Bun request router for `/api/ext/db-store/*` upstream paths.
+ */
+export async function handleDbStoreRequest(
+  ctx: DbStoreContext,
+  request: Request,
+): Promise<Response> {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+  const method = request.method.toUpperCase();
+
+  if (method === 'GET' && path === '/health') {
+    return json({ ok: true, dialect: ctx.dialect });
+  }
+
+  const parsed = parseCollectionPath(path);
+  if (method === 'POST' && parsed) {
+    const body = (await readJsonBody(request)) ?? {};
+    try {
+      switch (parsed.action) {
+        case 'query': {
+          const result = await queryCollection(ctx, parsed.name, {
+            where:
+              body.where && typeof body.where === 'object'
+                ? (body.where as Record<string, unknown>)
+                : undefined,
+            limit: typeof body.limit === 'number' ? body.limit : undefined,
+            offset: typeof body.offset === 'number' ? body.offset : undefined,
+          });
+          return json(result);
+        }
+        case 'insert': {
+          const data = body.data;
+          const id = typeof body.id === 'string' ? body.id : undefined;
+          if (!data || typeof data !== 'object' || Array.isArray(data)) {
+            return json(
+              { error: 'data must be a JSON object' },
+              { status: 400 },
+            );
+          }
+          const doc = await insertDocument(ctx, parsed.name, {
+            id,
+            data: data as Record<string, unknown>,
+          });
+          return json(doc, { status: 201 });
+        }
+        case 'update': {
+          const id = typeof body.id === 'string' ? body.id : '';
+          const data = body.data;
+          if (!data || typeof data !== 'object' || Array.isArray(data)) {
+            return json(
+              { error: 'data must be a JSON object' },
+              { status: 400 },
+            );
+          }
+          const doc = await updateDocument(ctx, parsed.name, {
+            id,
+            data: data as Record<string, unknown>,
+            merge: body.merge === true,
+          });
+          return json(doc);
+        }
+        case 'delete': {
+          const result = await deleteDocuments(ctx, parsed.name, {
+            id: typeof body.id === 'string' ? body.id : undefined,
+            ids: Array.isArray(body.ids)
+              ? (body.ids as unknown[]).filter(
+                  (v): v is string => typeof v === 'string',
+                )
+              : undefined,
+          });
+          return json(result);
+        }
+        default:
+          return json({ error: 'not found' }, { status: 404 });
+      }
+    } catch (error) {
+      if (error instanceof CollectionError) {
+        return json({ error: error.message }, { status: error.status });
+      }
+      throw error;
+    }
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}
