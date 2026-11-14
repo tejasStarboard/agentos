@@ -1,6 +1,6 @@
 # 9 — Command palette, toasts, status bar
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

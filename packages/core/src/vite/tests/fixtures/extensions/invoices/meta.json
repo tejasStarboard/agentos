@@ -1,0 +1,9 @@
+{
+  "name": "Invoice Bot",
+  "api": {
+    "language": "python",
+    "root": "../../services/invoice-bot",
+    "port": 6102,
+    "health": "/health"
+  }
+}
