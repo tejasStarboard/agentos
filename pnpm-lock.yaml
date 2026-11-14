@@ -12,6 +12,14 @@ importers:
         specifier: ~5.8.3
         version: 5.8.3
 
+  examples/client-app:
+    dependencies:
+      '@agentos/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+
+  packages/core: {}
+
 packages:
 
   typescript@5.8.3:

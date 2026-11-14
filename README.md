@@ -35,4 +35,4 @@ Details: [`.project/docs/skills.md`](.project/docs/skills.md).
 
 ## Status
 
-Legacy `@app/*` workspace reset is done (ticket **1**). Next: scaffold monorepo (ticket **2**).
+Monorepo scaffold is in place (tickets **1–2**): `@agentos/core`, Python `agentos`, and `examples/client-app`. Next: core package exports (ticket **3**).
