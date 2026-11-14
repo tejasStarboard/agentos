@@ -66,7 +66,21 @@ export function createShellHostApi(extensionId: string): HostAPI {
       requestApproval: async () => ({ approved: false, id: 'stub' }),
     },
     api: {
-      fetch: async () => ({ ok: false, status: 501, body: '' }),
+      fetch: async (path, init) => {
+        const normalized = path.startsWith('/') ? path : `/${path}`;
+        const url = `/api/ext/${encodeURIComponent(extensionId)}${normalized}`;
+        const res = await fetch(url, {
+          method: init?.method ?? 'GET',
+          headers: init?.headers,
+          body: init?.body,
+          credentials: 'include',
+        });
+        return {
+          ok: res.ok,
+          status: res.status,
+          body: await res.text(),
+        };
+      },
     },
     events: {
       publish: async () => {},

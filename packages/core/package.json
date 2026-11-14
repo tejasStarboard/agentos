@@ -20,11 +20,13 @@
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "auth:dev": "bun ./builtins/auth/api/server.ts"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
+    "better-auth": "^1.7.25",
     "comlink": "^4.4.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

@@ -19,7 +19,7 @@ Browser:  Shell (mountShell) + extension UI iframes
 
 ## Comlink sandbox
 
-- Each `ui/page.tsx` | `sidebar.tsx` | `widget.tsx` loads in `iframe sandbox="allow-scripts allow-same-origin"`.
+- Each `ui/page.tsx` | `sidebar.tsx` | `widget.tsx` loads in `iframe sandbox="allow-scripts allow-same-origin allow-forms"`.
 - Transport: **dual MessageChannel** per iframe (not shared `windowEndpoint` — avoids cross-talk).
 - UI uses `@agentos/core/client` hooks; never raw `postMessage`.
 

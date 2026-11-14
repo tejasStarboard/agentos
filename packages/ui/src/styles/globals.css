@@ -4,9 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Scan Shell + consumer app for Tailwind class names */
+/* Scan Shell + builtins + consumer app for Tailwind class names */
 @source "../../../core/src/**/*.{ts,tsx}";
+@source "../../../core/builtins/**/*.{ts,tsx}";
 @source "../../../../examples/client-app/src/**/*.{ts,tsx}";
+@source "../../../../examples/client-app/extensions/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
 @theme inline {

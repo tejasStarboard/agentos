@@ -1,0 +1,190 @@
+import { isAPIError } from 'better-auth/api';
+
+import type { AuthContext } from './create-auth';
+import { listRolesForUser, userHasPermission } from './rbac-store';
+
+function json(data: unknown, init: ResponseInit = {}): Response {
+  const headers = new Headers(init.headers);
+  if (!headers.has('content-type')) {
+    headers.set('content-type', 'application/json; charset=utf-8');
+  }
+  return new Response(JSON.stringify(data), { ...init, headers });
+}
+
+function mergeSetCookie(from: Headers, into: Headers): void {
+  const cookies =
+    typeof from.getSetCookie === 'function'
+      ? from.getSetCookie()
+      : from.get('set-cookie')
+        ? [from.get('set-cookie')!]
+        : [];
+  for (const cookie of cookies) {
+    into.append('set-cookie', cookie);
+  }
+}
+
+async function readJsonBody(
+  request: Request,
+): Promise<Record<string, unknown> | null> {
+  try {
+    const body = (await request.json()) as unknown;
+    if (body && typeof body === 'object' && !Array.isArray(body)) {
+      return body as Record<string, unknown>;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function requireSession(ctx: AuthContext, request: Request) {
+  return ctx.auth.api.getSession({ headers: request.headers });
+}
+
+function sessionPayload(
+  ctx: AuthContext,
+  session: NonNullable<Awaited<ReturnType<typeof requireSession>>>,
+) {
+  const roles = listRolesForUser(ctx.db, session.user.id);
+  return {
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+    },
+    session: {
+      id: session.session.id,
+      expiresAt: session.session.expiresAt,
+    },
+    roles,
+  };
+}
+
+/**
+ * Thin Bun request router for `/api/ext/auth/*` upstream paths.
+ */
+export async function handleAuthRequest(
+  ctx: AuthContext,
+  request: Request,
+): Promise<Response> {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+  const method = request.method.toUpperCase();
+
+  if (method === 'GET' && path === '/health') {
+    return json({ ok: true });
+  }
+
+  if (method === 'GET' && (path === '/session' || path === '/me')) {
+    const session = await requireSession(ctx, request);
+    if (!session) {
+      return json({ user: null, session: null, roles: [] }, { status: 401 });
+    }
+    return json(sessionPayload(ctx, session));
+  }
+
+  if (method === 'POST' && path === '/sign-in') {
+    const body = await readJsonBody(request);
+    const email = typeof body?.email === 'string' ? body.email : '';
+    const password = typeof body?.password === 'string' ? body.password : '';
+    if (!email || !password) {
+      return json({ error: 'email and password required' }, { status: 400 });
+    }
+
+    try {
+      const response = await ctx.auth.api.signInEmail({
+        body: { email, password },
+        headers: request.headers,
+        asResponse: true,
+      });
+
+      const outHeaders = new Headers();
+      mergeSetCookie(response.headers, outHeaders);
+
+      if (!response.ok) {
+        const errBody = await response.text();
+        return new Response(
+          errBody || JSON.stringify({ error: 'sign-in failed' }),
+          {
+            status: response.status,
+            headers: outHeaders,
+          },
+        );
+      }
+
+      const session = await ctx.auth.api.getSession({
+        headers: (() => {
+          const h = new Headers(request.headers);
+          const cookies =
+            typeof response.headers.getSetCookie === 'function'
+              ? response.headers.getSetCookie()
+              : [];
+          if (cookies.length > 0) {
+            h.set('cookie', cookies.map((c) => c.split(';')[0]).join('; '));
+          }
+          return h;
+        })(),
+      });
+
+      if (!session) {
+        return json(
+          { error: 'sign-in succeeded but no session' },
+          {
+            status: 500,
+            headers: outHeaders,
+          },
+        );
+      }
+
+      return json(sessionPayload(ctx, session), {
+        status: 200,
+        headers: outHeaders,
+      });
+    } catch (error) {
+      if (isAPIError(error)) {
+        return json(
+          { error: error.message ?? 'sign-in failed' },
+          { status: typeof error.status === 'number' ? error.status : 401 },
+        );
+      }
+      throw error;
+    }
+  }
+
+  if (method === 'POST' && path === '/sign-out') {
+    try {
+      const response = await ctx.auth.api.signOut({
+        headers: request.headers,
+        asResponse: true,
+      });
+      const outHeaders = new Headers();
+      mergeSetCookie(response.headers, outHeaders);
+      return json({ ok: true }, { status: 200, headers: outHeaders });
+    } catch (error) {
+      if (isAPIError(error)) {
+        return json(
+          { error: error.message ?? 'sign-out failed' },
+          { status: typeof error.status === 'number' ? error.status : 400 },
+        );
+      }
+      throw error;
+    }
+  }
+
+  if (method === 'POST' && path === '/permissions/check') {
+    const session = await requireSession(ctx, request);
+    if (!session) {
+      return json({ error: 'unauthenticated' }, { status: 401 });
+    }
+    const body = await readJsonBody(request);
+    const permission =
+      typeof body?.permission === 'string' ? body.permission : '';
+    if (!permission) {
+      return json({ error: 'permission required' }, { status: 400 });
+    }
+    const allowed = userHasPermission(ctx.db, session.user.id, permission);
+    return json({ allowed, permission });
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}

@@ -43,7 +43,7 @@ export function ExtensionFrame({
       ref={iframeRef}
       src={themedSrc}
       title={`${extensionId} ${view}`}
-      sandbox="allow-scripts allow-same-origin"
+      sandbox="allow-scripts allow-same-origin allow-forms"
       data-extension-id={extensionId}
       data-view={view}
       data-visible={visible ? 'true' : 'false'}
