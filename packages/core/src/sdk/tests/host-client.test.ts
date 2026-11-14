@@ -1,16 +1,18 @@
 import { describe, expect, test } from 'bun:test';
 import * as Comlink from 'comlink';
-import { hostApiFromRemote } from '../lib/client';
-import type {
-  ExtensionContentWindow,
-  HandshakeIncomingMessage,
-  HandshakeMessageTarget,
-  StorageValue,
-} from '../lib/contracts';
-import { HANDSHAKE } from '../lib/handshake';
-import { connectExtensionHost } from '../lib/host';
-import { proxyHostApi } from '../lib/proxy';
-import type { ExtensionAPI, HostAPI, HostAPIClient } from '../lib/types';
+import {
+  connectExtensionHost,
+  HANDSHAKE,
+  hostApiFromRemote,
+  proxyHostApi,
+  type ExtensionAPI,
+  type ExtensionContentWindow,
+  type HandshakeIncomingMessage,
+  type HandshakeMessageTarget,
+  type HostAPI,
+  type HostAPIClient,
+  type StorageValue,
+} from '@agentos/core/sdk';
 
 type MessageListener = (event: HandshakeIncomingMessage) => void;
 

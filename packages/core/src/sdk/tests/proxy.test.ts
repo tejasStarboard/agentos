@@ -1,9 +1,12 @@
 import { describe, expect, test } from 'bun:test';
 import * as Comlink from 'comlink';
-import { hostApiFromRemote } from '../lib/client';
-import type { StorageValue } from '../lib/contracts';
-import { proxyHostApi } from '../lib/proxy';
-import type { HostAPI, HostAPIClient } from '../lib/types';
+import {
+  hostApiFromRemote,
+  proxyHostApi,
+  type HostAPI,
+  type HostAPIClient,
+  type StorageValue,
+} from '@agentos/core/sdk';
 
 function stubHostApi(calls: string[]): HostAPI {
   return {

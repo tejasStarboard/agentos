@@ -1,8 +1,8 @@
+import { useShellActiveView } from '@agentos/core/shell/hooks';
 import {
   AGENTOS_THEMES,
   ThemeProvider,
 } from '@agentos/ui/components/theme-provider';
-import { useShellStore } from '../lib/store';
 import { ActivityBar } from './activity-bar';
 import { HiddenSlot } from './hidden-slot';
 import { HomeDashboard } from './home-dashboard';
@@ -12,7 +12,7 @@ import { StatusBar } from './status-bar';
 import '@agentos/ui/globals.css';
 
 export function ShellRoot() {
-  const activeView = useShellStore((s) => s.activeView);
+  const activeView = useShellActiveView();
   const isHome = activeView === 'home';
 
   return (

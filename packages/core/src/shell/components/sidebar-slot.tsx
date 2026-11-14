@@ -1,11 +1,28 @@
+import {
+  useShellContributions,
+  useShellSidebarOpen,
+} from '@agentos/core/shell/hooks';
+import { contributionKey, type UiContribution } from '@agentos/core/shell/lib';
 import { ScrollArea } from '@agentos/ui/components/scroll-area';
 import { Separator } from '@agentos/ui/components/separator';
 import { cn } from '@agentos/ui/lib/utils';
-import { useShellStore } from '../lib/store';
+import { ExtensionFrame } from './extension-frame';
 
-/** Left sidebar contribution slot (`ui/sidebar.tsx` in later tickets). */
-export function SidebarSlot() {
-  const sidebarOpen = useShellStore((s) => s.sidebarOpen);
+export type SidebarSlotProps = {
+  contributions?: UiContribution[];
+  sidebarOpen?: boolean;
+};
+
+/** Left sidebar contribution slot (`ui/sidebar.tsx`). */
+export function SidebarSlot({
+  contributions: contributionsProp,
+  sidebarOpen: sidebarOpenProp,
+}: SidebarSlotProps) {
+  const sidebarOpen = useShellSidebarOpen(sidebarOpenProp);
+  const sidebars = useShellContributions({
+    contributions: contributionsProp,
+    view: 'sidebar',
+  });
 
   return (
     <aside
@@ -23,7 +40,21 @@ export function SidebarSlot() {
       </div>
       <Separator />
       <ScrollArea className="h-[calc(100%-2.25rem)]">
-        <div className="p-3 text-xs text-muted-foreground">Sidebar slot</div>
+        {sidebars.length === 0 ? (
+          <div className="p-3 text-xs text-muted-foreground">Sidebar slot</div>
+        ) : (
+          sidebars.map((contribution) => (
+            <div
+              key={contributionKey(contribution.extensionId, contribution.view)}
+              className="h-48 w-full"
+            >
+              <ExtensionFrame
+                contribution={contribution}
+                visible={sidebarOpen}
+              />
+            </div>
+          ))
+        )}
       </ScrollArea>
     </aside>
   );
