@@ -1,6 +1,6 @@
 # 14 — Agent control-plane routes
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Add `/api/agent/registry`, enable/disable (customer only), and thin chat/HITL en
 
 ## Done when
 
-- [ ] `GET /api/agent/registry` returns enabled contributions only
-- [ ] Enable API rejects `driven: true` builtins
-- [ ] Chat/HITL stubs route toward builtin `ai` / `hitl` (full impl in later tickets)
+- [x] `GET /api/agent/registry` returns enabled contributions only
+- [x] Enable API rejects `driven: true` builtins
+- [x] Chat/HITL stubs route toward builtin `ai` / `hitl` (full impl in later tickets)
 
 ## Notes
 

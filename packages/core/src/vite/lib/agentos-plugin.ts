@@ -5,6 +5,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { Plugin, ViteDevServer } from 'vite';
 
+import { createAgentControlPlaneMiddleware } from './agent-control-plane';
 import { createExtApiProxyMiddleware } from './ext-api-proxy';
 import { serializeExtEntryModule } from './ext-entry-module';
 import {
@@ -28,6 +29,10 @@ import type {
   UiViewName,
 } from './types';
 
+export {
+  createAgentControlPlaneMiddleware,
+  parseAgentExtensionEnablePath,
+} from './agent-control-plane';
 export {
   EXT_API_PREFIX,
   createExtApiProxyMiddleware,
@@ -168,6 +173,7 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
     use: (fn: ConnectMiddleware) => void;
   }): void => {
     middlewares.use(createExtensionEnableMiddleware(getModel, enableState));
+    middlewares.use(createAgentControlPlaneMiddleware(getModel, enableState));
     middlewares.use(createExtApiProxyMiddleware(getModel, enableState));
     middlewares.use(
       createExtHtmlMiddleware(getModel, (extensionId, view) =>

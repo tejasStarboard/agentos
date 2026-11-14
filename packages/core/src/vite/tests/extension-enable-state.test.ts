@@ -162,6 +162,7 @@ describe('createExtensionEnableMiddleware', () => {
     mw(disableAuth.req, disableAuth.res, () => {});
     await disableAuth.settle();
     expect(disableAuth.status).toBe(403);
+    expect(JSON.parse(disableAuth.body).error).toContain('driven');
 
     const unknown = mockReqRes('/api/extensions/nope/enable', {
       method: 'POST',
@@ -177,5 +178,30 @@ describe('createExtensionEnableMiddleware', () => {
       passed = true;
     });
     expect(passed).toBe(true);
+  });
+
+  test('rejects disable when driven: true even if toggleable', async () => {
+    const registry = modelOf(
+      ext({
+        id: 'weird',
+        kind: 'customer',
+        toggleable: true,
+        driven: true,
+      }),
+    );
+    const state = createExtensionEnableState();
+    const mw = createExtensionEnableMiddleware(() => registry, state);
+
+    const disable = mockReqRes('/api/extensions/weird/enable', {
+      method: 'POST',
+      body: JSON.stringify({ enabled: false }),
+    });
+    mw(disable.req, disable.res, () => {});
+    await disable.settle();
+    expect(disable.status).toBe(403);
+    expect(JSON.parse(disable.body)).toEqual({
+      error: 'Cannot disable driven extension: weird',
+    });
+    expect(state.isEnabled(registry.extensions[0]!)).toBe(true);
   });
 });
