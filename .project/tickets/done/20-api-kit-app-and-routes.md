@@ -1,6 +1,6 @@
 # 20 — `@agentos/core/api` app factory + file-based `loadRoutes`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # 21 — `@agentos/core/api/auth` (session + RBAC clients)
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Domain kit talking to builtin `auth`: session middleware, `requireRoles`, `requi
 
 ## Done when
 
-- [ ] Protected routes return 401/403 correctly
-- [ ] No separate `@agentos/core/api/rbac` export
-- [ ] Python parity stub or full `agentos.auth` started (complete in ticket 24)
+- [x] Protected routes return 401/403 correctly
+- [x] No separate `@agentos/core/api/rbac` export
+- [x] Python parity stub or full `agentos.auth` started (complete in ticket 24)
 
 ## Notes
 
