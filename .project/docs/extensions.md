@@ -79,6 +79,7 @@ Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
 ```json
 {
   "name": "CRM Helper",
+  "icon": "Users",
   "api": {
     "language": "bun",
     "port": 6101,
@@ -92,6 +93,7 @@ Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
 ```json
 {
   "name": "Invoice Bot",
+  "icon": "Receipt",
   "api": {
     "language": "python",
     "root": "../../services/invoice-bot",
@@ -100,6 +102,8 @@ Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
   }
 }
 ```
+
+Optional `icon` is a Phosphor icon basename (`"Users"` → `UsersIcon`) for Activity Bar and Extension Manager. Unknown or missing values fall back to `Cube`. Curated names live in `@agentos/core` `resolveExtensionIcon` / `EXTENSION_ICON_MAP`.
 
 ## File-based routes (Bun)
 

@@ -17,6 +17,7 @@ export function mapRegistry(registry: RegistryModel): AppliedRegistry {
     kind: ext.kind,
     toggleable: ext.toggleable,
     driven: ext.driven,
+    ...(ext.meta.icon ? { icon: ext.meta.icon } : {}),
   }));
 
   const contributions: UiContribution[] = [];

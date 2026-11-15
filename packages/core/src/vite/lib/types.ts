@@ -17,6 +17,11 @@ export type ExtensionMetaApi = {
 /** Parsed `meta.json` (tolerant subset). */
 export type ExtensionMeta = {
   name?: string;
+  /**
+   * Phosphor icon export basename for Shell chrome (Activity Bar, manager).
+   * Example: `"Users"` → `UsersIcon`. Unknown values fall back to Cube.
+   */
+  icon?: string;
   api?: ExtensionMetaApi;
 };
 

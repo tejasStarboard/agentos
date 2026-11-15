@@ -85,6 +85,9 @@ function readMeta(metaPath: string): ExtensionMeta | undefined {
     const obj = parsed as Record<string, unknown>;
     const meta: ExtensionMeta = {};
     if (typeof obj.name === 'string') meta.name = obj.name;
+    if (typeof obj.icon === 'string' && obj.icon.trim()) {
+      meta.icon = obj.icon.trim();
+    }
     const api = parseMetaApi(obj.api);
     if (api) meta.api = api;
     return meta;

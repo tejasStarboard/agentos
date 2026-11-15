@@ -76,4 +76,39 @@ describe('ExtensionManagerDrawer', () => {
     expect(useShellStore.getState().drawerOpen).toBe(true);
     expect(useShellStore.getState().activeView).toBe('home');
   });
+
+  test('manager row exposes data-icon from meta (Cube fallback)', () => {
+    const withIcon = renderToStaticMarkup(
+      <ExtensionManagerList
+        extensions={[
+          {
+            id: 'crm',
+            name: 'CRM',
+            kind: 'customer',
+            toggleable: true,
+            driven: false,
+            icon: 'Users',
+          },
+        ]}
+        enabledById={{ crm: true }}
+      />,
+    );
+    expect(withIcon).toContain('data-icon="Users"');
+
+    const fallback = renderToStaticMarkup(
+      <ExtensionManagerList
+        extensions={[
+          {
+            id: 'crm',
+            name: 'CRM',
+            kind: 'customer',
+            toggleable: true,
+            driven: false,
+          },
+        ]}
+        enabledById={{ crm: true }}
+      />,
+    );
+    expect(fallback).toContain('data-icon="Cube"');
+  });
 });

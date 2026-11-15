@@ -34,6 +34,13 @@ export {
 } from './extension-runtime';
 export { deriveExtensionManagerStatus } from './extension-status';
 export {
+  DEFAULT_EXTENSION_ICON,
+  EXTENSION_ICON_MAP,
+  normalizeExtensionIconName,
+  resolveExtensionIcon,
+  type ExtensionIconName,
+} from './resolve-extension-icon';
+export {
   useShellStore,
   type ChatMessage,
   type ShellUiState,
