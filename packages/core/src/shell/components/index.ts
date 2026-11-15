@@ -16,6 +16,7 @@ export {
   type ExtensionManagerListProps,
 } from './extension-manager-drawer';
 export { HiddenSlot } from './hidden-slot';
+export { HitlInbox } from './hitl-inbox';
 export { HomeDashboard } from './home-dashboard';
 export { MainCanvas } from './main-canvas';
 export { ShellRoot } from './shell-root';

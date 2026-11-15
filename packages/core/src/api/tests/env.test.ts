@@ -10,9 +10,15 @@ import {
   platformKeys,
 } from '@agentos/core/api/env';
 import { keys as aiKeys } from '@agentos/core/builtins/ai/env';
+import { keys as auditKeys } from '@agentos/core/builtins/audit/env';
 import { keys as authKeys } from '@agentos/core/builtins/auth/env';
 import { keys as cacheStoreKeys } from '@agentos/core/builtins/cache-store/env';
 import { keys as dbStoreKeys } from '@agentos/core/builtins/db-store/env';
+import { keys as eventsKeys } from '@agentos/core/builtins/events/env';
+import { keys as filesKeys } from '@agentos/core/builtins/files/env';
+import { keys as hitlKeys } from '@agentos/core/builtins/hitl/env';
+import { keys as notificationsKeys } from '@agentos/core/builtins/notifications/env';
+import { keys as secretsKeys } from '@agentos/core/builtins/secrets/env';
 
 describe('env naming helpers', () => {
   test('extDomain uppercases and replaces hyphens', () => {
@@ -54,6 +60,12 @@ describe('createEnv extends keys()', () => {
         dbStoreKeys(empty),
         cacheStoreKeys(empty),
         aiKeys(empty),
+        hitlKeys(empty),
+        eventsKeys(empty),
+        filesKeys(empty),
+        notificationsKeys(empty),
+        secretsKeys(empty),
+        auditKeys(empty),
       ],
       server: {},
       clientPrefix: 'AGENT_OS_APP_CLIENT',
@@ -69,6 +81,12 @@ describe('createEnv extends keys()', () => {
     expect(env.AGENT_OS_EXT_DB_STORE_PORT).toBe(6111);
     expect(env.AGENT_OS_EXT_CACHE_STORE_PORT).toBe(6112);
     expect(env.AGENT_OS_EXT_AI_PORT).toBe(6113);
+    expect(env.AGENT_OS_EXT_HITL_PORT).toBe(6114);
+    expect(env.AGENT_OS_EXT_EVENTS_PORT).toBe(6115);
+    expect(env.AGENT_OS_EXT_FILES_PORT).toBe(6116);
+    expect(env.AGENT_OS_EXT_NOTIFICATIONS_PORT).toBe(6117);
+    expect(env.AGENT_OS_EXT_SECRETS_PORT).toBe(6118);
+    expect(env.AGENT_OS_EXT_AUDIT_PORT).toBe(6119);
     expect(env.AGENT_OS_EXT_AUTH_DB).toBeUndefined();
     expect(env.AGENT_OS_GLOBAL_NODE_ENV).toBeUndefined();
   });

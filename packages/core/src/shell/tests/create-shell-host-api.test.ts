@@ -13,6 +13,7 @@ function resetStore() {
     activeView: 'home',
     sidebarOpen: true,
     drawerOpen: false,
+    hitlInboxOpen: false,
     chatOpen: false,
     chatMessages: [],
     chatBusy: false,
@@ -92,6 +93,91 @@ describe('createShellHostApi notifications', () => {
       expect(calls[0]?.url).toBe('/api/ext/ai/generate-text');
       expect(calls[0]?.init?.method).toBe('POST');
       expect(calls[0]?.init?.body).toBe(JSON.stringify({ prompt: 'hi' }));
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  test('notifications.show fans out to notifications builtin', async () => {
+    const originalFetch = globalThis.fetch;
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
+      calls.push({ url: String(input), init });
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    }) as typeof fetch;
+
+    try {
+      const host = createShellHostApi('crm');
+      await host.notifications.show('ping', 'info');
+      await new Promise((r) => setTimeout(r, 0));
+      expect(calls.some((c) => c.url === '/api/ext/notifications/notify')).toBe(
+        true,
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  test('events.publish posts to events builtin', async () => {
+    const originalFetch = globalThis.fetch;
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
+      calls.push({ url: String(input), init });
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    }) as typeof fetch;
+
+    try {
+      const host = createShellHostApi('crm');
+      await host.events.publish('demo', { n: 1 });
+      expect(calls).toHaveLength(1);
+      expect(calls[0]?.url).toBe('/api/ext/events/publish');
+      expect(calls[0]?.init?.body).toBe(
+        JSON.stringify({ topic: 'demo', payload: { n: 1 } }),
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  test('hitl.requestApproval creates, opens inbox, and returns on resolve', async () => {
+    const originalFetch = globalThis.fetch;
+    let status: 'pending' | 'approved' = 'pending';
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === '/api/ext/hitl/approvals' && init?.method === 'POST') {
+        return new Response(
+          JSON.stringify({ id: 'a1', status: 'pending', title: 'Pay' }),
+          { status: 201, headers: { 'content-type': 'application/json' } },
+        );
+      }
+      if (url === '/api/ext/hitl/approvals') {
+        const current = status;
+        // Flip after first poll so the HostAPI loop completes.
+        status = 'approved';
+        return new Response(
+          JSON.stringify({
+            approvals: [{ id: 'a1', status: current, title: 'Pay' }],
+          }),
+          { status: 200, headers: { 'content-type': 'application/json' } },
+        );
+      }
+      return new Response('{}', { status: 404 });
+    }) as typeof fetch;
+
+    try {
+      const host = createShellHostApi('crm');
+      const resultPromise = host.hitl.requestApproval({ title: 'Pay' });
+      // Allow create + setHitlInboxOpen to settle before asserting.
+      await new Promise((r) => setTimeout(r, 0));
+      expect(useShellStore.getState().hitlInboxOpen).toBe(true);
+      const result = await resultPromise;
+      expect(result).toEqual({ approved: true, id: 'a1' });
     } finally {
       globalThis.fetch = originalFetch;
     }

@@ -45,7 +45,13 @@
     "auth:dev": "bun ./builtins/auth/api/server.ts",
     "db-store:dev": "bun ./builtins/db-store/api/server.ts",
     "cache-store:dev": "bun ./builtins/cache-store/api/server.ts",
-    "ai:dev": "bun ./builtins/ai/api/server.ts"
+    "ai:dev": "bun ./builtins/ai/api/server.ts",
+    "hitl:dev": "bun ./builtins/hitl/api/server.ts",
+    "events:dev": "bun ./builtins/events/api/server.ts",
+    "files:dev": "bun ./builtins/files/api/server.ts",
+    "notifications:dev": "bun ./builtins/notifications/api/server.ts",
+    "secrets:dev": "bun ./builtins/secrets/api/server.ts",
+    "audit:dev": "bun ./builtins/audit/api/server.ts"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",

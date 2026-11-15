@@ -48,23 +48,12 @@ function methodNotAllowed(res: ServerResponse, allow: string): void {
   res.end('Method Not Allowed');
 }
 
-/** Stub body pointing HITL at builtin extension APIs (ticket 19). */
-function sendDelegateStub(res: ServerResponse, extensionId: 'hitl'): void {
-  sendJson(res, 501, {
-    error: `Agent ${extensionId} control-plane stub; delegate to builtin`,
-    delegate: {
-      extensionId,
-      pathPrefix: `/api/ext/${extensionId}`,
-    },
-  });
-}
-
 /**
  * Connect middleware for thin agent control-plane routes:
  * - `GET  /api/agent/registry`
  * - `POST /api/agent/extensions/:id/enable`
  * - `POST /api/agent/chat`  → rewrite to `/api/ext/ai/chat` (builtin ai)
- * - `POST /api/agent/hitl`  → stub toward builtin `hitl`
+ * - `POST /api/agent/hitl`  → rewrite to `/api/ext/hitl/approvals` (builtin hitl)
  */
 export function createAgentControlPlaneMiddleware(
   getModel: () => RegistryModel,
@@ -125,7 +114,9 @@ export function createAgentControlPlaneMiddleware(
         methodNotAllowed(res, 'POST');
         return;
       }
-      sendDelegateStub(res, 'hitl');
+      // Thin alias: forward to ext-api proxy → builtin hitl `/approvals`.
+      req.url = `/api/ext/hitl/approvals${searchOf(req)}`;
+      next();
       return;
     }
 

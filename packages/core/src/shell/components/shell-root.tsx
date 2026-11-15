@@ -9,6 +9,7 @@ import { ChatPanel } from './chat-panel';
 import { CommandPalette } from './command-palette';
 import { ExtensionManagerDrawer } from './extension-manager-drawer';
 import { HiddenSlot } from './hidden-slot';
+import { HitlInbox } from './hitl-inbox';
 import { HomeDashboard } from './home-dashboard';
 import { MainCanvas } from './main-canvas';
 import { SidebarSlot } from './sidebar-slot';
@@ -56,6 +57,7 @@ export function ShellRoot() {
           <ChatPanel />
           <HiddenSlot />
           <ExtensionManagerDrawer />
+          <HitlInbox />
           <CommandPalette />
         </div>
       </Toaster>

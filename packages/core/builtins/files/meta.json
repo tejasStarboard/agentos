@@ -1,0 +1,7 @@
+{
+  "name": "Files",
+  "api": {
+    "language": "bun",
+    "port": 6116
+  }
+}

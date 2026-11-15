@@ -1,0 +1,7 @@
+{
+  "name": "HITL",
+  "api": {
+    "language": "bun",
+    "port": 6114
+  }
+}
