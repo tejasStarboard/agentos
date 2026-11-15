@@ -9,7 +9,7 @@ extensions/<id>/
   meta.json
   ui/
     page.tsx       # main slot → /ext/<id>
-    sidebar.tsx    # left sidebar
+    sidebar.tsx    # left sidebar (shown when this extension is activeView)
     widget.tsx     # home dashboard card
   agent/
     tools.json     # tool schemas → HTTP
@@ -115,6 +115,12 @@ Optional `activityBarSection` is `"primary"` (default) or `"secondary"`:
 | **secondary** | Bottom of the bar, stacked bottom → top     | **Builtins only**                                               |
 
 Customer `meta.json` that sets `"activityBarSection": "secondary"` is coerced to **primary** when the registry is applied to the Shell. Builtins such as **auth** (page iframe) and **hitl** (Approvals inbox chrome) register secondary; Extension Manager remains Shell chrome in the secondary cluster.
+
+### Left sidebar host
+
+`ui/sidebar.tsx` mounts in the Shell’s left column. Only the **active** extension’s sidebar is visible (`activeView === extensionId`). Home or an extension without a sidebar shows an empty placeholder — sidebars are not stacked globally.
+
+Opening **Extensions** or **Approvals** from the Activity Bar (secondary) swaps that column to the Shell Extension Manager or HITL panel (mutually exclusive with contribution sidebars). These are left-sidebar panels, not right-edge sheets.
 
 ```json
 {

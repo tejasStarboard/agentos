@@ -72,10 +72,13 @@ describe('ExtensionFrame slot placement', () => {
     const sidebar = renderToStaticMarkup(
       createElement(SidebarSlot, {
         sidebarOpen: true,
+        activeView: 'crm',
         contributions: crmContributions,
       }),
     );
     expect(sidebar).toContain('data-view="sidebar"');
+    expect(sidebar).toContain('data-sidebar-panel="contribution"');
+    expect(sidebar).toContain('data-sidebar-active="true"');
     expect(sidebar).toContain(
       'sandbox="allow-scripts allow-same-origin allow-forms"',
     );

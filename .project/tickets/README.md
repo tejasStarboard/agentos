@@ -56,6 +56,7 @@ Agents must never promote tickets to `done/` themselves.
 36. Custom icon for sample `invoice-bot`
 37. Custom icon for sample `demo`
 38. Activity Bar primary (top→bottom) + secondary (bottom→top, builtins only)
+39. Contextual sidebar (per active extension) + Shell panels (manager / HITL) in left sidebar
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

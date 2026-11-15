@@ -89,7 +89,7 @@ export function ActivityBar() {
   return (
     <TooltipProvider>
       <nav
-        className="flex w-12 shrink-0 flex-col items-center border-r border-border bg-sidebar py-2"
+        className="flex h-full min-h-0 w-12 shrink-0 flex-col items-center overflow-hidden border-r border-border bg-sidebar py-2"
         aria-label="Activity bar"
       >
         <div

@@ -1,8 +1,5 @@
 import { LockSimpleIcon } from '@phosphor-icons/react';
-import {
-  useShellDrawerOpen,
-  useShellExtensions,
-} from '@agentos/core/shell/hooks';
+import { useShellExtensions } from '@agentos/core/shell/hooks';
 import {
   deriveExtensionManagerStatus,
   resolveExtensionIcon,
@@ -14,13 +11,6 @@ import {
 } from '@agentos/core/shell/lib';
 import { Badge } from '@agentos/ui/components/badge';
 import { ScrollArea } from '@agentos/ui/components/scroll-area';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@agentos/ui/components/sheet';
 import { Switch } from '@agentos/ui/components/switch';
 import { cn } from '@agentos/ui/lib/utils';
 
@@ -67,7 +57,7 @@ function ExtensionRow({
 
   return (
     <li
-      className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-b-0"
+      className="flex items-center gap-3 border-b border-border px-3 py-3 last:border-b-0"
       data-extension-id={entry.id}
       data-kind={entry.kind}
       data-status={status}
@@ -149,28 +139,19 @@ export function ExtensionManagerList(props: ExtensionManagerListProps = {}) {
   );
 }
 
-/** Right-side Extension Manager: list, lock builtins, toggle customers. */
-export function ExtensionManagerDrawer() {
-  const open = useShellDrawerOpen();
-  const setDrawerOpen = useShellStore((s) => s.setDrawerOpen);
-
+/** Left-sidebar Extension Manager panel (no Sheet overlay). */
+export function ExtensionManagerPanel() {
   return (
-    <Sheet open={open} onOpenChange={setDrawerOpen}>
-      <SheetContent
-        side="right"
-        className="w-full gap-0 p-0 sm:max-w-md"
-        data-slot="extension-manager"
-      >
-        <SheetHeader className="border-b border-border">
-          <SheetTitle>Extensions</SheetTitle>
-          <SheetDescription>
-            Toggle customer extensions. Builtins stay on.
-          </SheetDescription>
-        </SheetHeader>
-        <ScrollArea className="min-h-0 flex-1">
-          <ExtensionManagerList />
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
+    <div className="flex h-full min-h-0 flex-col" data-slot="extension-manager">
+      <p className="border-b border-border px-3 py-2 text-xs text-muted-foreground">
+        Toggle customer extensions. Builtins stay on.
+      </p>
+      <ScrollArea className="min-h-0 flex-1">
+        <ExtensionManagerList />
+      </ScrollArea>
+    </div>
   );
 }
+
+/** @deprecated Prefer ExtensionManagerPanel — kept for export stability. */
+export const ExtensionManagerDrawer = ExtensionManagerPanel;

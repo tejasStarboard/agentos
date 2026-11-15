@@ -100,18 +100,43 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   skillsByExtension: {},
   statusText: null,
   statusTone: null,
-  setActiveView: (view) => set({ activeView: view }),
+  setActiveView: (view) =>
+    set({
+      activeView: view,
+      drawerOpen: false,
+      hitlInboxOpen: false,
+    }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  setDrawerOpen: (open) => set({ drawerOpen: open }),
-  setHitlInboxOpen: (open) => set({ hitlInboxOpen: open }),
-  toggleHitlInbox: () => set((s) => ({ hitlInboxOpen: !s.hitlInboxOpen })),
+  setDrawerOpen: (open) =>
+    set(
+      open
+        ? { drawerOpen: true, hitlInboxOpen: false, sidebarOpen: true }
+        : { drawerOpen: false },
+    ),
+  setHitlInboxOpen: (open) =>
+    set(
+      open
+        ? { hitlInboxOpen: true, drawerOpen: false, sidebarOpen: true }
+        : { hitlInboxOpen: false },
+    ),
+  toggleHitlInbox: () =>
+    set((s) =>
+      s.hitlInboxOpen
+        ? { hitlInboxOpen: false }
+        : { hitlInboxOpen: true, drawerOpen: false, sidebarOpen: true },
+    ),
   setChatOpen: (open) => set({ chatOpen: open }),
   toggleChat: () => set((s) => ({ chatOpen: !s.chatOpen })),
   appendChatMessage: (message) =>
     set((s) => ({ chatMessages: [...s.chatMessages, message] })),
   setChatBusy: (busy) => set({ chatBusy: busy }),
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
-  toggleDrawer: () => set((s) => ({ drawerOpen: !s.drawerOpen })),
+  toggleDrawer: () =>
+    set((s) =>
+      s.drawerOpen
+        ? { drawerOpen: false }
+        : { drawerOpen: true, hitlInboxOpen: false, sidebarOpen: true },
+    ),
   setExtensions: (extensions) =>
     set((s) => {
       const enabledById = {
