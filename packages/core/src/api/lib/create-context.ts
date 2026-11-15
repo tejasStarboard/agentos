@@ -37,9 +37,17 @@ export function createContext(
     },
   } as AppRequest;
 
+  const store = new Map<string, unknown>();
+
   return {
     req,
     params,
+    get<T = unknown>(key: string): T | undefined {
+      return store.get(key) as T | undefined;
+    },
+    set(key: string, value: unknown): void {
+      store.set(key, value);
+    },
     json(data: unknown, init: ResponseInit = {}): Response {
       const headers = new Headers(init.headers);
       if (!headers.has('content-type')) {

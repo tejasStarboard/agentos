@@ -1,6 +1,6 @@
 # 17 — Builtin `cache-store`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

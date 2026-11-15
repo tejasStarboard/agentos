@@ -14,6 +14,9 @@ export type AppContext = {
   json: (data: unknown, init?: ResponseInit) => Response;
   /** Path params captured from `:param` / `[param]` segments. */
   params: Record<string, string>;
+  /** Hono-shaped bag for middleware (e.g. auth session). */
+  get: <T = unknown>(key: string) => T | undefined;
+  set: (key: string, value: unknown) => void;
 };
 
 export type Handler = (c: AppContext) => Response | Promise<Response>;

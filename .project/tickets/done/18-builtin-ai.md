@@ -1,6 +1,6 @@
 # 18 — Builtin `ai`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

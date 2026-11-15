@@ -1,6 +1,6 @@
 # 19 — Supporting builtins (hitl, events, files, notifications, secrets, audit)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
