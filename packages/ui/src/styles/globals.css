@@ -141,8 +141,10 @@
   body,
   #root {
     height: 100%;
+    overflow: hidden;
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
+    overscroll-behavior: none;
   }
 }

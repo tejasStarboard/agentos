@@ -10,7 +10,6 @@ import {
   type ShellView,
   type UiContribution,
 } from '@agentos/core/shell/lib';
-import { ScrollArea } from '@agentos/ui/components/scroll-area';
 import { Separator } from '@agentos/ui/components/separator';
 import { cn } from '@agentos/ui/lib/utils';
 import { ExtensionFrame } from './extension-frame';
@@ -64,7 +63,7 @@ export function SidebarSlot({
   return (
     <aside
       className={cn(
-        'flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground',
+        'flex h-full min-h-0 w-64 shrink-0 flex-col overflow-hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground',
         !sidebarOpen && 'hidden',
       )}
       data-slot="sidebar"
@@ -88,7 +87,7 @@ export function SidebarSlot({
         </div>
       ) : null}
       {contributionMode ? (
-        <ScrollArea className="h-[calc(100%-2.25rem)]">
+        <div className="min-h-0 flex-1 overflow-hidden">
           {sidebars.length === 0 ? (
             <div className="p-3 text-xs text-muted-foreground">
               Sidebar slot
@@ -102,7 +101,7 @@ export function SidebarSlot({
                     contribution.extensionId,
                     contribution.view,
                   )}
-                  className={cn('h-full w-full min-h-48', !active && 'hidden')}
+                  className={cn('h-full w-full', !active && 'hidden')}
                   hidden={!active}
                   data-sidebar-active={active ? 'true' : 'false'}
                 >
@@ -120,7 +119,7 @@ export function SidebarSlot({
               Sidebar slot
             </div>
           ) : null}
-        </ScrollArea>
+        </div>
       ) : null}
     </aside>
   );

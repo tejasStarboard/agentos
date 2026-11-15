@@ -28,13 +28,13 @@ export function ShellRoot() {
     >
       <Toaster toastManager={toast} position="top-center">
         <div
-          className="flex h-full min-h-screen w-full flex-col bg-background text-foreground"
+          className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background text-foreground"
           data-agentos-shell
         >
-          <div className="flex min-h-0 flex-1">
+          <div className="flex min-h-0 flex-1 overflow-hidden">
             <ActivityBar />
             <SidebarSlot />
-            <div className="relative min-h-0 min-w-0 flex-1 bg-background">
+            <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden bg-background">
               <div
                 className="h-full w-full overflow-auto"
                 data-active={isHome ? 'true' : 'false'}

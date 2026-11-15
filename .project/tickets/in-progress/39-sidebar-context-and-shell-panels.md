@@ -23,6 +23,7 @@ Today contacts appear on every page because `SidebarSlot` mounts all `view: 'sid
 - [x] `hitl.requestApproval` / existing open flags still surface the HITL UI (now left sidebar)
 - [x] Docs (`extensions.md` / architecture) note: sidebars are per active extension; manager + HITL are Shell sidebar panels
 - [x] Tests: contextual filter; manager/HITL render in sidebar slot; no right-sheet open for those flows
+- [x] Shell viewport is fixed (`h-dvh` + `overflow-hidden` on shell / `html` / `body` / `#root`); scroll happens only inside main/home panes and sidebar panels (no page rubber-band / wobble)
 
 ## Notes
 
@@ -37,8 +38,10 @@ ActivityBar | SidebarSlot (one host) | Main
 
 **Shell mode:** Prefer a small mode (derive from existing `drawerOpen` / `hitlInboxOpen`, or a single `sidebarPanel: 'contribution' | 'extensions' | 'hitl'`) over keeping parallel right overlays. Reuse existing manager/HITL React bodies; strip `Sheet` chrome and mount them in `SidebarSlot` when that mode is active.
 
+**Viewport lock:** `ShellRoot` uses `h-dvh max-h-dvh overflow-hidden` (not `min-h-screen`). Workspace row and panes use `min-h-0` / `overflow-hidden`; main + home keep `overflow-auto`. Global + client-app `html`/`body`/`#root` are `overflow: hidden` with `overscroll-behavior: none` on `body`.
+
 **Out of scope:** New extension-owned right-panel / sheet slot; chat overlay changes.
 
-**Key paths:** `packages/core/src/shell/components/sidebar-slot.tsx`, `extension-manager-drawer.tsx`, `hitl-inbox.tsx`, `shell-root.tsx`, `activity-bar.tsx`, `store.ts`.
+**Key paths:** `packages/core/src/shell/components/sidebar-slot.tsx`, `extension-manager-drawer.tsx`, `hitl-inbox.tsx`, `shell-root.tsx`, `activity-bar.tsx`, `store.ts`, `packages/ui/src/styles/globals.css`, `examples/client-app/index.html`.
 
 UI primitives stay on `@agentos/ui`; source files remain kebab-case.
