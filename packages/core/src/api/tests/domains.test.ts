@@ -1,0 +1,292 @@
+import { afterEach, describe, expect, test } from 'bun:test';
+
+import {
+  chat,
+  embed,
+  generateImage,
+  generateText,
+  health as aiHealth,
+  resolveAiApiBase,
+} from '@agentos/core/api/ai';
+import {
+  publish,
+  resolveEventsApiBase,
+  subscribeUrl,
+} from '@agentos/core/api/events';
+import {
+  getBlob,
+  getBlobBase64,
+  putBlob,
+  resolveFilesApiBase,
+} from '@agentos/core/api/files';
+import {
+  createApproval,
+  listApprovals,
+  resolveApproval,
+  resolveHitlApiBase,
+} from '@agentos/core/api/hitl';
+import { getSecret, resolveSecretsApiBase } from '@agentos/core/api/secrets';
+import { callTool, resolveToolUrl } from '@agentos/core/api/tools';
+
+const originalFetch = globalThis.fetch;
+
+afterEach(() => {
+  globalThis.fetch = originalFetch;
+});
+
+type Captured = {
+  url: string;
+  method: string;
+  body: unknown;
+  headers: Headers;
+};
+
+function mockFetch(
+  handler: (req: Captured) => Response | Promise<Response>,
+): void {
+  globalThis.fetch = (async (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ): Promise<Response> => {
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.href
+          : input.url;
+    const method = (init?.method ?? 'GET').toUpperCase();
+    let body: unknown = undefined;
+    if (typeof init?.body === 'string') {
+      try {
+        body = JSON.parse(init.body);
+      } catch {
+        body = init.body;
+      }
+    }
+    return handler({
+      url,
+      method,
+      body,
+      headers: new Headers(init?.headers),
+    });
+  }) as typeof fetch;
+}
+
+describe('resolve*ApiBase', () => {
+  test('defaults and overrides', () => {
+    expect(resolveAiApiBase({})).toBe('http://127.0.0.1:5173/api/ext/ai');
+    expect(resolveHitlApiBase({})).toBe('http://127.0.0.1:5173/api/ext/hitl');
+    expect(resolveEventsApiBase({})).toBe(
+      'http://127.0.0.1:5173/api/ext/events',
+    );
+    expect(resolveFilesApiBase({})).toBe('http://127.0.0.1:5173/api/ext/files');
+    expect(resolveSecretsApiBase({})).toBe(
+      'http://127.0.0.1:5173/api/ext/secrets',
+    );
+
+    expect(resolveAiApiBase({ AGENT_OS_AI_API_BASE: 'http://ai.test/' })).toBe(
+      'http://ai.test',
+    );
+  });
+});
+
+describe('ai client', () => {
+  test('generateText / chat / embed / health map paths', async () => {
+    const seen: string[] = [];
+    mockFetch(({ url, method, body }) => {
+      seen.push(`${method} ${url}`);
+      if (url.endsWith('/health')) {
+        return Response.json({ ok: true, mode: 'mock' });
+      }
+      if (url.endsWith('/generate-text')) {
+        expect(body).toEqual({ prompt: 'hi' });
+        return Response.json({ text: 'hello' });
+      }
+      if (url.endsWith('/generate-image')) {
+        return Response.json({
+          stub: true,
+          mediaType: 'image/png',
+          base64: null,
+        });
+      }
+      if (url.endsWith('/embed')) {
+        return Response.json({ embedding: [0.1], stub: true });
+      }
+      if (url.endsWith('/chat')) {
+        return Response.json({ text: 'chat', toolNames: [] });
+      }
+      return new Response('nope', { status: 404 });
+    });
+
+    const env = { AGENT_OS_AI_API_BASE: 'http://ai.test' };
+    expect(await aiHealth(env)).toEqual({ ok: true, mode: 'mock' });
+    expect(await generateText({ prompt: 'hi' }, env)).toEqual({
+      text: 'hello',
+    });
+    expect(await generateImage({ prompt: 'img' }, env)).toEqual({
+      stub: true,
+      mediaType: 'image/png',
+      base64: null,
+    });
+    expect(await embed({ value: 'x' }, env)).toEqual({
+      embedding: [0.1],
+      stub: true,
+    });
+    expect(await chat({ prompt: 'q' }, env)).toEqual({
+      text: 'chat',
+      toolNames: [],
+    });
+    expect(seen).toContain('GET http://ai.test/health');
+    expect(seen).toContain('POST http://ai.test/generate-text');
+  });
+
+  test('throws on non-OK', async () => {
+    mockFetch(() =>
+      Response.json({ error: 'prompt required' }, { status: 400 }),
+    );
+    await expect(
+      generateText({ prompt: '' }, { AGENT_OS_AI_API_BASE: 'http://ai.test' }),
+    ).rejects.toThrow(/ai generate-text failed \(400\)/);
+  });
+});
+
+describe('hitl client', () => {
+  test('list / create / resolve', async () => {
+    const approval = {
+      id: 'a1',
+      title: 'Ship',
+      status: 'pending' as const,
+      createdAt: '2026-01-01T00:00:00.000Z',
+    };
+    mockFetch(({ url, method, body }) => {
+      if (method === 'GET' && url.includes('/approvals')) {
+        expect(url).toContain('status=pending');
+        return Response.json({ approvals: [approval] });
+      }
+      if (method === 'POST' && url.endsWith('/approvals')) {
+        expect(body).toEqual({ title: 'Ship' });
+        return Response.json(approval, { status: 201 });
+      }
+      if (method === 'POST' && url.endsWith('/resolve')) {
+        expect(body).toEqual({ decision: 'approved' });
+        return Response.json({ ...approval, status: 'approved' });
+      }
+      return new Response('nope', { status: 404 });
+    });
+
+    const env = { AGENT_OS_HITL_API_BASE: 'http://hitl.test' };
+    expect(await listApprovals('pending', env)).toEqual([approval]);
+    expect(await createApproval({ title: 'Ship' }, env)).toEqual(approval);
+    expect(await resolveApproval('a1', 'approved', env)).toEqual({
+      ...approval,
+      status: 'approved',
+    });
+  });
+});
+
+describe('events client', () => {
+  test('publish and subscribeUrl', async () => {
+    mockFetch(({ url, method, body }) => {
+      expect(method).toBe('POST');
+      expect(url).toBe('http://events.test/publish');
+      expect(body).toEqual({ topic: 'orders', payload: { id: 1 } });
+      return Response.json({
+        ok: true,
+        event: {
+          topic: 'orders',
+          payload: { id: 1 },
+          at: '2026-01-01T00:00:00.000Z',
+        },
+      });
+    });
+
+    const env = { AGENT_OS_EVENTS_API_BASE: 'http://events.test' };
+    const result = await publish('orders', { id: 1 }, env);
+    expect(result.ok).toBe(true);
+    expect(subscribeUrl('orders', env)).toBe(
+      'http://events.test/subscribe?topic=orders',
+    );
+    expect(subscribeUrl(['a', 'b'], env)).toBe(
+      'http://events.test/subscribe?topics=a&topics=b',
+    );
+  });
+});
+
+describe('files client', () => {
+  test('putBlob base64 / getBlob / getBlobBase64', async () => {
+    mockFetch(({ url, method, body, headers }) => {
+      if (method === 'PUT') {
+        expect(url).toBe('http://files.test/blobs/doc%2F1');
+        expect(headers.get('content-type')).toContain('application/json');
+        expect(body).toEqual({ base64: 'YQ==' });
+        return Response.json({ ok: true, key: 'doc/1', bytes: 1 });
+      }
+      if (method === 'GET' && url.includes('format=json')) {
+        return Response.json({ key: 'doc/1', base64: 'YQ==', bytes: 1 });
+      }
+      if (method === 'GET') {
+        return new Response(new Uint8Array([97]), {
+          headers: { 'content-type': 'application/octet-stream' },
+        });
+      }
+      return new Response('nope', { status: 404 });
+    });
+
+    const env = { AGENT_OS_FILES_API_BASE: 'http://files.test' };
+    expect(await putBlob('doc/1', 'YQ==', env)).toEqual({
+      ok: true,
+      key: 'doc/1',
+      bytes: 1,
+    });
+    expect(await getBlobBase64('doc/1', env)).toEqual({
+      key: 'doc/1',
+      base64: 'YQ==',
+      bytes: 1,
+    });
+    const bytes = await getBlob('doc/1', env);
+    expect([...bytes]).toEqual([97]);
+  });
+});
+
+describe('secrets client', () => {
+  test('getSecret', async () => {
+    mockFetch(({ url, method }) => {
+      expect(method).toBe('GET');
+      expect(url).toBe('http://secrets.test/secrets/OPENAI_KEY');
+      return Response.json({ key: 'OPENAI_KEY', value: 'sk-test' });
+    });
+    expect(
+      await getSecret('OPENAI_KEY', {
+        AGENT_OS_SECRETS_API_BASE: 'http://secrets.test',
+      }),
+    ).toEqual({ key: 'OPENAI_KEY', value: 'sk-test' });
+  });
+});
+
+describe('tools client', () => {
+  test('resolveToolUrl and callTool', async () => {
+    expect(
+      resolveToolUrl('crm-helper', 'search_contacts', {
+        AGENT_OS_GLOBAL_GATEWAY_URL: 'http://gw.test',
+      }),
+    ).toBe('http://gw.test/api/ext/crm-helper/tools/search_contacts');
+
+    mockFetch(({ url, method, body }) => {
+      expect(method).toBe('POST');
+      expect(url).toBe(
+        'http://gw.test/api/ext/crm-helper/tools/search_contacts',
+      );
+      expect(body).toEqual({ q: 'ada' });
+      return Response.json({ items: [] });
+    });
+
+    expect(
+      await callTool(
+        'crm-helper',
+        'search_contacts',
+        { q: 'ada' },
+        { AGENT_OS_GLOBAL_GATEWAY_URL: 'http://gw.test' },
+      ),
+    ).toEqual({ items: [] });
+  });
+});

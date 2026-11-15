@@ -1,3 +1,4 @@
+import { runErrorHooks, runRequestHooks, runResponseHooks } from './hooks';
 import { createContext } from './create-context';
 import { matchRoute } from './match-route';
 import type {
@@ -22,6 +23,9 @@ const METHODS: HttpMethod[] = [
 /**
  * Bun-native app factory with a built-in `GET /health` → `{ ok: true }`.
  * File routes registered later via `loadRoutes` (or `app.route`) can override health.
+ *
+ * Lifecycle hooks from `@agentos/core/api/hooks` run automatically for
+ * onRequest / onResponse / onError. Call `runStartHooks()` before Bun.serve.
  */
 export function createApp(): App {
   const routes: RouteRegistration[] = [];
@@ -47,6 +51,11 @@ export function createApp(): App {
     },
 
     async fetch(request: Request): Promise<Response> {
+      const early = await runRequestHooks(request);
+      if (early) {
+        return early;
+      }
+
       const url = new URL(request.url);
       const pathname = url.pathname.replace(/\/+$/, '') || '/';
       const method = request.method.toUpperCase() as HttpMethod;
@@ -78,7 +87,18 @@ export function createApp(): App {
       }
 
       const c = createContext(request, params);
-      return runMiddleware(matched.middleware, c, () => matched!.handler(c));
+      try {
+        const response = await runMiddleware(matched.middleware, c, () =>
+          matched!.handler(c),
+        );
+        return await runResponseHooks(request, response, c);
+      } catch (error) {
+        const hooked = await runErrorHooks(error, request, c);
+        if (hooked) {
+          return hooked;
+        }
+        throw error;
+      }
     },
   };
 
