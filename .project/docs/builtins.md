@@ -13,14 +13,14 @@ Shipped in `packages/core/builtins/`. Registry flags: `kind: "builtin"`, `driven
 
 ## Supporting (default-on)
 
-| Id                | Role                                                                        |
-| ----------------- | --------------------------------------------------------------------------- |
-| **hitl**          | Approvals API; Activity Bar **secondary** opens Shell HITL inbox (no `ui/`) |
-| **events**        | Cross-extension pub/sub                                                     |
-| **files**         | Blob/object API                                                             |
-| **notifications** | Toast/fan-out                                                               |
-| **secrets**       | Secret resolution                                                           |
-| **audit**         | Append-only audit via db-store                                              |
+| Id                | Role                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| **hitl**          | Approvals API; Activity Bar **secondary** opens HITL panel in left sidebar (no `ui/`) |
+| **events**        | Cross-extension pub/sub                                                               |
+| **files**         | Blob/object API                                                                       |
+| **notifications** | Toast/fan-out                                                                         |
+| **secrets**       | Secret resolution                                                                     |
+| **audit**         | Append-only audit via db-store                                                        |
 
 ## Access pattern
 

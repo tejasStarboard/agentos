@@ -1,6 +1,6 @@
 # 39 — Contextual sidebar + Shell panels left
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -17,12 +17,12 @@ Today contacts appear on every page because `SidebarSlot` mounts all `view: 'sid
 
 ## Done when
 
-- [ ] `SidebarSlot` shows only the sidebar contribution for `activeView` when in contribution mode; Home / no sidebar → empty placeholder (not CRM contacts on every page)
-- [ ] Opening Extensions or Approvals from the Activity Bar shows that Shell UI in the **left** sidebar (sidebar forced open); right `Sheet` wrappers removed or unused for these two
-- [ ] Contribution mode and Shell-panel mode are mutually exclusive (one host content at a time)
-- [ ] `hitl.requestApproval` / existing open flags still surface the HITL UI (now left sidebar)
-- [ ] Docs (`extensions.md` / architecture) note: sidebars are per active extension; manager + HITL are Shell sidebar panels
-- [ ] Tests: contextual filter; manager/HITL render in sidebar slot; no right-sheet open for those flows
+- [x] `SidebarSlot` shows only the sidebar contribution for `activeView` when in contribution mode; Home / no sidebar → empty placeholder (not CRM contacts on every page)
+- [x] Opening Extensions or Approvals from the Activity Bar shows that Shell UI in the **left** sidebar (sidebar forced open); right `Sheet` wrappers removed or unused for these two
+- [x] Contribution mode and Shell-panel mode are mutually exclusive (one host content at a time)
+- [x] `hitl.requestApproval` / existing open flags still surface the HITL UI (now left sidebar)
+- [x] Docs (`extensions.md` / architecture) note: sidebars are per active extension; manager + HITL are Shell sidebar panels
+- [x] Tests: contextual filter; manager/HITL render in sidebar slot; no right-sheet open for those flows
 
 ## Notes
 

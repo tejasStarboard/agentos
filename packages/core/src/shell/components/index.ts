@@ -13,6 +13,7 @@ export { ExtensionFrame } from './extension-frame';
 export {
   ExtensionManagerDrawer,
   ExtensionManagerList,
+  ExtensionManagerPanel,
   type ExtensionManagerListProps,
 } from './extension-manager-drawer';
 export { HiddenSlot } from './hidden-slot';

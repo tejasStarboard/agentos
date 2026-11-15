@@ -20,6 +20,7 @@ Browser:  Shell (mountShell) + extension UI iframes
 ## Comlink sandbox
 
 - Each `ui/page.tsx` | `sidebar.tsx` | `widget.tsx` loads in `iframe sandbox="allow-scripts allow-same-origin allow-forms"`.
+- Left sidebar host shows the **active** extension’s `ui/sidebar.tsx` (matched to `activeView`). Extension Manager and HITL Approvals are Shell panels in that same left column (not right sheets).
 - Transport: **dual MessageChannel** per iframe (not shared `windowEndpoint` — avoids cross-talk).
 - UI uses `@agentos/core/client` hooks; never raw `postMessage`.
 

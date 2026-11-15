@@ -81,9 +81,12 @@ describe('useShellStore', () => {
     expect(state.runtimeStatus['b:page']).toBe('active');
   });
 
-  test('setActiveView updates active view', () => {
+  test('setActiveView updates active view and clears shell panels', () => {
+    useShellStore.getState().setDrawerOpen(true);
     useShellStore.getState().setActiveView('ext-placeholder');
     expect(useShellStore.getState().activeView).toBe('ext-placeholder');
+    expect(useShellStore.getState().drawerOpen).toBe(false);
+    expect(useShellStore.getState().hitlInboxOpen).toBe(false);
   });
 
   test('toggleSidebar and setDrawerOpen flip drawer flags', () => {
@@ -91,8 +94,22 @@ describe('useShellStore', () => {
     expect(useShellStore.getState().sidebarOpen).toBe(false);
     useShellStore.getState().setDrawerOpen(true);
     expect(useShellStore.getState().drawerOpen).toBe(true);
+    expect(useShellStore.getState().sidebarOpen).toBe(true);
     useShellStore.getState().toggleDrawer();
     expect(useShellStore.getState().drawerOpen).toBe(false);
+  });
+
+  test('drawer and HITL panels are mutually exclusive and force sidebar open', () => {
+    useShellStore.getState().setSidebarOpen(false);
+    useShellStore.getState().setDrawerOpen(true);
+    expect(useShellStore.getState().drawerOpen).toBe(true);
+    expect(useShellStore.getState().hitlInboxOpen).toBe(false);
+    expect(useShellStore.getState().sidebarOpen).toBe(true);
+
+    useShellStore.getState().setHitlInboxOpen(true);
+    expect(useShellStore.getState().hitlInboxOpen).toBe(true);
+    expect(useShellStore.getState().drawerOpen).toBe(false);
+    expect(useShellStore.getState().sidebarOpen).toBe(true);
   });
 
   test('customer disable unmounts contributions and clears skills', () => {

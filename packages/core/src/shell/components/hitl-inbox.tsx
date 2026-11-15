@@ -3,13 +3,6 @@ import { useShellStore } from '@agentos/core/shell/lib';
 import { Badge } from '@agentos/ui/components/badge';
 import { Button } from '@agentos/ui/components/button';
 import { ScrollArea } from '@agentos/ui/components/scroll-area';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@agentos/ui/components/sheet';
 
 type Approval = {
   id: string;
@@ -47,9 +40,9 @@ async function resolveApproval(
   }
 }
 
+/** Left-sidebar HITL Approvals panel (no Sheet overlay). */
 export function HitlInbox() {
   const open = useShellStore((s) => s.hitlInboxOpen);
-  const setHitlInboxOpen = useShellStore((s) => s.setHitlInboxOpen);
   const [approvals, setApprovals] = useState<Approval[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,66 +83,65 @@ export function HitlInbox() {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setHitlInboxOpen}>
-      <SheetContent side="right" className="gap-0 p-0" aria-label="HITL inbox">
-        <SheetHeader className="border-b border-border">
-          <SheetTitle>Approvals</SheetTitle>
-          <SheetDescription>
-            Pending human-in-the-loop requests from agents and extensions.
-          </SheetDescription>
-        </SheetHeader>
-        <ScrollArea className="h-[calc(100%-5rem)]">
-          {error ? (
-            <p className="px-4 py-3 text-xs text-destructive" role="alert">
-              {error}
-            </p>
-          ) : null}
-          {approvals.length === 0 ? (
-            <p className="px-4 py-6 text-xs text-muted-foreground">
-              No pending approvals.
-            </p>
-          ) : (
-            <ul className="divide-y divide-border">
-              {approvals.map((approval) => (
-                <li key={approval.id} className="flex flex-col gap-2 px-4 py-3">
-                  <div className="flex items-start gap-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-foreground">
-                        {approval.title}
+    <div
+      className="flex h-full min-h-0 flex-col"
+      data-slot="hitl-inbox"
+      aria-label="HITL inbox"
+    >
+      <p className="border-b border-border px-3 py-2 text-xs text-muted-foreground">
+        Pending human-in-the-loop requests from agents and extensions.
+      </p>
+      <ScrollArea className="min-h-0 flex-1">
+        {error ? (
+          <p className="px-3 py-3 text-xs text-destructive" role="alert">
+            {error}
+          </p>
+        ) : null}
+        {approvals.length === 0 ? (
+          <p className="px-3 py-6 text-xs text-muted-foreground">
+            No pending approvals.
+          </p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {approvals.map((approval) => (
+              <li key={approval.id} className="flex flex-col gap-2 px-3 py-3">
+                <div className="flex items-start gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {approval.title}
+                    </p>
+                    {approval.body ? (
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {approval.body}
                       </p>
-                      {approval.body ? (
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {approval.body}
-                        </p>
-                      ) : null}
-                    </div>
-                    <Badge variant="secondary">pending</Badge>
+                    ) : null}
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      size="sm"
-                      disabled={busyId === approval.id}
-                      onClick={() => void onResolve(approval.id, 'approved')}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      disabled={busyId === approval.id}
-                      onClick={() => void onResolve(approval.id, 'rejected')}
-                    >
-                      Reject
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
+                  <Badge variant="secondary">pending</Badge>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={busyId === approval.id}
+                    onClick={() => void onResolve(approval.id, 'approved')}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={busyId === approval.id}
+                    onClick={() => void onResolve(approval.id, 'rejected')}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </ScrollArea>
+    </div>
   );
 }
