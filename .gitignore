@@ -35,3 +35,10 @@ dist-ssr
 
 # AgentOS local stores (repo-relative; user store is ~/.agentos/store)
 .agentos/
+
+# Python (packages/python, services/)
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
