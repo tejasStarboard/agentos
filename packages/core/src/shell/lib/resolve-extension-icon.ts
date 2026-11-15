@@ -5,6 +5,7 @@ import {
   InvoiceIcon,
   ReceiptIcon,
   SparkleIcon,
+  UserIcon,
   UsersIcon,
   type Icon,
 } from '@phosphor-icons/react';
@@ -20,6 +21,7 @@ export const EXTENSION_ICON_MAP = {
   Invoice: InvoiceIcon,
   Receipt: ReceiptIcon,
   Sparkle: SparkleIcon,
+  User: UserIcon,
   Users: UsersIcon,
 } as const satisfies Record<string, Icon>;
 

@@ -4,23 +4,23 @@ Shipped in `packages/core/builtins/`. Registry flags: `kind: "builtin"`, `driven
 
 ## Driving (required)
 
-| Id              | Role                                                  | Tech                                                                   |
-| --------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
-| **auth**        | Identity, sessions, **RBAC**                          | Better Auth (+ db-store as needed)                                     |
-| **db-store**    | Sole SQL owner                                        | Drizzle (SQLite default)                                               |
-| **cache-store** | Sole cache owner                                      | In-memory v1                                                           |
-| **ai**          | generateText/Image/embed, tools/skills/agents runtime | Vercel AI SDK v7 (mock default; [ADR 006](./adr/006-vercel-ai-sdk.md)) |
+| Id              | Role                                                                       | Tech                                                                   |
+| --------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **auth**        | Identity, sessions, **RBAC**; Activity Bar **secondary** via `ui/page.tsx` | Better Auth (+ db-store as needed)                                     |
+| **db-store**    | Sole SQL owner                                                             | Drizzle (SQLite default)                                               |
+| **cache-store** | Sole cache owner                                                           | In-memory v1                                                           |
+| **ai**          | generateText/Image/embed, tools/skills/agents runtime                      | Vercel AI SDK v7 (mock default; [ADR 006](./adr/006-vercel-ai-sdk.md)) |
 
 ## Supporting (default-on)
 
-| Id                | Role                           |
-| ----------------- | ------------------------------ |
-| **hitl**          | Approvals inbox/API            |
-| **events**        | Cross-extension pub/sub        |
-| **files**         | Blob/object API                |
-| **notifications** | Toast/fan-out                  |
-| **secrets**       | Secret resolution              |
-| **audit**         | Append-only audit via db-store |
+| Id                | Role                                                                        |
+| ----------------- | --------------------------------------------------------------------------- |
+| **hitl**          | Approvals API; Activity Bar **secondary** opens Shell HITL inbox (no `ui/`) |
+| **events**        | Cross-extension pub/sub                                                     |
+| **files**         | Blob/object API                                                             |
+| **notifications** | Toast/fan-out                                                               |
+| **secrets**       | Secret resolution                                                           |
+| **audit**         | Append-only audit via db-store                                              |
 
 ## Access pattern
 
