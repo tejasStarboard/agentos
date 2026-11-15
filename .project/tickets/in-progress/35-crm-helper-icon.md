@@ -1,6 +1,6 @@
 # 35 — Custom icon for `crm-helper`
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -12,9 +12,9 @@ Give the customer extension `crm-helper` a distinct Activity Bar / manager icon 
 
 ## Done when
 
-- [ ] `examples/client-app/extensions/crm-helper/meta.json` sets `"icon"` to a CRM-appropriate Phosphor name (suggested: `Users` or `AddressBook`)
-- [ ] Icon appears in Activity Bar (when the extension contributes a navigable view) and Extension Manager
-- [ ] No change to builtin icons or other customer extensions
+- [x] `examples/client-app/extensions/crm-helper/meta.json` sets `"icon"` to a CRM-appropriate Phosphor name (suggested: `Users` or `AddressBook`)
+- [x] Icon appears in Activity Bar (when the extension contributes a navigable view) and Extension Manager
+- [x] No change to builtin icons or other customer extensions
 
 ## Notes
 
