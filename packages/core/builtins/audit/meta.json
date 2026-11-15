@@ -1,0 +1,7 @@
+{
+  "name": "Audit",
+  "api": {
+    "language": "bun",
+    "port": 6119
+  }
+}

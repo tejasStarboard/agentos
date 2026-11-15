@@ -37,6 +37,7 @@ export type ShellUiState = {
   activeView: ShellView;
   sidebarOpen: boolean;
   drawerOpen: boolean;
+  hitlInboxOpen: boolean;
   chatOpen: boolean;
   chatMessages: ChatMessage[];
   chatBusy: boolean;
@@ -61,6 +62,8 @@ export type ShellUiState = {
   setActiveView: (view: ShellView) => void;
   setSidebarOpen: (open: boolean) => void;
   setDrawerOpen: (open: boolean) => void;
+  setHitlInboxOpen: (open: boolean) => void;
+  toggleHitlInbox: () => void;
   setChatOpen: (open: boolean) => void;
   toggleChat: () => void;
   appendChatMessage: (message: ChatMessage) => void;
@@ -84,6 +87,7 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   activeView: 'home',
   sidebarOpen: true,
   drawerOpen: false,
+  hitlInboxOpen: false,
   chatOpen: false,
   chatMessages: [],
   chatBusy: false,
@@ -99,6 +103,8 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   setActiveView: (view) => set({ activeView: view }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   setDrawerOpen: (open) => set({ drawerOpen: open }),
+  setHitlInboxOpen: (open) => set({ hitlInboxOpen: open }),
+  toggleHitlInbox: () => set((s) => ({ hitlInboxOpen: !s.hitlInboxOpen })),
   setChatOpen: (open) => set({ chatOpen: open }),
   toggleChat: () => set((s) => ({ chatOpen: !s.chatOpen })),
   appendChatMessage: (message) =>

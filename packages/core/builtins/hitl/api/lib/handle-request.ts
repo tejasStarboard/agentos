@@ -1,0 +1,105 @@
+import type { ApprovalStatus, ApprovalsStore } from './approvals-store';
+
+function json(data: unknown, init: ResponseInit = {}): Response {
+  const headers = new Headers(init.headers);
+  if (!headers.has('content-type')) {
+    headers.set('content-type', 'application/json; charset=utf-8');
+  }
+  return new Response(JSON.stringify(data), { ...init, headers });
+}
+
+async function readJsonBody(
+  request: Request,
+): Promise<Record<string, unknown> | null> {
+  try {
+    const body = (await request.json()) as unknown;
+    if (body && typeof body === 'object' && !Array.isArray(body)) {
+      return body as Record<string, unknown>;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function parseResolvePath(path: string): string | null {
+  const match = path.match(/^\/approvals\/([^/]+)\/resolve$/);
+  if (!match?.[1]) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Thin Bun request router for `/api/ext/hitl/*` upstream paths.
+ */
+export async function handleHitlRequest(
+  store: ApprovalsStore,
+  request: Request,
+): Promise<Response> {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+  const method = request.method.toUpperCase();
+
+  if (method === 'GET' && path === '/health') {
+    return json({ ok: true });
+  }
+
+  if (method === 'GET' && path === '/approvals') {
+    const statusParam = url.searchParams.get('status');
+    const status =
+      statusParam === 'pending' ||
+      statusParam === 'approved' ||
+      statusParam === 'rejected'
+        ? (statusParam as ApprovalStatus)
+        : undefined;
+    return json({ approvals: store.list(status) });
+  }
+
+  if (method === 'POST' && path === '/approvals') {
+    const body = await readJsonBody(request);
+    const title = typeof body?.title === 'string' ? body.title.trim() : '';
+    if (!title) {
+      return json({ error: 'title required' }, { status: 400 });
+    }
+    const approval = store.create({
+      title,
+      body: typeof body?.body === 'string' ? body.body : undefined,
+      metadata:
+        body?.metadata &&
+        typeof body.metadata === 'object' &&
+        !Array.isArray(body.metadata)
+          ? (body.metadata as Record<string, unknown>)
+          : undefined,
+    });
+    return json(approval, { status: 201 });
+  }
+
+  const resolveId = parseResolvePath(path);
+  if (method === 'POST' && resolveId) {
+    const body = await readJsonBody(request);
+    const decision = body?.decision;
+    if (decision !== 'approved' && decision !== 'rejected') {
+      return json(
+        { error: 'decision must be "approved" or "rejected"' },
+        { status: 400 },
+      );
+    }
+    const existing = store.get(resolveId);
+    if (!existing) {
+      return json({ error: 'not found' }, { status: 404 });
+    }
+    if (existing.status !== 'pending') {
+      return json(
+        { error: 'already resolved', approval: existing },
+        { status: 409 },
+      );
+    }
+    const approval = store.resolve(resolveId, decision)!;
+    return json(approval);
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}

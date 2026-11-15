@@ -1,13 +1,18 @@
 import type {
   HostAPI,
+  HitlApprovalRequest,
+  HitlApprovalResult,
   NotificationType,
   StorageValue,
 } from '@agentos/core/sdk';
 import { toast } from '@agentos/ui/components/toast';
 import { useShellStore } from './store';
 
-/** In-memory storage shared across stub HostAPI instances (keyed by extension). */
+/** In-memory storage shared across HostAPI instances (keyed by extension). */
 const storageByExtension = new Map<string, Map<string, StorageValue>>();
+
+const HITL_POLL_MS = 250;
+const HITL_POLL_MAX_MS = 5 * 60 * 1000;
 
 function storageFor(extensionId: string): Map<string, StorageValue> {
   let store = storageByExtension.get(extensionId);
@@ -34,9 +39,75 @@ function showNotification(
   useShellStore.getState().setStatusText(message, type);
 }
 
+async function fanOutNotification(
+  message: string,
+  type: NotificationType,
+): Promise<void> {
+  try {
+    await fetch('/api/ext/notifications/notify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ message, type }),
+    });
+  } catch {
+    // Toast path already succeeded; fan-out is best-effort.
+  }
+}
+
+async function requestHitlApproval(
+  input: HitlApprovalRequest,
+): Promise<HitlApprovalResult> {
+  const createRes = await fetch('/api/ext/hitl/approvals', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+      title: input.title,
+      ...(input.body !== undefined ? { body: input.body } : {}),
+      ...(input.metadata !== undefined ? { metadata: input.metadata } : {}),
+    }),
+  });
+  if (!createRes.ok) {
+    const detail = await createRes.text();
+    throw new Error(detail || `HITL create failed (${createRes.status})`);
+  }
+  const created = (await createRes.json()) as { id?: string; status?: string };
+  if (typeof created.id !== 'string' || !created.id) {
+    throw new Error('HITL create returned no id');
+  }
+  const id = created.id;
+
+  // Surface pending work in the Shell inbox.
+  useShellStore.getState().setHitlInboxOpen(true);
+
+  const deadline = Date.now() + HITL_POLL_MAX_MS;
+  while (Date.now() < deadline) {
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, HITL_POLL_MS);
+    });
+    const allRes = await fetch('/api/ext/hitl/approvals', {
+      credentials: 'include',
+    });
+    if (!allRes.ok) continue;
+    const body = (await allRes.json()) as {
+      approvals?: Array<{ id: string; status: string }>;
+    };
+    const found = body.approvals?.find((a) => a.id === id);
+    if (!found) continue;
+    if (found.status === 'approved') {
+      return { approved: true, id };
+    }
+    if (found.status === 'rejected') {
+      return { approved: false, id };
+    }
+  }
+  throw new Error(`HITL approval timed out for ${id}`);
+}
+
 /**
- * Stub HostAPI for shell iframe hosting until builtins back these namespaces.
- * Storage is scoped per `extensionId`; notifications fan out to Shell toasts.
+ * HostAPI for shell iframe hosting. Notifications toast locally and fan out to
+ * the notifications builtin; HITL / events hit supporting builtins.
  */
 export function createShellHostApi(extensionId: string): HostAPI {
   const store = storageFor(extensionId);
@@ -57,6 +128,7 @@ export function createShellHostApi(extensionId: string): HostAPI {
     notifications: {
       show: async (message, type = 'info') => {
         showNotification(message, type);
+        void fanOutNotification(message, type);
       },
     },
     ai: {
@@ -85,7 +157,7 @@ export function createShellHostApi(extensionId: string): HostAPI {
       },
     },
     hitl: {
-      requestApproval: async () => ({ approved: false, id: 'stub' }),
+      requestApproval: async (input) => requestHitlApproval(input),
     },
     api: {
       fetch: async (path, init) => {
@@ -105,7 +177,18 @@ export function createShellHostApi(extensionId: string): HostAPI {
       },
     },
     events: {
-      publish: async () => {},
+      publish: async (topic, payload) => {
+        const res = await fetch('/api/ext/events/publish', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ topic, payload }),
+        });
+        if (!res.ok) {
+          const detail = await res.text();
+          throw new Error(detail || `events.publish failed (${res.status})`);
+        }
+      },
     },
   };
 }

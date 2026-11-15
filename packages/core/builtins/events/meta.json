@@ -1,0 +1,7 @@
+{
+  "name": "Events",
+  "api": {
+    "language": "bun",
+    "port": 6115
+  }
+}

@@ -12,6 +12,12 @@ const servers = [
   { name: 'db-store', entry: './builtins/db-store/api/server.ts' },
   { name: 'cache-store', entry: './builtins/cache-store/api/server.ts' },
   { name: 'ai', entry: './builtins/ai/api/server.ts' },
+  { name: 'hitl', entry: './builtins/hitl/api/server.ts' },
+  { name: 'events', entry: './builtins/events/api/server.ts' },
+  { name: 'files', entry: './builtins/files/api/server.ts' },
+  { name: 'notifications', entry: './builtins/notifications/api/server.ts' },
+  { name: 'secrets', entry: './builtins/secrets/api/server.ts' },
+  { name: 'audit', entry: './builtins/audit/api/server.ts' },
 ] as const;
 
 const children: Array<{ name: string; proc: ReturnType<typeof Bun.spawn> }> =

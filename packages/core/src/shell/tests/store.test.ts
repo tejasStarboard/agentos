@@ -12,6 +12,7 @@ function resetStore() {
     activeView: 'home',
     sidebarOpen: true,
     drawerOpen: false,
+    hitlInboxOpen: false,
     chatOpen: false,
     chatMessages: [],
     chatBusy: false,

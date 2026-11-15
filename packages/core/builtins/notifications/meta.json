@@ -1,0 +1,7 @@
+{
+  "name": "Notifications",
+  "api": {
+    "language": "bun",
+    "port": 6117
+  }
+}
