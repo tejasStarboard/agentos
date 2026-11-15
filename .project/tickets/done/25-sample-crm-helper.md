@@ -1,6 +1,6 @@
 # 25 — Sample extension `crm-helper` (Node)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

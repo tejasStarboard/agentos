@@ -1,0 +1,12 @@
+[
+  {
+    "name": "parse_invoice",
+    "method": "POST",
+    "description": "Parse invoice text or fields into a structured invoice stored in db-store (vendor, amount, currency, dueDate, lineItems)."
+  },
+  {
+    "name": "request_payout_approval",
+    "method": "POST",
+    "description": "Request human approval (HITL) before paying out an invoice by invoiceId; updates invoice status to pending_approval."
+  }
+]

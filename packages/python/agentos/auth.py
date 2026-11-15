@@ -56,8 +56,14 @@ async def _fetch_session(
     base: str,
 ) -> AuthSession | None:
     headers = _forward_cookie_headers(request)
-    async with httpx.AsyncClient() as client:
-        res = await client.get(f"{base}/session", headers=headers)
+    try:
+        async with httpx.AsyncClient() as client:
+            res = await client.get(f"{base}/session", headers=headers)
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": f"auth unreachable: {exc}"},
+        ) from exc
     if res.status_code == 401 or not res.is_success:
         return None
     try:
@@ -76,12 +82,18 @@ async def _check_permission(
 ) -> str:
     headers = _forward_cookie_headers(request)
     headers["content-type"] = "application/json"
-    async with httpx.AsyncClient() as client:
-        res = await client.post(
-            f"{base}/permissions/check",
-            headers=headers,
-            json={"permission": permission},
-        )
+    try:
+        async with httpx.AsyncClient() as client:
+            res = await client.post(
+                f"{base}/permissions/check",
+                headers=headers,
+                json={"permission": permission},
+            )
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": f"auth unreachable: {exc}"},
+        ) from exc
     if res.status_code == 401:
         return "unauthenticated"
     if not res.is_success:
