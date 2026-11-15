@@ -1,5 +1,6 @@
 {
   "name": "HITL",
+  "activityBarSection": "secondary",
   "api": {
     "language": "bun",
     "port": 6114

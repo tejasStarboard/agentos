@@ -1,3 +1,4 @@
 {
-  "name": "Auth"
+  "name": "Auth",
+  "activityBarSection": "secondary"
 }

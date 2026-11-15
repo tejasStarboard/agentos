@@ -24,7 +24,7 @@ function fixtureRegistry(): RegistryModel {
         toggleable: false,
         rootDir: join(fixturesRoot, 'builtins/auth'),
         name: 'Auth',
-        meta: {},
+        meta: { activityBarSection: 'secondary' },
         ui: { page: join(fixturesRoot, 'builtins/auth/ui/page.tsx') },
         uiEntries: { page: '/__agentos/ext/auth/page.html' },
         agent: {},
@@ -37,7 +37,7 @@ function fixtureRegistry(): RegistryModel {
         toggleable: true,
         rootDir: join(fixturesRoot, 'extensions/crm'),
         name: 'CRM Helper',
-        meta: { icon: 'Users' },
+        meta: { icon: 'Users', activityBarSection: 'secondary' },
         ui: {
           page: join(fixturesRoot, 'extensions/crm/ui/page.tsx'),
           sidebar: join(fixturesRoot, 'extensions/crm/ui/sidebar.tsx'),
@@ -86,6 +86,7 @@ describe('applyRegistry', () => {
         kind: 'builtin',
         toggleable: false,
         driven: true,
+        activityBarSection: 'secondary',
       },
       {
         id: 'crm',
@@ -127,5 +128,23 @@ describe('applyRegistry', () => {
     expect(state.contributions).toHaveLength(3);
     expect(state.skillsByExtension.crm).toEqual(['search-contacts']);
     expect(state.desiredSkillsByExtension.crm).toEqual(['search-contacts']);
+  });
+
+  test('coerces customer activityBarSection secondary to primary', () => {
+    const mapped = mapRegistry(fixtureRegistry());
+    const auth = mapped.extensions.find((e) => e.id === 'auth');
+    const crm = mapped.extensions.find((e) => e.id === 'crm');
+    expect(auth?.activityBarSection).toBe('secondary');
+    expect(crm?.activityBarSection).toBeUndefined();
+  });
+
+  test('defaults auth to secondary when meta omits activityBarSection', () => {
+    const registry = fixtureRegistry();
+    const authExt = registry.extensions.find((e) => e.id === 'auth');
+    if (authExt) authExt.meta = {};
+    const mapped = mapRegistry(registry);
+    expect(
+      mapped.extensions.find((e) => e.id === 'auth')?.activityBarSection,
+    ).toBe('secondary');
   });
 });

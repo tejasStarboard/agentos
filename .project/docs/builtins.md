@@ -6,7 +6,7 @@ Shipped in `packages/core/builtins/`. Registry flags: `kind: "builtin"`, `driven
 
 | Id              | Role                                                  | Tech                                                                   |
 | --------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
-| **auth**        | Identity, sessions, **RBAC**                          | Better Auth (+ db-store as needed)                                     |
+| **auth**        | Identity, sessions, **RBAC**; Activity Bar **secondary** via `ui/page.tsx` | Better Auth (+ db-store as needed)                                     |
 | **db-store**    | Sole SQL owner                                        | Drizzle (SQLite default)                                               |
 | **cache-store** | Sole cache owner                                      | In-memory v1                                                           |
 | **ai**          | generateText/Image/embed, tools/skills/agents runtime | Vercel AI SDK v7 (mock default; [ADR 006](./adr/006-vercel-ai-sdk.md)) |
@@ -15,7 +15,7 @@ Shipped in `packages/core/builtins/`. Registry flags: `kind: "builtin"`, `driven
 
 | Id                | Role                           |
 | ----------------- | ------------------------------ |
-| **hitl**          | Approvals inbox/API            |
+| **hitl**          | Approvals API; Activity Bar **secondary** opens Shell HITL inbox (no `ui/`) |
 | **events**        | Cross-extension pub/sub        |
 | **files**         | Blob/object API                |
 | **notifications** | Toast/fan-out                  |

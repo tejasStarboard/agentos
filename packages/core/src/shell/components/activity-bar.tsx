@@ -1,14 +1,8 @@
-import {
-  HandWavingIcon,
-  HouseIcon,
-  SquaresFourIcon,
-  type Icon,
-} from '@phosphor-icons/react';
 import { useShellActiveView } from '@agentos/core/shell/hooks';
 import {
-  resolveExtensionIcon,
+  buildActivityBarSections,
   useShellStore,
-  type ShellView,
+  type ActivityBarItem,
 } from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
 import {
@@ -19,33 +13,41 @@ import {
 } from '@agentos/ui/components/tooltip';
 import { cn } from '@agentos/ui/lib/utils';
 
-type ActivityItem = {
-  id: ShellView | 'extensions' | 'hitl';
-  label: string;
-  Icon: Icon;
-  /** Opens Extension Manager instead of switching canvas view. */
-  opensManager?: boolean;
-  /** Opens HITL approvals inbox. */
-  opensHitl?: boolean;
-};
-
-const FIXED_ITEMS: ActivityItem[] = [
-  { id: 'home', label: 'Home', Icon: HouseIcon },
-];
-
-const MANAGER_ITEM: ActivityItem = {
-  id: 'extensions',
-  label: 'Extensions',
-  Icon: SquaresFourIcon,
-  opensManager: true,
-};
-
-const HITL_ITEM: ActivityItem = {
-  id: 'hitl',
-  label: 'Approvals',
-  Icon: HandWavingIcon,
-  opensHitl: true,
-};
+function ActivityIconButton({
+  item,
+  current,
+  onActivate,
+}: {
+  item: ActivityBarItem;
+  current: boolean;
+  onActivate: () => void;
+}) {
+  const { id, label, Icon } = item;
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            data-activity-id={id}
+            aria-label={label}
+            aria-current={current ? 'true' : undefined}
+            className={cn(
+              'text-muted-foreground',
+              current && 'bg-sidebar-accent text-sidebar-accent-foreground',
+            )}
+            onClick={onActivate}
+          />
+        }
+      >
+        <Icon weight={current ? 'fill' : 'regular'} className="size-4" />
+      </TooltipTrigger>
+      <TooltipContent side="right">{label}</TooltipContent>
+    </Tooltip>
+  );
+}
 
 export function ActivityBar() {
   const activeView = useShellActiveView();
@@ -59,76 +61,63 @@ export function ActivityBar() {
   const enabledById = useShellStore((s) => s.enabledById);
   const contributions = useShellStore((s) => s.contributions);
 
-  const pageExtensionIds = new Set(
-    contributions.filter((c) => c.view === 'page').map((c) => c.extensionId),
-  );
+  const { primary: primaryItems, secondary: secondaryItems } =
+    buildActivityBarSections({ extensions, enabledById, contributions });
 
-  const extensionItems: ActivityItem[] = extensions
-    .filter(
-      (ext) => enabledById[ext.id] !== false && pageExtensionIds.has(ext.id),
-    )
-    .map((ext) => ({
-      id: ext.id,
-      label: ext.name,
-      Icon: resolveExtensionIcon(ext.icon),
-    }));
+  function currentFor(item: ActivityBarItem): boolean {
+    if (item.opensManager) return drawerOpen;
+    if (item.opensHitl) return hitlInboxOpen;
+    return activeView === item.id;
+  }
 
-  const items = [...FIXED_ITEMS, ...extensionItems, HITL_ITEM, MANAGER_ITEM];
+  function activate(item: ActivityBarItem) {
+    if (item.opensManager) {
+      setDrawerOpen(!drawerOpen);
+      return;
+    }
+    if (item.opensHitl) {
+      toggleHitlInbox();
+      return;
+    }
+    if (activeView === item.id) {
+      toggleSidebar();
+      return;
+    }
+    setActiveView(item.id);
+  }
 
   return (
     <TooltipProvider>
       <nav
-        className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2"
+        className="flex w-12 shrink-0 flex-col items-center border-r border-border bg-sidebar py-2"
         aria-label="Activity bar"
       >
-        {items.map(({ id, label, Icon, opensManager, opensHitl }) => {
-          const current = opensManager
-            ? drawerOpen
-            : opensHitl
-              ? hitlInboxOpen
-              : activeView === id;
-          return (
-            <Tooltip key={id}>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={label}
-                    aria-current={current ? 'true' : undefined}
-                    className={cn(
-                      'text-muted-foreground',
-                      current &&
-                        'bg-sidebar-accent text-sidebar-accent-foreground',
-                    )}
-                    onClick={() => {
-                      if (opensManager) {
-                        setDrawerOpen(!drawerOpen);
-                        return;
-                      }
-                      if (opensHitl) {
-                        toggleHitlInbox();
-                        return;
-                      }
-                      if (current) {
-                        toggleSidebar();
-                        return;
-                      }
-                      setActiveView(id);
-                    }}
-                  />
-                }
-              >
-                <Icon
-                  weight={current ? 'fill' : 'regular'}
-                  className="size-4"
-                />
-              </TooltipTrigger>
-              <TooltipContent side="right">{label}</TooltipContent>
-            </Tooltip>
-          );
-        })}
+        <div
+          data-slot="activity-bar-primary"
+          className="flex w-full flex-col items-center gap-1"
+        >
+          {primaryItems.map((item) => (
+            <ActivityIconButton
+              key={item.id}
+              item={item}
+              current={currentFor(item)}
+              onActivate={() => activate(item)}
+            />
+          ))}
+        </div>
+        <div
+          data-slot="activity-bar-secondary"
+          className="mt-auto flex w-full flex-col-reverse items-center gap-1"
+        >
+          {secondaryItems.map((item) => (
+            <ActivityIconButton
+              key={item.id}
+              item={item}
+              current={currentFor(item)}
+              onActivate={() => activate(item)}
+            />
+          ))}
+        </div>
       </nav>
     </TooltipProvider>
   );

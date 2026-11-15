@@ -4,6 +4,11 @@ export {
   type AppliedRegistry,
 } from './apply-registry';
 export {
+  buildActivityBarSections,
+  type ActivityBarItem,
+  type ActivityBarSections,
+} from './build-activity-bar-items';
+export {
   contributionKey,
   type ContributionRuntimeStatus,
   type ExtensionView,
@@ -17,8 +22,10 @@ export {
   collectEnabledSkills,
   defaultEnabledById,
   defaultSkillsByExtension,
+  resolveActivityBarSection,
   STUB_EXTENSION_CATALOG,
   STUB_SKILLS_BY_EXTENSION,
+  type ActivityBarSection,
   type ExtensionEntry,
   type ExtensionKind,
   type ExtensionManagerStatus,

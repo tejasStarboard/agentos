@@ -62,6 +62,15 @@ describe('scanExtensions', () => {
     );
   });
 
+  test('reads activityBarSection from meta.json', () => {
+    const model = scanExtensions({ extensionsDir, builtinsDir });
+    const auth = model.extensions.find((e) => e.id === 'auth');
+    const crm = model.extensions.find((e) => e.id === 'crm');
+
+    expect(auth?.meta.activityBarSection).toBe('secondary');
+    expect(crm?.meta.activityBarSection).toBeUndefined();
+  });
+
   test('enriches driven, toggleable, uiEntries, and tool descriptors', () => {
     const model = scanExtensions({ extensionsDir, builtinsDir });
     const auth = model.extensions.find((e) => e.id === 'auth');

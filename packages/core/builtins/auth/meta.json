@@ -1,5 +1,7 @@
 {
   "name": "Auth",
+  "icon": "User",
+  "activityBarSection": "secondary",
   "api": {
     "language": "bun",
     "port": 6110

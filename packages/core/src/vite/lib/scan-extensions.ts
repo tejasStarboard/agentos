@@ -88,6 +88,12 @@ function readMeta(metaPath: string): ExtensionMeta | undefined {
     if (typeof obj.icon === 'string' && obj.icon.trim()) {
       meta.icon = obj.icon.trim();
     }
+    if (
+      obj.activityBarSection === 'primary' ||
+      obj.activityBarSection === 'secondary'
+    ) {
+      meta.activityBarSection = obj.activityBarSection;
+    }
     const api = parseMetaApi(obj.api);
     if (api) meta.api = api;
     return meta;

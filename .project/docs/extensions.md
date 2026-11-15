@@ -105,6 +105,25 @@ Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
 
 Optional `icon` is a Phosphor icon basename (`"Users"` → `UsersIcon`) for Activity Bar and Extension Manager. Unknown or missing values fall back to `Cube`. Curated names live in `@agentos/core` `resolveExtensionIcon` / `EXTENSION_ICON_MAP`.
 
+### Activity Bar sections
+
+Optional `activityBarSection` is `"primary"` (default) or `"secondary"`:
+
+| Section | Placement | Who may use it |
+| ------- | --------- | -------------- |
+| **primary** | Top of the Activity Bar, icons top → bottom | Customer extensions with a `ui/page` (and builtins that opt in) |
+| **secondary** | Bottom of the bar, stacked bottom → top | **Builtins only** |
+
+Customer `meta.json` that sets `"activityBarSection": "secondary"` is coerced to **primary** when the registry is applied to the Shell. Builtins such as **auth** (page iframe) and **hitl** (Approvals inbox chrome) register secondary; Extension Manager remains Shell chrome in the secondary cluster.
+
+```json
+{
+  "name": "Auth",
+  "activityBarSection": "secondary",
+  "api": { "language": "bun", "port": 6110 }
+}
+```
+
 ## File-based routes (Bun)
 
 Wire the kit in `api/server.ts`, then place handlers under `api/routes/**/index.ts`.
