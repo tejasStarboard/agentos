@@ -1,11 +1,15 @@
 import {
-  CubeIcon,
   HandWavingIcon,
   HouseIcon,
   SquaresFourIcon,
+  type Icon,
 } from '@phosphor-icons/react';
 import { useShellActiveView } from '@agentos/core/shell/hooks';
-import { useShellStore, type ShellView } from '@agentos/core/shell/lib';
+import {
+  resolveExtensionIcon,
+  useShellStore,
+  type ShellView,
+} from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
 import {
   Tooltip,
@@ -18,7 +22,7 @@ import { cn } from '@agentos/ui/lib/utils';
 type ActivityItem = {
   id: ShellView | 'extensions' | 'hitl';
   label: string;
-  Icon: typeof HouseIcon;
+  Icon: Icon;
   /** Opens Extension Manager instead of switching canvas view. */
   opensManager?: boolean;
   /** Opens HITL approvals inbox. */
@@ -66,7 +70,7 @@ export function ActivityBar() {
     .map((ext) => ({
       id: ext.id,
       label: ext.name,
-      Icon: CubeIcon,
+      Icon: resolveExtensionIcon(ext.icon),
     }));
 
   const items = [...FIXED_ITEMS, ...extensionItems, HITL_ITEM, MANAGER_ITEM];

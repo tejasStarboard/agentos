@@ -51,6 +51,11 @@ Agents must never promote tickets to `done/` themselves.
 31. Install agent skills + ADR (pnpm workspaces / Bun runtime) — **done** (setup)
 32. `.project` docs — **done** (setup)
 33. Global + extension env config (`@t3-oss/env-core`) — keys export + app extend
+34. Extension icons via `meta.json` (replace hardcoded Activity Bar `CubeIcon`)
+35. Custom icon for sample `crm-helper`
+36. Custom icon for sample `invoice-bot`
+37. Custom icon for sample `demo`
+38. Activity Bar primary (top→bottom) + secondary (bottom→top, builtins only)
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

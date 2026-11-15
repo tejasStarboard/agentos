@@ -1,5 +1,6 @@
 {
   "name": "CRM Helper",
+  "icon": "Users",
   "api": {
     "language": "bun",
     "port": 6101,

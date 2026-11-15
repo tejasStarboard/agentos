@@ -38,6 +38,7 @@ describe('scanExtensions', () => {
     const crm = model.extensions.find((e) => e.id === 'crm');
 
     expect(crm?.name).toBe('CRM Helper');
+    expect(crm?.meta.icon).toBe('Users');
     expect(crm?.meta.api).toEqual({
       language: 'bun',
       port: 6101,

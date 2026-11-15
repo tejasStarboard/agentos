@@ -5,6 +5,7 @@ import {
 } from '@agentos/core/shell/hooks';
 import {
   deriveExtensionManagerStatus,
+  resolveExtensionIcon,
   useShellStore,
   type ContributionRuntimeStatus,
   type ExtensionEntry,
@@ -62,6 +63,7 @@ function ExtensionRow({
     runtimeStatus,
   );
   const locked = !entry.toggleable;
+  const ExtIcon = resolveExtensionIcon(entry.icon);
 
   return (
     <li
@@ -69,7 +71,9 @@ function ExtensionRow({
       data-extension-id={entry.id}
       data-kind={entry.kind}
       data-status={status}
+      data-icon={entry.icon ?? 'Cube'}
     >
+      <ExtIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <span className="truncate text-sm font-medium text-foreground">

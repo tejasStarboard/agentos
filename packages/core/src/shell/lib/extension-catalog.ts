@@ -10,6 +10,11 @@ export type ExtensionEntry = {
   toggleable: boolean;
   /** Driving builtins (auth, db-store, …); all builtins are driven. */
   driven: boolean;
+  /**
+   * Phosphor icon basename from `meta.json` (`"Users"`, `"Receipt"`, …).
+   * Shell resolves via `resolveExtensionIcon`; missing → Cube fallback.
+   */
+  icon?: string;
 };
 
 /**

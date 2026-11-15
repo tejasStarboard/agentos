@@ -37,7 +37,7 @@ function fixtureRegistry(): RegistryModel {
         toggleable: true,
         rootDir: join(fixturesRoot, 'extensions/crm'),
         name: 'CRM Helper',
-        meta: {},
+        meta: { icon: 'Users' },
         ui: {
           page: join(fixturesRoot, 'extensions/crm/ui/page.tsx'),
           sidebar: join(fixturesRoot, 'extensions/crm/ui/sidebar.tsx'),
@@ -93,6 +93,7 @@ describe('applyRegistry', () => {
         kind: 'customer',
         toggleable: true,
         driven: false,
+        icon: 'Users',
       },
     ]);
     expect(mapped.contributions).toEqual([
