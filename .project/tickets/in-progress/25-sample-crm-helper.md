@@ -1,6 +1,6 @@
 # 25 — Sample extension `crm-helper` (Node)
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,10 +8,10 @@ Customer extension with sidebar UI, `/qualify-lead` skill, and `api/routes` tool
 
 ## Done when
 
-- [ ] `ui/sidebar.tsx` contact lookup works in Shell
-- [ ] `api/routes/tools/search_contacts` + `create_deal` live
-- [ ] Skill appears in Cmd+K / chat
-- [ ] No local SQL — only `dbStore`
+- [x] `ui/sidebar.tsx` contact lookup works in Shell
+- [x] `api/routes/tools/search_contacts` + `create_deal` live
+- [x] Skill appears in Cmd+K / chat
+- [x] No local SQL — only `dbStore`
 
 ## Notes
 
