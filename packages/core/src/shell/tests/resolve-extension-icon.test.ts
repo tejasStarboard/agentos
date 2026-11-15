@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CubeIcon, UsersIcon } from '@phosphor-icons/react';
+import { CubeIcon, UserIcon, UsersIcon } from '@phosphor-icons/react';
 import {
   DEFAULT_EXTENSION_ICON,
   normalizeExtensionIconName,
@@ -17,6 +17,7 @@ describe('resolveExtensionIcon', () => {
   test('resolves known names and falls back to Cube', () => {
     expect(resolveExtensionIcon('Users')).toBe(UsersIcon);
     expect(resolveExtensionIcon('UsersIcon')).toBe(UsersIcon);
+    expect(resolveExtensionIcon('User')).toBe(UserIcon);
     expect(resolveExtensionIcon('Nope')).toBe(DEFAULT_EXTENSION_ICON);
     expect(resolveExtensionIcon(undefined)).toBe(CubeIcon);
   });

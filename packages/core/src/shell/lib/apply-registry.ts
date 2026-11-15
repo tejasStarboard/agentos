@@ -1,6 +1,9 @@
 import type { RegistryModel } from '@agentos/core/vite/lib/types';
 import type { UiContribution } from './contribution';
-import type { ExtensionEntry } from './extension-catalog';
+import {
+  resolveActivityBarSection,
+  type ExtensionEntry,
+} from './extension-catalog';
 import { useShellStore } from './store';
 
 export type AppliedRegistry = {
@@ -11,14 +14,22 @@ export type AppliedRegistry = {
 
 /** Map a registry model into Shell store slices (pure). */
 export function mapRegistry(registry: RegistryModel): AppliedRegistry {
-  const extensions: ExtensionEntry[] = registry.extensions.map((ext) => ({
-    id: ext.id,
-    name: ext.name,
-    kind: ext.kind,
-    toggleable: ext.toggleable,
-    driven: ext.driven,
-    ...(ext.meta.icon ? { icon: ext.meta.icon } : {}),
-  }));
+  const extensions: ExtensionEntry[] = registry.extensions.map((ext) => {
+    const activityBarSection = resolveActivityBarSection(
+      ext.meta.activityBarSection,
+      ext.kind,
+      ext.id,
+    );
+    return {
+      id: ext.id,
+      name: ext.name,
+      kind: ext.kind,
+      toggleable: ext.toggleable,
+      driven: ext.driven,
+      ...(ext.meta.icon ? { icon: ext.meta.icon } : {}),
+      ...(activityBarSection !== 'primary' ? { activityBarSection } : {}),
+    };
+  });
 
   const contributions: UiContribution[] = [];
   const skillsByExtension: Record<string, string[]> = {};

@@ -1,0 +1,111 @@
+import {
+  HandWavingIcon,
+  HouseIcon,
+  SquaresFourIcon,
+  type Icon,
+} from '@phosphor-icons/react';
+import type { UiContribution } from './contribution';
+import {
+  resolveActivityBarSection,
+  type ExtensionEntry,
+} from './extension-catalog';
+import { resolveExtensionIcon } from './resolve-extension-icon';
+import type { ShellView } from './store';
+
+export type ActivityBarItem = {
+  id: ShellView | 'extensions' | 'hitl';
+  label: string;
+  Icon: Icon;
+  /** Opens Extension Manager instead of switching canvas view. */
+  opensManager?: boolean;
+  /** Opens HITL approvals inbox. */
+  opensHitl?: boolean;
+};
+
+const HOME_ITEM: ActivityBarItem = {
+  id: 'home',
+  label: 'Home',
+  Icon: HouseIcon,
+};
+
+const MANAGER_ITEM: ActivityBarItem = {
+  id: 'extensions',
+  label: 'Extensions',
+  Icon: SquaresFourIcon,
+  opensManager: true,
+};
+
+/** Non-page secondary builtins → Shell chrome actions (HITL inbox, etc.). */
+const BUILTIN_ACTIVITY_CHROME: Record<string, Omit<ActivityBarItem, 'id'>> = {
+  hitl: {
+    label: 'Approvals',
+    Icon: HandWavingIcon,
+    opensHitl: true,
+  },
+};
+
+function isSecondary(ext: ExtensionEntry): boolean {
+  return (
+    resolveActivityBarSection(ext.activityBarSection, ext.kind, ext.id) ===
+    'secondary'
+  );
+}
+
+export type ActivityBarSections = {
+  /** Top cluster: Home + primary page contributions (top → bottom). */
+  primary: ActivityBarItem[];
+  /**
+   * Bottom cluster for `flex-col-reverse`: index 0 is nearest the bottom edge.
+   * Order: Approvals (HITL chrome), secondary page builtins (e.g. auth), Extensions manager.
+   */
+  secondary: ActivityBarItem[];
+};
+
+/** Pure split of Activity Bar items into primary + secondary sections. */
+export function buildActivityBarSections(input: {
+  extensions: ExtensionEntry[];
+  enabledById: Record<string, boolean>;
+  contributions: UiContribution[];
+}): ActivityBarSections {
+  const { extensions, enabledById, contributions } = input;
+
+  const pageExtensionIds = new Set(
+    contributions.filter((c) => c.view === 'page').map((c) => c.extensionId),
+  );
+
+  const primaryPages: ActivityBarItem[] = extensions
+    .filter(
+      (ext) =>
+        enabledById[ext.id] !== false &&
+        pageExtensionIds.has(ext.id) &&
+        !isSecondary(ext),
+    )
+    .map((ext) => ({
+      id: ext.id,
+      label: ext.name,
+      Icon: resolveExtensionIcon(ext.icon),
+    }));
+
+  const secondaryChrome: ActivityBarItem[] = [];
+  const secondaryPages: ActivityBarItem[] = [];
+  for (const ext of extensions) {
+    if (enabledById[ext.id] === false || !isSecondary(ext)) continue;
+    const chrome = BUILTIN_ACTIVITY_CHROME[ext.id];
+    if (chrome) {
+      secondaryChrome.push({ id: ext.id, ...chrome });
+      continue;
+    }
+    if (pageExtensionIds.has(ext.id)) {
+      secondaryPages.push({
+        id: ext.id,
+        label: ext.name,
+        Icon: resolveExtensionIcon(ext.icon),
+      });
+    }
+  }
+
+  return {
+    primary: [HOME_ITEM, ...primaryPages],
+    secondary: [...secondaryChrome, ...secondaryPages, MANAGER_ITEM],
+  };
+}

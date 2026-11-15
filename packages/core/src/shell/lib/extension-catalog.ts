@@ -1,6 +1,9 @@
 /** Builtin vs customer extension (matches virtual:agentos-registry). */
 export type ExtensionKind = 'builtin' | 'customer';
 
+/** Activity Bar vertical region (from `meta.json`, coerced for customers). */
+export type ActivityBarSection = 'primary' | 'secondary';
+
 /** One row in the Extension Manager list. */
 export type ExtensionEntry = {
   id: string;
@@ -15,7 +18,39 @@ export type ExtensionEntry = {
    * Shell resolves via `resolveExtensionIcon`; missing → Cube fallback.
    */
   icon?: string;
+  /**
+   * Activity Bar section. Defaults to `primary`. Only builtins may be `secondary`.
+   */
+  activityBarSection?: ActivityBarSection;
 };
+
+/** Builtins that own Activity Bar secondary chrome when meta omits a section. */
+const DEFAULT_SECONDARY_BUILTIN_IDS = new Set(['auth', 'hitl']);
+
+/**
+ * Resolve Activity Bar section from meta + kind (+ id fallback).
+ * Non-builtins are always `primary`. Builtins `auth` / `hitl` default to
+ * `secondary` when `meta.activityBarSection` is omitted (stale registry safe).
+ */
+export function resolveActivityBarSection(
+  metaSection: ActivityBarSection | undefined,
+  kind: ExtensionKind,
+  extensionId?: string,
+): ActivityBarSection {
+  if (kind !== 'builtin') {
+    return 'primary';
+  }
+  if (metaSection === 'primary') {
+    return 'primary';
+  }
+  if (metaSection === 'secondary') {
+    return 'secondary';
+  }
+  if (extensionId && DEFAULT_SECONDARY_BUILTIN_IDS.has(extensionId)) {
+    return 'secondary';
+  }
+  return 'primary';
+}
 
 /**
  * Manager-facing lifecycle status for an extension.
@@ -35,6 +70,7 @@ export const STUB_EXTENSION_CATALOG: ExtensionEntry[] = [
     kind: 'builtin',
     toggleable: false,
     driven: true,
+    activityBarSection: 'secondary',
   },
   {
     id: 'db-store',

@@ -14,6 +14,9 @@ export type ExtensionMetaApi = {
   health?: string;
 };
 
+/** Activity Bar vertical region (`meta.json` `activityBarSection`). */
+export type ActivityBarSection = 'primary' | 'secondary';
+
 /** Parsed `meta.json` (tolerant subset). */
 export type ExtensionMeta = {
   name?: string;
@@ -22,6 +25,11 @@ export type ExtensionMeta = {
    * Example: `"Users"` → `UsersIcon`. Unknown values fall back to Cube.
    */
   icon?: string;
+  /**
+   * Activity Bar section. `secondary` is builtins-only; customers are coerced
+   * to `primary` when the registry is applied to the Shell.
+   */
+  activityBarSection?: ActivityBarSection;
   api?: ExtensionMetaApi;
 };
 
