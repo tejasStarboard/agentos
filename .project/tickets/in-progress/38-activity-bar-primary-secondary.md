@@ -36,7 +36,7 @@ Only **builtin** extensions may register items into the secondary section. Custo
 - **auth** — move / register into secondary
 - **Approvals** (HITL) — move from the flat list into secondary
 
-Other bottom chrome (e.g. Extensions manager) may stay secondary shell chrome if it remains; the required secondary *builtin* items are auth + Approvals.
+Other bottom chrome (e.g. Extensions manager) may stay secondary shell chrome if it remains; the required secondary _builtin_ items are auth + Approvals.
 
 **Intent:**
 

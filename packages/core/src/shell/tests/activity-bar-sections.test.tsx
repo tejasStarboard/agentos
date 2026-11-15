@@ -100,11 +100,7 @@ describe('buildActivityBarSections', () => {
       contributions,
     });
     expect(primary.map((i) => i.id)).toEqual(['home', 'demo']);
-    expect(secondary.map((i) => i.id)).toEqual([
-      'hitl',
-      'auth',
-      'extensions',
-    ]);
+    expect(secondary.map((i) => i.id)).toEqual(['hitl', 'auth', 'extensions']);
   });
 });
 
