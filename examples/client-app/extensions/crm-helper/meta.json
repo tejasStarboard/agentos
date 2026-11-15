@@ -1,0 +1,8 @@
+{
+  "name": "CRM Helper",
+  "api": {
+    "language": "bun",
+    "port": 6101,
+    "routesDir": "api/routes"
+  }
+}

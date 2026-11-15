@@ -1,0 +1,12 @@
+[
+  {
+    "name": "search_contacts",
+    "method": "POST",
+    "description": "Search CRM contacts by name, email, or company (q) or exact where filters."
+  },
+  {
+    "name": "create_deal",
+    "method": "POST",
+    "description": "Create a CRM deal linked to a contact (name, contactId, amount, stage)."
+  }
+]
