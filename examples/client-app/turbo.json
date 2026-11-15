@@ -4,10 +4,9 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": []
+      "outputs": ["dist/**"]
     },
     "dev": {
-      "with": ["@agentos/core#dev"],
       "cache": false,
       "persistent": true
     }
