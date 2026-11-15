@@ -55,7 +55,7 @@ Shared **shadcn + Tailwind** primitives for Shell, builtins, and extension UI.
 
 ## `agentos` (Python)
 
-Separate pip/uv package under `packages/python`. Mirrors `/api` domains: `agentos.auth`, `agentos.store`, `agentos.ai`, etc. **Only** for `services/<id>/`.
+Separate pip/uv package under [`packages/python`](../../packages/python) (see package [README](../../packages/python/README.md)). Mirrors `/api` domains: `agentos.auth`, `agentos.store`, `agentos.ai`, `agentos.hitl`, etc. **Only** for `services/<id>/` — never under `extensions/`.
 
 ## Consumer
 
