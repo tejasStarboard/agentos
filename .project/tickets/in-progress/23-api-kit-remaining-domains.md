@@ -1,6 +1,6 @@
 # 23 — Remaining `@agentos/core/api/*` domains
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -8,9 +8,9 @@ Ship `/ai`, `/hitl`, `/events`, `/files`, `/secrets`, `/hooks`, `/logging`, `/co
 
 ## Done when
 
-- [ ] Each subpath export resolves
-- [ ] Clients hit matching builtins where applicable
-- [ ] Hooks registry supports onStart/onRequest/onError/etc.
+- [x] Each subpath export resolves
+- [x] Clients hit matching builtins where applicable
+- [x] Hooks registry supports onStart/onRequest/onError/etc.
 
 ## Notes
 
