@@ -103,7 +103,21 @@ Server-side only — never put secrets in `@agentos/core/client` / iframe UI.
 
 ## File-based routes (Bun)
 
+Wire the kit in `api/server.ts`, then place handlers under `api/routes/**/index.ts`.
+Folder segments map to the path; `[param]` becomes `:param`. `createApp` registers
+`GET /health` → `{ ok: true }` (override with `api/routes/health/index.ts` if needed).
+
+```ts
+// api/server.ts
+import { createApp, loadRoutes } from '@agentos/core/api';
+
+const app = createApp();
+await loadRoutes(app, `${import.meta.dir}/routes`);
+Bun.serve({ port: 6101, fetch: app.fetch });
+```
+
 `api/routes/tools/search_contacts/index.ts` → `POST /tools/search_contacts`.
+`api/routes/contacts/[id]/index.ts` → `GET /contacts/:id` (via `c.req.param('id')`).
 
 ```ts
 import { requirePermissions } from '@agentos/core/api/auth';

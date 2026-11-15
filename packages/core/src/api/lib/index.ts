@@ -1,2 +1,17 @@
-/** @agentos/core/api — Bun API kit (stub). */
-export {};
+/** @agentos/core/api — Bun API kit. */
+export { createApp } from './create-app';
+export { createContext } from './create-context';
+export { loadRoutes } from './load-routes';
+export { folderPathToPattern, matchRoute } from './match-route';
+export type {
+  App,
+  AppContext,
+  AppRequest,
+  Handler,
+  HttpMethod,
+  Middleware,
+  Next,
+  RouteHandlers,
+  RouteModule,
+  RouteRegistration,
+} from './types';
