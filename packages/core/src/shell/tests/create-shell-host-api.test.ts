@@ -148,7 +148,10 @@ describe('createShellHostApi notifications', () => {
   test('hitl.requestApproval creates, opens inbox, and returns on resolve', async () => {
     const originalFetch = globalThis.fetch;
     let status: 'pending' | 'approved' = 'pending';
-    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
       const url = String(input);
       if (url === '/api/ext/hitl/approvals' && init?.method === 'POST') {
         return new Response(

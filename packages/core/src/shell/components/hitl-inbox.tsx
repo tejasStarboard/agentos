@@ -32,12 +32,15 @@ async function resolveApproval(
   id: string,
   decision: 'approved' | 'rejected',
 ): Promise<void> {
-  const res = await fetch(`/api/ext/hitl/approvals/${encodeURIComponent(id)}/resolve`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ decision }),
-  });
+  const res = await fetch(
+    `/api/ext/hitl/approvals/${encodeURIComponent(id)}/resolve`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ decision }),
+    },
+  );
   if (!res.ok) {
     const detail = await res.text();
     throw new Error(detail || `Resolve failed (${res.status})`);

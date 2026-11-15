@@ -40,14 +40,11 @@ export function createDbStoreClient(baseUrl: string): DbStoreClient {
     },
 
     async query(limit = 50) {
-      const res = await fetch(
-        `${root}/collections/${AUDIT_COLLECTION}/query`,
-        {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ limit }),
-        },
-      );
+      const res = await fetch(`${root}/collections/${AUDIT_COLLECTION}/query`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ limit }),
+      });
       if (!res.ok) {
         const detail = await res.text();
         throw new Error(
@@ -68,7 +65,9 @@ export function createDbStoreClient(baseUrl: string): DbStoreClient {
           resource:
             typeof data.resource === 'string' ? data.resource : undefined,
           meta:
-            data.meta && typeof data.meta === 'object' && !Array.isArray(data.meta)
+            data.meta &&
+            typeof data.meta === 'object' &&
+            !Array.isArray(data.meta)
               ? (data.meta as Record<string, unknown>)
               : undefined,
           at: typeof data.at === 'string' ? data.at : '',

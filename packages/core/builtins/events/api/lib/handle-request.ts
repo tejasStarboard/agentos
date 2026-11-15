@@ -51,11 +51,7 @@ export async function handleEventsRequest(
     const topicParam = url.searchParams.get('topic');
     const topicsParam = url.searchParams.getAll('topics');
     const topics =
-      topicsParam.length > 0
-        ? topicsParam
-        : topicParam
-          ? [topicParam]
-          : null;
+      topicsParam.length > 0 ? topicsParam : topicParam ? [topicParam] : null;
     const { stream } = bus.subscribe(topics);
     return new Response(stream, {
       headers: {

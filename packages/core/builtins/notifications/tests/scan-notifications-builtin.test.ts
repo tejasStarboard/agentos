@@ -13,7 +13,9 @@ describe('scan builtin notifications', () => {
       builtinsDir,
     });
 
-    const notifications = model.extensions.find((e) => e.id === 'notifications');
+    const notifications = model.extensions.find(
+      (e) => e.id === 'notifications',
+    );
     expect(notifications).toBeDefined();
     expect(notifications?.kind).toBe('builtin');
     expect(notifications?.driven).toBe(true);

@@ -34,8 +34,7 @@ export function createEventBus() {
       close: () => void;
     } {
       const encoder = new TextEncoder();
-      let controller: ReadableStreamDefaultController<Uint8Array> | null =
-        null;
+      let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
       let closed = false;
 
       const sub: Subscriber = {

@@ -43,7 +43,10 @@ export async function handleFilesRequest(
       const contentType = request.headers.get('content-type') ?? '';
       let bytes: Uint8Array;
       if (contentType.includes('application/json')) {
-        const body = (await request.json()) as { data?: string; base64?: string };
+        const body = (await request.json()) as {
+          data?: string;
+          base64?: string;
+        };
         const b64 =
           typeof body.base64 === 'string'
             ? body.base64
