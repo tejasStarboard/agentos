@@ -1,6 +1,6 @@
 # 22 — `@agentos/core/api/store` (db + cache clients)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

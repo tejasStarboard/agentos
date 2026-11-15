@@ -1,6 +1,6 @@
 # 24 — Python `agentos` package (parity)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

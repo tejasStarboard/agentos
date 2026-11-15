@@ -1,6 +1,6 @@
 # 23 — Remaining `@agentos/core/api/*` domains
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

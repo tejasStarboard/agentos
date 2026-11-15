@@ -1,6 +1,6 @@
 # 21 — `@agentos/core/api/auth` (session + RBAC clients)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
