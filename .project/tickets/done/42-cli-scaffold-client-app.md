@@ -1,6 +1,6 @@
 # 42 — CLI package: scaffold a client app (`create` / `init`)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

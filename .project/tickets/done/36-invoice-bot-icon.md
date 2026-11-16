@@ -1,6 +1,6 @@
 # 36 — Custom icon for `invoice-bot`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

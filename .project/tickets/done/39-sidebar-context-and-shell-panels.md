@@ -1,6 +1,6 @@
 # 39 — Contextual sidebar + Shell panels left
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
