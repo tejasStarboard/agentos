@@ -1,6 +1,6 @@
 # 37 — Custom icon for `demo`
 
-**Status:** todo
+**Status:** done
 
 ## Goal
 
@@ -12,9 +12,9 @@ Give the customer extension `demo` a distinct Activity Bar / manager icon instea
 
 ## Done when
 
-- [ ] `examples/client-app/extensions/demo/meta.json` sets `"icon"` to a demo-appropriate Phosphor name (suggested: `Sparkle` or `Flask`)
-- [ ] Icon appears in Activity Bar for the demo page contribution and in Extension Manager
-- [ ] No change to builtin icons or other customer extensions
+- [x] `examples/client-app/extensions/demo/meta.json` sets `"icon"` to a demo-appropriate Phosphor name (suggested: `Sparkle` or `Flask`)
+- [x] Icon appears in Activity Bar for the demo page contribution and in Extension Manager
+- [x] No change to builtin icons or other customer extensions
 
 ## Notes
 

@@ -1,6 +1,6 @@
 # 27 — CLI `agentos dev` / `build`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

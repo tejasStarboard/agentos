@@ -1,6 +1,6 @@
 # 34 — Extension icons via `meta.json`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

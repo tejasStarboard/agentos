@@ -1,6 +1,6 @@
 # 40 — App-level `ui/dashboard.tsx` Home surface
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

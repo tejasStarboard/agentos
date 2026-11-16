@@ -1,6 +1,6 @@
 # 41 — Chore: git metadata, package.json, and READMEs
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

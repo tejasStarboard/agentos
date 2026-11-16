@@ -1,6 +1,6 @@
 # 26 — Sample `invoice-bot` extension + Python service
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

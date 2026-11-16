@@ -1,6 +1,6 @@
 # 38 — Activity Bar primary + secondary sections
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
