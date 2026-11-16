@@ -67,6 +67,7 @@ Agents must never promote tickets to `done/` themselves.
 47. Shell topbar (sidebar toggle, branding, settings stub)
 48. Builtin `settings` extension + topbar Settings opens it
 49. Shell not-found (404) page for unknown SPA paths
+50. Auth account settings panel (profile / roles / security — not just sign-out)
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 
