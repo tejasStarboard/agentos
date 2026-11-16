@@ -50,7 +50,8 @@ async function importConfigModule(
     return mod.default ?? mod;
   }
 
-  // Fresh evaluate: bundle to memory + data-URL import (avoids ESM module cache).
+  // Fresh evaluate: bundle to memory + Blob URL import (avoids ESM module cache).
+  // Cast: installed bun-types omit `write: false` even though runtime supports it.
   const built = await Bun.build({
     entrypoints: [filePath],
     target: 'bun',
@@ -74,7 +75,7 @@ async function importConfigModule(
         },
       },
     ],
-  });
+  } as Parameters<typeof Bun.build>[0]);
   if (!built.success) {
     const message = built.logs.map((l) => l.message).join('\n') || 'unknown';
     throw new Error(`agentos.config: failed to reload ${filePath}: ${message}`);
