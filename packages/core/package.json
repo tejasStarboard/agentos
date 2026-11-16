@@ -3,6 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "description": "AgentOS framework — Shell, Comlink SDK, Bun API kit, Vite gateway, and builtins",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/tejasStarboard/agentos/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/tejasStarboard/agentos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasStarboard/agentos.git",
+    "directory": "packages/core"
+  },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "bin": {

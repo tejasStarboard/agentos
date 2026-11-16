@@ -3,6 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "description": "Sample AgentOS consumer app — mountShell, sample extensions, and invoice-bot service",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/tejasStarboard/agentos/tree/main/examples/client-app#readme",
+  "bugs": {
+    "url": "https://github.com/tejasStarboard/agentos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasStarboard/agentos.git",
+    "directory": "examples/client-app"
+  },
   "scripts": {
     "dev": "agentos dev",
     "typecheck": "tsc -p tsconfig.json --noEmit",

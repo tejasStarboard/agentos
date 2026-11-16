@@ -4,6 +4,16 @@
   "description": "Shared React UI primitives (shadcn + Tailwind) for AgentOS Shell",
   "private": true,
   "type": "module",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/tejasStarboard/agentos/tree/main/packages/ui#readme",
+  "bugs": {
+    "url": "https://github.com/tejasStarboard/agentos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasStarboard/agentos.git",
+    "directory": "packages/ui"
+  },
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.json"

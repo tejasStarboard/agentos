@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "description": "Shared TypeScript configs for the AgentOS monorepo",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/tejasStarboard/agentos/tree/main/tooling/typescript-config",
+  "bugs": {
+    "url": "https://github.com/tejasStarboard/agentos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasStarboard/agentos.git",
+    "directory": "tooling/typescript-config"
+  },
   "exports": {
     "./base.json": "./base.json",
     "./react-library.json": "./react-library.json"
