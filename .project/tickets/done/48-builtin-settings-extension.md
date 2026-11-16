@@ -1,6 +1,6 @@
 # 48 — Builtin `settings` extension + Activity Bar entry
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

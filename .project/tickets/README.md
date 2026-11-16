@@ -68,6 +68,10 @@ Agents must never promote tickets to `done/` themselves.
 48. Builtin `settings` extension + topbar Settings opens it
 49. Shell not-found (404) page for unknown SPA paths
 50. Auth account settings panel (profile / roles / security — not just sign-out)
+51. Chore: monorepo clean + Python uv sync on install
+52. Ticket reconciliation: promote covered in-progress → done — **done** (43–51 → `done/`)
+
+**Open:** `todo/` — **29** (E2E verification), **30** (Next host adapter spike). `in-progress/` — empty after reconciliation 52.
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

@@ -1,6 +1,6 @@
 # 46 — Hide empty active-extension UI contrib hosts + Home `dashboard-sidebar`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

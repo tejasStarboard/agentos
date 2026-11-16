@@ -1,6 +1,6 @@
 # 50 — Auth account settings panel (proper user account UI)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # 45 — Organize Shell `components` / `hooks` / `lib` by feature
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

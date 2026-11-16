@@ -1,6 +1,6 @@
 # 44 — Branding in `agentos.config.ts` + `/_public` assets
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
