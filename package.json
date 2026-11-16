@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "AgentOS monorepo — Shell, Comlink iframes, Bun APIs, Python services, and builtins",
+  "description": "AgentOS — framework for building extensible products (Shell, extensions, Bun APIs, Python services)",
   "license": "UNLICENSED",
   "homepage": "https://github.com/tejasStarboard/agentos#readme",
   "bugs": {
