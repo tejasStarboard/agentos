@@ -179,4 +179,83 @@ describe('agentos()', () => {
     expect(after).toContain('"id": "demo"');
     expect(after).toContain('"name": "Demo"');
   });
+
+  test('reloads virtual:agentos-config when agentos.config.ts changes', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'agentos-config-watch-'));
+    temps.push(root);
+    mkdirSync(join(root, 'extensions'), { recursive: true });
+    mkdirSync(join(root, 'builtins'), { recursive: true });
+    const configPath = join(root, 'agentos.config.ts');
+    writeFileSync(
+      configPath,
+      `export default { branding: { appName: 'Before' } };\n`,
+    );
+
+    const plugin = asHooks(
+      agentos({
+        extensionsDir: join(root, 'extensions'),
+        builtinsDir: join(root, 'builtins'),
+      }),
+    );
+    await plugin.configResolved?.({ root });
+    const before = await plugin.load?.(RESOLVED_VIRTUAL_CONFIG_ID);
+    expect(before).toContain('"appName": "Before"');
+
+    const invalidated: string[] = [];
+    const reloads: unknown[] = [];
+    const watched: string[] = [];
+    const handlers: Record<string, Array<(file: string) => void>> = {};
+
+    const fakeServer = {
+      moduleGraph: {
+        getModuleById(id: string) {
+          return id === RESOLVED_VIRTUAL_CONFIG_ID
+            ? { id: RESOLVED_VIRTUAL_CONFIG_ID }
+            : undefined;
+        },
+        invalidateModule(mod: { id: string }) {
+          invalidated.push(mod.id);
+        },
+      },
+      watcher: {
+        add(path: string) {
+          watched.push(path);
+        },
+        on(event: string, cb: (file: string) => void) {
+          (handlers[event] ??= []).push(cb);
+        },
+      },
+      ws: {
+        send(payload: unknown) {
+          reloads.push(payload);
+        },
+      },
+      middlewares: {
+        use() {},
+      },
+    } as unknown as ViteDevServer;
+
+    await plugin.configureServer?.(fakeServer);
+    expect(watched.some((p) => p.endsWith('agentos.config.ts'))).toBe(true);
+
+    writeFileSync(
+      configPath,
+      `export default { branding: { appName: 'After' } };\n`,
+    );
+    for (const cb of handlers.change ?? []) {
+      cb(configPath);
+    }
+
+    // Allow async reload to settle.
+    await Bun.sleep(50);
+
+    expect(invalidated).toContain(RESOLVED_VIRTUAL_CONFIG_ID);
+    expect(
+      reloads.some((p) => (p as { type?: string }).type === 'full-reload'),
+    ).toBe(true);
+
+    const after = await plugin.load?.(RESOLVED_VIRTUAL_CONFIG_ID);
+    expect(after).toContain('"appName": "After"');
+    expect(after).not.toContain('"appName": "Before"');
+  });
 });

@@ -6,6 +6,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Plugin, ViteDevServer } from 'vite';
 
 import {
+  AGENTOS_CONFIG_FILES,
+  findAgentosConfigFile,
   loadAgentosConfig,
   serializeConfigModule,
   type ResolvedAgentosConfig,
@@ -230,6 +232,26 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
     }
   };
 
+  const applyResolvedDirs = (fileConfig: ResolvedAgentosConfig): void => {
+    const extensionsOption =
+      options.extensionsDir ?? fileConfig.extensionsDir ?? 'extensions';
+    extensionsDir = isAbsolute(extensionsOption)
+      ? extensionsOption
+      : resolve(viteRoot, extensionsOption);
+    const builtinsOption = options.builtinsDir ?? fileConfig.builtinsDir;
+    builtinsDir = builtinsOption
+      ? resolve(builtinsOption)
+      : defaultBuiltinsDir();
+  };
+
+  const fullReload = (): void => {
+    if (!server) return;
+    server.ws.send({
+      type: 'full-reload',
+      path: '*',
+    });
+  };
+
   const invalidateRegistry = (): void => {
     if (!server) return;
     const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_REGISTRY_ID);
@@ -243,10 +265,43 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
         server!.moduleGraph.invalidateModule(entryMod);
       }
     });
-    server.ws.send({
-      type: 'full-reload',
-      path: '*',
-    });
+    fullReload();
+  };
+
+  const invalidateConfig = (): void => {
+    if (!server) return;
+    const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_CONFIG_ID);
+    if (mod) {
+      server.moduleGraph.invalidateModule(mod);
+    }
+    fullReload();
+  };
+
+  const reloadAgentosConfigFromDisk = async (): Promise<void> => {
+    const prevExtensionsDir = extensionsDir;
+    const prevBuiltinsDir = builtinsDir;
+    const fileConfig = await loadAgentosConfig(viteRoot, { bustCache: true });
+    resolvedConfig = fileConfig;
+    applyResolvedDirs(fileConfig);
+    ensureDir(extensionsDir);
+    ensureDir(builtinsDir);
+    if (server) {
+      if (extensionsDir !== prevExtensionsDir) {
+        server.watcher.add(extensionsDir);
+      }
+      if (builtinsDir !== prevBuiltinsDir) {
+        server.watcher.add(builtinsDir);
+      }
+    }
+    if (
+      extensionsDir !== prevExtensionsDir ||
+      builtinsDir !== prevBuiltinsDir
+    ) {
+      rescan();
+      invalidateRegistry();
+      return;
+    }
+    invalidateConfig();
   };
 
   return {
@@ -264,16 +319,7 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
       viteRoot = config.root;
       const fileConfig = await loadAgentosConfig(viteRoot);
       resolvedConfig = fileConfig;
-
-      const extensionsOption =
-        options.extensionsDir ?? fileConfig.extensionsDir ?? 'extensions';
-      extensionsDir = isAbsolute(extensionsOption)
-        ? extensionsOption
-        : resolve(viteRoot, extensionsOption);
-      const builtinsOption = options.builtinsDir ?? fileConfig.builtinsDir;
-      builtinsDir = builtinsOption
-        ? resolve(builtinsOption)
-        : defaultBuiltinsDir();
+      applyResolvedDirs(fileConfig);
 
       ensureDir(extensionsDir);
       ensureDir(builtinsDir);
@@ -353,7 +399,28 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
       devServer.watcher.add(extensionsDir);
       devServer.watcher.add(builtinsDir);
 
+      const configFile = findAgentosConfigFile(viteRoot);
+      if (configFile) {
+        devServer.watcher.add(configFile);
+      }
+      // Watch candidate names so creating agentos.config.* later is picked up.
+      for (const name of AGENTOS_CONFIG_FILES) {
+        devServer.watcher.add(resolve(viteRoot, name));
+      }
+
+      const configFileNames = new Set<string>(AGENTOS_CONFIG_FILES);
+      const isAgentosConfigPath = (file: string): boolean => {
+        const base = file.split(/[/\\]/).pop() ?? '';
+        return configFileNames.has(base);
+      };
+
       const onFsChange = (file: string): void => {
+        if (isAgentosConfigPath(file)) {
+          void reloadAgentosConfigFromDisk().catch((err) => {
+            console.error('[agentos] failed to reload agentos.config:', err);
+          });
+          return;
+        }
         if (
           !pathUnderRoot(file, extensionsDir) &&
           !pathUnderRoot(file, builtinsDir)
