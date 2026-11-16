@@ -79,7 +79,7 @@ async function requestHitlApproval(
   const id = created.id;
 
   // Surface pending work in the Shell inbox.
-  useShellStore.getState().setHitlInboxOpen(true);
+  useShellStore.getState().setSidebarPanel('hitl');
 
   const deadline = Date.now() + HITL_POLL_MAX_MS;
   while (Date.now() < deadline) {

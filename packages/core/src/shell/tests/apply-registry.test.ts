@@ -64,7 +64,7 @@ describe('applyRegistry', () => {
     useShellStore.setState({
       activeView: 'home',
       sidebarOpen: true,
-      drawerOpen: false,
+      sidebarPanel: 'contribution',
       extensions: [],
       enabledById: {},
       desiredContributions: [],

@@ -27,9 +27,13 @@ describe('StatusBar', () => {
     expect(html).toContain('enabled: 2/2');
   });
 
-  test('shows crashed and loading badges from runtime props', () => {
+  test('shows crashed badge and reserved loading spinner slot', () => {
     const html = renderToStaticMarkup(
       <StatusBar
+        contributions={[
+          { extensionId: 'crm', view: 'page', src: '/crm.html' },
+          { extensionId: 'invoices', view: 'page', src: '/inv.html' },
+        ]}
         runtimeStatus={{
           'crm:page': 'crashed',
           'invoices:page': 'loading',
@@ -38,7 +42,37 @@ describe('StatusBar', () => {
     );
     expect(html).toContain('data-slot="status-crashed"');
     expect(html).toContain('crashed: 1');
+    expect(html).toContain('data-slot="status-loading-slot"');
+    expect(html).toContain('data-loading="true"');
     expect(html).toContain('data-slot="status-loading"');
-    expect(html).toContain('loading: 1');
+    expect(html).toContain('data-slot="status-chat-toggle"');
+    expect(html).toContain('data-slot="status-bar-end"');
+    // Theme toggle mounts client-only (EnsureMounted); chat precedes loading slot.
+    expect(html.indexOf('status-chat-toggle')).toBeLessThan(
+      html.indexOf('status-loading-slot'),
+    );
+  });
+
+  test('reserves loading slot space when idle', () => {
+    const html = renderToStaticMarkup(<StatusBar />);
+    expect(html).toContain('data-slot="status-loading-slot"');
+    expect(html).toContain('data-loading="false"');
+    expect(html).not.toContain('data-slot="status-loading"');
+  });
+
+  test('ignores crashed status for unmounted contributions', () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        contributions={[
+          { extensionId: 'invoices', view: 'page', src: '/inv.html' },
+        ]}
+        runtimeStatus={{
+          'crm:page': 'crashed',
+          'invoices:page': 'active',
+        }}
+      />,
+    );
+    expect(html).not.toContain('data-slot="status-crashed"');
+    expect(html).not.toContain('crashed:');
   });
 });

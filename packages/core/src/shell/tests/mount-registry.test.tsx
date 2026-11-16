@@ -1,10 +1,13 @@
-import { afterEach, describe, expect, test } from 'bun:test';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type { RegistryModel } from '@agentos/core/vite/lib/types';
 import { mountShell } from '@agentos/core/shell/mount';
-import { useShellStore } from '@agentos/core/shell/lib';
+import {
+  ACTIVITY_BAR_STORAGE_KEY,
+  useShellStore,
+} from '@agentos/core/shell/lib';
 
 const fixturesRoot = fileURLToPath(
   new URL('../../vite/tests/fixtures', import.meta.url),
@@ -30,8 +33,16 @@ const registry: RegistryModel = {
 };
 
 describe('mountShell registry wiring', () => {
-  afterEach(() => {
+  beforeEach(() => {
+    try {
+      localStorage?.removeItem(ACTIVITY_BAR_STORAGE_KEY);
+    } catch {
+      // jsdom / memory storage may be missing
+    }
     useShellStore.setState({
+      activeView: 'home',
+      sidebarOpen: true,
+      sidebarPanel: 'contribution',
       extensions: [],
       enabledById: {},
       desiredContributions: [],

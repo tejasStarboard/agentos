@@ -15,3 +15,9 @@ List extensions; toggle customer extensions ON/OFF; show builtins as locked/alwa
 ## Notes
 
 Server-side unregister lands with gateway tickets; UI should already call enable API when available.
+
+## Follow-up coverage (ticket 40 PR)
+
+- Left-sidebar panel host (ticket 39) instead of right Sheet
+- Search + filter menu (`builtin` unchecked by default hides platform builtins)
+- List uses `@agentos/ui` `InputGroup` / `DropdownMenu` + `ScrollArea`

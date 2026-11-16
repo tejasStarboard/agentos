@@ -20,6 +20,7 @@ export { HiddenSlot } from './hidden-slot';
 export { HitlInbox } from './hitl-inbox';
 export { HomeDashboard } from './home-dashboard';
 export { MainCanvas } from './main-canvas';
-export { ShellRoot } from './shell-root';
+export { ShellRoot, type ShellRootProps } from './shell-root';
+export type { HomeDashboardProps } from './home-dashboard';
 export { SidebarSlot } from './sidebar-slot';
 export { StatusBar } from './status-bar';

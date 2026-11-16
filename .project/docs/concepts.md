@@ -31,6 +31,8 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 │  mountShell()  ←── @agentos/core                                     │
 │  vite.config   ←── @agentos/core/vite                                │
 │                                                                      │
+│  ui/dashboard.tsx          ←── APP Home surface (in-process)         │
+│                                                                      │
 │  extensions/<id>/          ←── EXTENSION                             │
 │    ui/*.tsx                ←── @agentos/core/client + @agentos/ui    │
 │    agent/*                 ←── declarations for builtin ai           │

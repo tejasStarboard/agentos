@@ -59,7 +59,7 @@ Separate pip/uv package under [`packages/python`](../../packages/python) (see pa
 
 ## Consumer
 
-`examples/client-app` — depends on `@agentos/core`, owns `extensions/` and optionally `services/`.
+`examples/client-app` — depends on `@agentos/core`, owns app-level `ui/dashboard.tsx` (Home), `extensions/`, and optionally `services/`.
 
 ## Tooling
 

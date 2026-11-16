@@ -1,4 +1,8 @@
-import { LockSimpleIcon } from '@phosphor-icons/react';
+import {
+  FunnelIcon,
+  LockSimpleIcon,
+  MagnifyingGlassIcon,
+} from '@phosphor-icons/react';
 import { useShellExtensions } from '@agentos/core/shell/hooks';
 import {
   deriveExtensionManagerStatus,
@@ -6,23 +10,25 @@ import {
   useShellStore,
   type ContributionRuntimeStatus,
   type ExtensionEntry,
-  type ExtensionManagerStatus,
   type UiContribution,
 } from '@agentos/core/shell/lib';
-import { Badge } from '@agentos/ui/components/badge';
+import { Button } from '@agentos/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@agentos/ui/components/dropdown-menu';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@agentos/ui/components/input-group';
 import { ScrollArea } from '@agentos/ui/components/scroll-area';
 import { Switch } from '@agentos/ui/components/switch';
-import { cn } from '@agentos/ui/lib/utils';
-
-const STATUS_VARIANT: Record<
-  ExtensionManagerStatus,
-  'default' | 'secondary' | 'outline' | 'destructive'
-> = {
-  active: 'default',
-  loading: 'secondary',
-  disabled: 'outline',
-  crashed: 'destructive',
-};
+import { useMemo, useState } from 'react';
 
 export type ExtensionManagerListProps = {
   /** Override catalog (tests / controlled hosts). */
@@ -82,12 +88,6 @@ function ExtensionRow({
           {entry.id}
         </p>
       </div>
-      <Badge
-        variant={STATUS_VARIANT[status]}
-        className={cn('shrink-0 capitalize')}
-      >
-        {status}
-      </Badge>
       <Switch
         size="sm"
         checked={enabled}
@@ -119,23 +119,88 @@ export function ExtensionManagerList(props: ExtensionManagerListProps = {}) {
   const runtimeStatus = props.runtimeStatus ?? storeRuntimeStatus;
   const onSetEnabled = props.onSetEnabled ?? setExtensionEnabled;
 
+  const [searchQuery, setSearchQuery] = useState('');
+  /** When false (default), builtins are hidden from the manager list. */
+  const [showBuiltin, setShowBuiltin] = useState(false);
+
+  const filteredExtensions = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return extensions.filter((entry) => {
+      if (!showBuiltin && entry.kind === 'builtin') return false;
+      if (q === '') return true;
+      return (
+        entry.name.toLowerCase().includes(q) ||
+        entry.id.toLowerCase().includes(q)
+      );
+    });
+  }, [extensions, searchQuery, showBuiltin]);
+
   return (
-    <ul
-      className="list-none p-0"
-      aria-label="Extension list"
+    <div
+      className="flex h-full min-h-0 flex-col"
       data-slot="extension-manager-list"
     >
-      {extensions.map((entry) => (
-        <ExtensionRow
-          key={entry.id}
-          entry={entry}
-          enabled={enabledById[entry.id] !== false}
-          contributions={contributions}
-          runtimeStatus={runtimeStatus}
-          onSetEnabled={onSetEnabled}
-        />
-      ))}
-    </ul>
+      <div className="flex shrink-0 items-center gap-1 border-b border-border px-2 py-2">
+        <InputGroup className="min-w-0 flex-1">
+          <InputGroupInput
+            placeholder="Search extensions…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search extensions"
+          />
+          <InputGroupAddon>
+            <MagnifyingGlassIcon
+              className="size-4 shrink-0 opacity-50"
+              aria-hidden
+            />
+          </InputGroupAddon>
+        </InputGroup>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label="Filter extensions"
+                data-slot="extension-manager-filter"
+                data-show-builtin={showBuiltin ? 'true' : 'false'}
+              />
+            }
+          >
+            <FunnelIcon
+              className="size-4"
+              weight={showBuiltin ? 'fill' : 'regular'}
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-40">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>View Selected</DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                checked={showBuiltin}
+                onCheckedChange={(checked) => setShowBuiltin(checked === true)}
+              >
+                builtin
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <ScrollArea className="min-h-0 flex-1">
+        <ul className="list-none p-0" aria-label="Extension list">
+          {filteredExtensions.map((entry) => (
+            <ExtensionRow
+              key={entry.id}
+              entry={entry}
+              enabled={enabledById[entry.id] !== false}
+              contributions={contributions}
+              runtimeStatus={runtimeStatus}
+              onSetEnabled={onSetEnabled}
+            />
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
   );
 }
 
@@ -143,12 +208,12 @@ export function ExtensionManagerList(props: ExtensionManagerListProps = {}) {
 export function ExtensionManagerPanel() {
   return (
     <div className="flex h-full min-h-0 flex-col" data-slot="extension-manager">
-      <p className="border-b border-border px-3 py-2 text-xs text-muted-foreground">
-        Toggle customer extensions. Builtins stay on.
+      <p className="shrink-0 px-2 pt-2 text-xs text-muted-foreground">
+        Extensions
       </p>
-      <ScrollArea className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1">
         <ExtensionManagerList />
-      </ScrollArea>
+      </div>
     </div>
   );
 }

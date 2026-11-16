@@ -65,17 +65,14 @@ export function useExtensionHost(
       cancelled = true;
       const current = activatedRef.current;
       activatedRef.current = null;
-      void (async () => {
-        const result = await deactivateFrame(
-          extensionId,
-          current?.remote ?? null,
-          current?.dispose ?? null,
-          rpcTimeoutMs,
-        );
-        if (!result.ok) {
-          setRuntimeStatus(extensionId, view, 'crashed');
-        }
-      })();
+      // Intentional unmount (disable, remount, theme src change) often tears
+      // down the iframe before onDeactivate finishes — that is not a crash.
+      void deactivateFrame(
+        extensionId,
+        current?.remote ?? null,
+        current?.dispose ?? null,
+        rpcTimeoutMs,
+      );
     };
   }, [
     extensionId,

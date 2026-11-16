@@ -10,6 +10,10 @@ import {
 } from '@agentos/core/shell/components';
 import { contributionKey, useShellStore } from '@agentos/core/shell/lib';
 
+function StubDashboard() {
+  return <div data-app-dashboard="true">App home</div>;
+}
+
 const crmContributions = [
   {
     extensionId: 'crm',
@@ -84,10 +88,26 @@ describe('ExtensionFrame slot placement', () => {
     );
 
     const home = renderToStaticMarkup(
-      createElement(HomeDashboard, { contributions: crmContributions }),
+      createElement(HomeDashboard, {
+        dashboard: StubDashboard,
+        contributions: crmContributions,
+      }),
     );
+    expect(home).toContain('data-slot="dashboard"');
+    expect(home).toContain('data-app-dashboard');
     expect(home).toContain('data-slot="widgets"');
     expect(home).toContain('data-view="widget"');
+    expect(home).not.toContain('Widgets slot');
+  });
+
+  test('HomeDashboard empty state has no Widgets marketing copy', () => {
+    const home = renderToStaticMarkup(
+      createElement(HomeDashboard, { contributions: [] }),
+    );
+    expect(home).toContain('data-slot="dashboard"');
+    expect(home).toContain('No dashboard');
+    expect(home).not.toContain('data-slot="widgets"');
+    expect(home).not.toContain('Widgets slot');
   });
 
   test('inactive page stays mounted but hidden; crash status is per-contribution', () => {
@@ -128,10 +148,11 @@ describe('ExtensionFrame slot placement', () => {
   });
 
   test('ShellRoot still exposes all slots', () => {
-    const html = renderToStaticMarkup(createElement(ShellRoot));
+    const html = renderToStaticMarkup(<ShellRoot dashboard={StubDashboard} />);
     expect(html).toContain('data-slot="sidebar"');
     expect(html).toContain('data-slot="main"');
-    expect(html).toContain('data-slot="widgets"');
+    expect(html).toContain('data-slot="dashboard"');
+    expect(html).toContain('data-app-dashboard');
     expect(html).toContain('data-slot="hidden"');
   });
 });

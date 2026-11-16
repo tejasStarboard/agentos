@@ -51,8 +51,8 @@ export type ExtensionViewAppProps = {
 
 /**
  * Framework iframe chrome: theme class + HostProvider around an FDE view.
- * Theme comes from `?theme=` (Shell), not next-themes (avoids inert script tags).
- * FDE `ui/*.tsx` files export only the view — they do not call this.
+ * Theme comes from `?theme=` (Shell), not the app ThemeProvider.
+ * Extension `ui/*.tsx` files export only the view — they do not call this.
  */
 export function ExtensionViewApp({
   View,

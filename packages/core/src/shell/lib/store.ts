@@ -7,6 +7,9 @@ import { requestExtensionEnable } from './extension-enable';
 
 export type ShellView = 'home' | (string & {});
 
+/** What the left SidebarSlot hosts (ticket 39 — no right Sheets). */
+export type SidebarPanel = 'contribution' | 'extensions' | 'hitl';
+
 function filterContributions(
   desired: UiContribution[],
   enabledById: Record<string, boolean>,
@@ -36,8 +39,8 @@ export type ChatMessage = {
 export type ShellUiState = {
   activeView: ShellView;
   sidebarOpen: boolean;
-  drawerOpen: boolean;
-  hitlInboxOpen: boolean;
+  /** Left sidebar host mode — Shell panels or active extension contribution. */
+  sidebarPanel: SidebarPanel;
   chatOpen: boolean;
   chatMessages: ChatMessage[];
   chatBusy: boolean;
@@ -61,15 +64,12 @@ export type ShellUiState = {
   statusTone: NotificationType | null;
   setActiveView: (view: ShellView) => void;
   setSidebarOpen: (open: boolean) => void;
-  setDrawerOpen: (open: boolean) => void;
-  setHitlInboxOpen: (open: boolean) => void;
-  toggleHitlInbox: () => void;
+  setSidebarPanel: (panel: SidebarPanel) => void;
   setChatOpen: (open: boolean) => void;
   toggleChat: () => void;
   appendChatMessage: (message: ChatMessage) => void;
   setChatBusy: (busy: boolean) => void;
   toggleSidebar: () => void;
-  toggleDrawer: () => void;
   setExtensions: (extensions: ExtensionEntry[]) => void;
   setContributions: (contributions: UiContribution[]) => void;
   setDesiredSkills: (skillsByExtension: Record<string, string[]>) => void;
@@ -86,8 +86,7 @@ export type ShellUiState = {
 export const useShellStore = create<ShellUiState>((set, get) => ({
   activeView: 'home',
   sidebarOpen: true,
-  drawerOpen: false,
-  hitlInboxOpen: false,
+  sidebarPanel: 'contribution',
   chatOpen: false,
   chatMessages: [],
   chatBusy: false,
@@ -103,27 +102,14 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
   setActiveView: (view) =>
     set({
       activeView: view,
-      drawerOpen: false,
-      hitlInboxOpen: false,
+      sidebarPanel: 'contribution',
     }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  setDrawerOpen: (open) =>
+  setSidebarPanel: (panel) =>
     set(
-      open
-        ? { drawerOpen: true, hitlInboxOpen: false, sidebarOpen: true }
-        : { drawerOpen: false },
-    ),
-  setHitlInboxOpen: (open) =>
-    set(
-      open
-        ? { hitlInboxOpen: true, drawerOpen: false, sidebarOpen: true }
-        : { hitlInboxOpen: false },
-    ),
-  toggleHitlInbox: () =>
-    set((s) =>
-      s.hitlInboxOpen
-        ? { hitlInboxOpen: false }
-        : { hitlInboxOpen: true, drawerOpen: false, sidebarOpen: true },
+      panel === 'contribution'
+        ? { sidebarPanel: 'contribution' }
+        : { sidebarPanel: panel, sidebarOpen: true },
     ),
   setChatOpen: (open) => set({ chatOpen: open }),
   toggleChat: () => set((s) => ({ chatOpen: !s.chatOpen })),
@@ -131,12 +117,6 @@ export const useShellStore = create<ShellUiState>((set, get) => ({
     set((s) => ({ chatMessages: [...s.chatMessages, message] })),
   setChatBusy: (busy) => set({ chatBusy: busy }),
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
-  toggleDrawer: () =>
-    set((s) =>
-      s.drawerOpen
-        ? { drawerOpen: false }
-        : { drawerOpen: true, hitlInboxOpen: false, sidebarOpen: true },
-    ),
   setExtensions: (extensions) =>
     set((s) => {
       const enabledById = {

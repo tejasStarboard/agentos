@@ -1,8 +1,17 @@
-import { useShellActiveView } from '@agentos/core/shell/hooks';
+import type { ComponentType } from 'react';
+import {
+  useShellActiveView,
+  useShellSidebarOpen,
+} from '@agentos/core/shell/hooks';
 import {
   AGENTOS_THEMES,
   ThemeProvider,
 } from '@agentos/ui/components/theme-provider';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@agentos/ui/components/resizable';
 import { Toaster, toast } from '@agentos/ui/components/toast';
 import { ActivityBar } from './activity-bar';
 import { ChatPanel } from './chat-panel';
@@ -14,8 +23,41 @@ import { SidebarSlot } from './sidebar-slot';
 import { StatusBar } from './status-bar';
 import '@agentos/ui/globals.css';
 
-export function ShellRoot() {
+export type ShellRootProps = {
+  /** App-owned Home page from `ui/dashboard.tsx`. */
+  dashboard?: ComponentType;
+};
+
+function MainWorkspace({
+  isHome,
+  dashboard,
+}: {
+  isHome: boolean;
+  dashboard?: ComponentType;
+}) {
+  return (
+    <div className="relative h-full min-h-0 min-w-0 overflow-hidden bg-background">
+      <div
+        className="h-full w-full overflow-auto"
+        data-active={isHome ? 'true' : 'false'}
+        hidden={!isHome}
+      >
+        <HomeDashboard dashboard={dashboard} />
+      </div>
+      <div
+        className="h-full w-full overflow-auto"
+        data-active={isHome ? 'false' : 'true'}
+        hidden={isHome}
+      >
+        <MainCanvas />
+      </div>
+    </div>
+  );
+}
+
+export function ShellRoot({ dashboard }: ShellRootProps = {}) {
   const activeView = useShellActiveView();
+  const sidebarOpen = useShellSidebarOpen();
   const isHome = activeView === 'home';
 
   return (
@@ -33,23 +75,35 @@ export function ShellRoot() {
         >
           <div className="flex min-h-0 flex-1 overflow-hidden">
             <ActivityBar />
-            <SidebarSlot />
-            <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden bg-background">
-              <div
-                className="h-full w-full overflow-auto"
-                data-active={isHome ? 'true' : 'false'}
-                hidden={!isHome}
+            {sidebarOpen ? (
+              <ResizablePanelGroup
+                orientation="horizontal"
+                className="min-h-0 min-w-0 flex-1"
               >
-                <HomeDashboard />
+                <ResizablePanel
+                  id="shell-sidebar"
+                  defaultSize={256}
+                  minSize={180}
+                  maxSize={480}
+                  className="min-h-0"
+                >
+                  <SidebarSlot />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel
+                  id="shell-main"
+                  defaultSize="70%"
+                  minSize="40%"
+                  className="min-h-0 min-w-0"
+                >
+                  <MainWorkspace isHome={isHome} dashboard={dashboard} />
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            ) : (
+              <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
+                <MainWorkspace isHome={isHome} dashboard={dashboard} />
               </div>
-              <div
-                className="h-full w-full overflow-auto"
-                data-active={isHome ? 'false' : 'true'}
-                hidden={isHome}
-              >
-                <MainCanvas />
-              </div>
-            </div>
+            )}
           </div>
           <StatusBar />
           <ChatPanel />

@@ -15,7 +15,7 @@ function resetStore() {
   useShellStore.setState({
     activeView: 'home',
     sidebarOpen: true,
-    drawerOpen: false,
+    sidebarPanel: 'contribution',
     extensions: STUB_EXTENSION_CATALOG,
     enabledById: defaultEnabledById(),
     desiredContributions: [],
@@ -37,7 +37,7 @@ describe('ExtensionManagerDrawer', () => {
     ) as unknown as typeof fetch;
   });
 
-  test('list shows builtins and customers with status badges', () => {
+  test('list hides builtins by default and shows customers', () => {
     const html = renderToStaticMarkup(
       <ExtensionManagerList
         extensions={STUB_EXTENSION_CATALOG}
@@ -46,13 +46,14 @@ describe('ExtensionManagerDrawer', () => {
     );
 
     expect(html).toContain('data-slot="extension-manager-list"');
-    expect(html).toContain('data-extension-id="auth"');
-    expect(html).toContain('data-kind="builtin"');
+    expect(html).toContain('data-slot="extension-manager-filter"');
+    expect(html).toContain('data-show-builtin="false"');
+    expect(html).toContain('aria-label="Filter extensions"');
+    expect(html).not.toContain('data-extension-id="auth"');
+    expect(html).not.toContain('data-kind="builtin"');
     expect(html).toContain('data-extension-id="crm"');
     expect(html).toContain('data-kind="customer"');
     expect(html).toContain('data-status="active"');
-    expect(html).toContain('Locked');
-    expect(html).toContain('Auth is always on');
     expect(html).toContain('Disable CRM');
   });
 
@@ -68,12 +69,12 @@ describe('ExtensionManagerDrawer', () => {
     expect(html).toContain('Enable CRM');
   });
 
-  test('ActivityBar Extensions control toggles drawer without changing view', () => {
+  test('ActivityBar Extensions control opens sidebar panel without changing view', () => {
     const html = renderToStaticMarkup(<ActivityBar />);
     expect(html).toContain('aria-label="Extensions"');
 
-    useShellStore.getState().setDrawerOpen(true);
-    expect(useShellStore.getState().drawerOpen).toBe(true);
+    useShellStore.getState().setSidebarPanel('extensions');
+    expect(useShellStore.getState().sidebarPanel).toBe('extensions');
     expect(useShellStore.getState().activeView).toBe('home');
   });
 

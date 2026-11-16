@@ -10,7 +10,7 @@ extensions/<id>/
   ui/
     page.tsx       # main slot → /ext/<id>
     sidebar.tsx    # left sidebar (shown when this extension is activeView)
-    widget.tsx     # home dashboard card
+    widget.tsx     # home widget card(s)
   agent/
     tools.json     # tool schemas → HTTP
     skills.ts      # /slash skills
@@ -115,6 +115,10 @@ Optional `activityBarSection` is `"primary"` (default) or `"secondary"`:
 | **secondary** | Bottom of the bar, stacked bottom → top     | **Builtins only**                                               |
 
 Customer `meta.json` that sets `"activityBarSection": "secondary"` is coerced to **primary** when the registry is applied to the Shell. Builtins such as **auth** (page iframe) and **hitl** (Approvals inbox chrome) register secondary; Extension Manager remains Shell chrome in the secondary cluster.
+
+### Home dashboard (app-level)
+
+The consumer app owns **`ui/dashboard.tsx`** next to `extensions/` and `services/` — not inside an extension. Pass it into `mountShell(root, { dashboard })`. Shell renders it in-process in the Home pane (`activeView === 'home'`). Optional extension `ui/widget.tsx` cards still appear in a grid below when present. Without a dashboard option, Home shows a minimal empty placeholder.
 
 ### Left sidebar host
 

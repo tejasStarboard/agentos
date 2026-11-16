@@ -42,7 +42,7 @@ async function resolveApproval(
 
 /** Left-sidebar HITL Approvals panel (no Sheet overlay). */
 export function HitlInbox() {
-  const open = useShellStore((s) => s.hitlInboxOpen);
+  const open = useShellStore((s) => s.sidebarPanel === 'hitl');
   const [approvals, setApprovals] = useState<Approval[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

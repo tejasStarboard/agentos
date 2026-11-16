@@ -10,16 +10,20 @@ import {
   type ExtensionEntry,
 } from './extension-catalog';
 import { resolveExtensionIcon } from './resolve-extension-icon';
-import type { ShellView } from './store';
+import type { ShellView, SidebarPanel } from './store';
+
+/** Shell chrome that swaps `sidebarPanel` instead of `activeView`. */
+export type ActivityBarShellPanel = Exclude<SidebarPanel, 'contribution'>;
 
 export type ActivityBarItem = {
   id: ShellView | 'extensions' | 'hitl';
   label: string;
   Icon: Icon;
-  /** Opens Extension Manager instead of switching canvas view. */
-  opensManager?: boolean;
-  /** Opens HITL approvals inbox. */
-  opensHitl?: boolean;
+  /**
+   * When set, activate toggles this left SidebarSlot panel.
+   * When unset, activate switches `activeView` (main canvas + contribution sidebar).
+   */
+  panel?: ActivityBarShellPanel;
 };
 
 const HOME_ITEM: ActivityBarItem = {
@@ -32,7 +36,7 @@ const MANAGER_ITEM: ActivityBarItem = {
   id: 'extensions',
   label: 'Extensions',
   Icon: SquaresFourIcon,
-  opensManager: true,
+  panel: 'extensions',
 };
 
 /** Non-page secondary builtins → Shell chrome actions (HITL inbox, etc.). */
@@ -40,7 +44,7 @@ const BUILTIN_ACTIVITY_CHROME: Record<string, Omit<ActivityBarItem, 'id'>> = {
   hitl: {
     label: 'Approvals',
     Icon: HandWavingIcon,
-    opensHitl: true,
+    panel: 'hitl',
   },
 };
 

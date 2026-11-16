@@ -20,5 +20,7 @@ Implementation is tracked as numbered tickets in [../tickets/](../tickets/). Do 
 | Infra  | Typed env (`@t3-oss/env-core`): platform + extension `keys`  | **33** (app extends / loads at runtime)              |
 | Polish | Per-extension Activity Bar icons (`meta.json` → Shell)       | **34**–**37**                                        |
 | Polish | Activity Bar primary + secondary (builtins-only bottom)      | **38**                                               |
+| Polish | Contextual sidebar + Shell panels left                       | **39**                                               |
+| Polish | App-level `ui/dashboard.tsx` Home surface                    | **40**                                               |
 
 **Status:** setup docs/skills can proceed before ticket 1. **Do not start ticket 1** until explicitly asked to build.
