@@ -1,8 +1,7 @@
 import type { ShellView, SidebarPanel } from '../chrome/store';
 import type { UiContribution } from './contribution';
 
-export type SidebarColumnVisibleInput = {
-  sidebarOpen: boolean;
+export type SidebarColumnContentInput = {
   sidebarPanel: SidebarPanel;
   activeView: ShellView;
   /** Sidebar contributions (`view: 'sidebar'`). */
@@ -11,22 +10,37 @@ export type SidebarColumnVisibleInput = {
   hasDashboardSidebar: boolean;
 };
 
+export type SidebarColumnVisibleInput = SidebarColumnContentInput & {
+  sidebarOpen: boolean;
+};
+
 /**
- * Whether ShellRoot should allocate the left sidebar column.
+ * Whether the left sidebar column has something to show (ignore open/closed).
  *
- * Active-extension host: in contribution mode, hide when the active view has
- * nothing to show (no Home `dashboardSidebar`, no matching `ui/sidebar.tsx`).
- * Shell panels (extensions / hitl) still show when `sidebarOpen`.
+ * Used so ShellRoot can keep the resizable layout + main canvas mounted while
+ * the user toggles the column closed — only collapse the sidebar panel.
+ *
+ * Active-extension host: in contribution mode, no content when the active view
+ * has nothing (no Home `dashboardSidebar`, no matching `ui/sidebar.tsx`).
+ * Shell panels (extensions / hitl) always count as content.
  */
-export function sidebarColumnVisible({
-  sidebarOpen,
+export function sidebarColumnHasContent({
   sidebarPanel,
   activeView,
   sidebars,
   hasDashboardSidebar,
-}: SidebarColumnVisibleInput): boolean {
-  if (!sidebarOpen) return false;
+}: SidebarColumnContentInput): boolean {
   if (sidebarPanel !== 'contribution') return true;
   if (activeView === 'home' && hasDashboardSidebar) return true;
   return sidebars.some((c) => c.extensionId === activeView);
+}
+
+/**
+ * Whether the sidebar column should appear expanded (`sidebarOpen` + content).
+ */
+export function sidebarColumnVisible({
+  sidebarOpen,
+  ...content
+}: SidebarColumnVisibleInput): boolean {
+  return sidebarOpen && sidebarColumnHasContent(content);
 }

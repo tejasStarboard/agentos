@@ -23,7 +23,7 @@ Create a **builtin `settings`** extension and wire the Shell **topbar Settings**
 
 ## Notes
 
-- **Auth** secondary Activity Bar entry stays **account** (session / roles / sign-out). **Settings** is broader app/platform preferences (theme, branding readouts, extension prefs later).
+- **Auth** secondary Activity Bar entry stays **account** (session / roles / security / sign-out — see ticket **50** for a proper panel). **Settings** is broader app/platform preferences (theme, branding readouts, extension prefs later).
 - Prefer minimal v1 page (“Settings” shell with placeholders) over a full preferences product.
 - Reuse `@agentos/ui`; no second design system.
 - If settings is page-iframe based, follow existing `/__agentos/ext/settings/page.html` conventions.

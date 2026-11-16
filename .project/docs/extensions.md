@@ -126,10 +126,10 @@ Optional **`ui/dashboard-sidebar.tsx`** is the Home sidebar entrypoint — also 
 
 Shell UI contribution hosts are either **active-extension** or **global**:
 
-| Host kind            | Example      | Shows                                                                      | When empty                           |
-| -------------------- | ------------ | -------------------------------------------------------------------------- | ------------------------------------ |
-| **Active-extension** | Left sidebar | Only the active extension’s `ui/sidebar.tsx`, or Home’s `dashboardSidebar` | Column **collapses** — no empty pane |
-| **Global**           | Status bar   | May aggregate all enabled extensions                                       | May stay visible with Shell chrome   |
+| Host kind            | Example            | Shows                                                                                                     | When empty                           |
+| -------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **Active-extension** | Left sidebar       | Only the active extension’s `ui/sidebar.tsx`, or Home’s `dashboardSidebar`                                | Column **collapses** — no empty pane |
+| **Global**           | Status bar, topbar | May aggregate all enabled extensions (topbar v1 is Shell chrome: sidebar toggle, branding, settings stub) | May stay visible with Shell chrome   |
 
 `ui/sidebar.tsx` mounts in the Shell’s left column. Only the **active** extension’s sidebar is visible (`activeView === extensionId`). Home without `dashboardSidebar`, or an extension without `ui/sidebar.tsx`, hides the sidebar column.
 

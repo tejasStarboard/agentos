@@ -27,6 +27,7 @@ export {
   type CommandPaletteProps,
 } from './chrome/command-palette';
 export { type StatusBarProps } from './ui-contribs/status-bar';
+export { type TopBarProps } from './ui-contribs/top-bar';
 export { EnsureMounted } from './ui-contribs/ensure-mounted';
 export { ExtensionFrame } from './ui-contribs/extension-frame';
 export {
@@ -43,3 +44,4 @@ export { ShellRoot, type ShellRootProps } from './chrome/shell-root';
 export type { HomeDashboardProps } from './home/home-dashboard';
 export { SidebarSlot } from './ui-contribs/sidebar-slot';
 export { StatusBar } from './ui-contribs/status-bar';
+export { TopBar } from './ui-contribs/top-bar';
