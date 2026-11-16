@@ -196,6 +196,118 @@ describe('builtin auth server', () => {
     expect(cookieHeaderFrom(signUp).length).toBeGreaterThan(0);
   });
 
+  test('update-profile changes display name on session', async () => {
+    const email = `profile-${Date.now()}@example.com`;
+    const signUp = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/sign-up', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'password123',
+          name: 'Before Name',
+        }),
+      }),
+    );
+    expect(signUp.status).toBe(200);
+    const cookie = cookieHeaderFrom(signUp);
+
+    const update = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/update-profile', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie },
+        body: JSON.stringify({ name: 'After Name' }),
+      }),
+    );
+    expect(update.status).toBe(200);
+    const updateBody = (await update.json()) as { user: { name: string } };
+    expect(updateBody.user.name).toBe('After Name');
+
+    const sessionCookie = cookieHeaderFrom(update) || cookie;
+    const session = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/session', {
+        headers: { cookie: sessionCookie },
+      }),
+    );
+    expect(session.status).toBe(200);
+    const sessionBody = (await session.json()) as { user: { name: string } };
+    expect(sessionBody.user.name).toBe('After Name');
+  });
+
+  test('change-password rejects wrong current; accepts correct then signs in', async () => {
+    const email = `pwchange-${Date.now()}@example.com`;
+    const signUp = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/sign-up', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'password123',
+          name: 'Pw User',
+        }),
+      }),
+    );
+    expect(signUp.status).toBe(200);
+    const cookie = cookieHeaderFrom(signUp);
+
+    const wrong = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/change-password', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie },
+        body: JSON.stringify({
+          currentPassword: 'wrong-password',
+          newPassword: 'newpassword123',
+        }),
+      }),
+    );
+    expect(wrong.status).not.toBe(200);
+
+    const change = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/change-password', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie },
+        body: JSON.stringify({
+          currentPassword: 'password123',
+          newPassword: 'newpassword123',
+        }),
+      }),
+    );
+    expect(change.status).toBe(200);
+    expect(await change.json()).toEqual({ ok: true });
+
+    const oldSignIn = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/sign-in', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'password123',
+        }),
+      }),
+    );
+    expect(oldSignIn.status).not.toBe(200);
+
+    const newSignIn = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/sign-in', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'newpassword123',
+        }),
+      }),
+    );
+    expect(newSignIn.status).toBe(200);
+  });
+
   test('forgot-password + reset-password round-trip', async () => {
     let capturedToken: string | null = null;
     const resetDir = mkdtempSync(join(tmpdir(), 'agentos-auth-reset-'));

@@ -312,6 +312,128 @@ export async function handleAuthRequest(
     }
   }
 
+  if (method === 'POST' && path === '/update-profile') {
+    const session = await requireSession(ctx, request);
+    if (!session) {
+      return json({ error: 'unauthenticated' }, { status: 401 });
+    }
+    const body = await readJsonBody(request);
+    const name = typeof body?.name === 'string' ? body.name.trim() : '';
+    if (!name) {
+      return json({ error: 'name required' }, { status: 400 });
+    }
+
+    try {
+      const response = await ctx.auth.api.updateUser({
+        body: { name },
+        headers: request.headers,
+        asResponse: true,
+      });
+
+      const outHeaders = new Headers();
+      mergeSetCookie(response.headers, outHeaders);
+
+      if (!response.ok) {
+        const errBody = await response.text();
+        return new Response(
+          errBody || JSON.stringify({ error: 'update-profile failed' }),
+          {
+            status: response.status,
+            headers: outHeaders,
+          },
+        );
+      }
+
+      const refreshed = await ctx.auth.api.getSession({
+        headers: (() => {
+          const h = new Headers(request.headers);
+          const cookies =
+            typeof response.headers.getSetCookie === 'function'
+              ? response.headers.getSetCookie()
+              : [];
+          if (cookies.length > 0) {
+            h.set('cookie', cookies.map((c) => c.split(';')[0]).join('; '));
+          }
+          return h;
+        })(),
+      });
+
+      if (!refreshed) {
+        return json(
+          { error: 'update-profile succeeded but no session' },
+          { status: 500, headers: outHeaders },
+        );
+      }
+
+      return json(sessionPayload(ctx, refreshed), {
+        status: 200,
+        headers: outHeaders,
+      });
+    } catch (error) {
+      if (isAPIError(error)) {
+        return json(
+          { error: error.message ?? 'update-profile failed' },
+          { status: typeof error.status === 'number' ? error.status : 400 },
+        );
+      }
+      throw error;
+    }
+  }
+
+  if (method === 'POST' && path === '/change-password') {
+    const session = await requireSession(ctx, request);
+    if (!session) {
+      return json({ error: 'unauthenticated' }, { status: 401 });
+    }
+    const body = await readJsonBody(request);
+    const currentPassword =
+      typeof body?.currentPassword === 'string' ? body.currentPassword : '';
+    const newPassword =
+      typeof body?.newPassword === 'string' ? body.newPassword : '';
+    if (!currentPassword || !newPassword) {
+      return json(
+        { error: 'currentPassword and newPassword required' },
+        { status: 400 },
+      );
+    }
+
+    try {
+      const response = await ctx.auth.api.changePassword({
+        body: {
+          currentPassword,
+          newPassword,
+          revokeOtherSessions: true,
+        },
+        headers: request.headers,
+        asResponse: true,
+      });
+
+      const outHeaders = new Headers();
+      mergeSetCookie(response.headers, outHeaders);
+
+      if (!response.ok) {
+        const errBody = await response.text();
+        return new Response(
+          errBody || JSON.stringify({ error: 'change-password failed' }),
+          {
+            status: response.status,
+            headers: outHeaders,
+          },
+        );
+      }
+
+      return json({ ok: true }, { status: 200, headers: outHeaders });
+    } catch (error) {
+      if (isAPIError(error)) {
+        return json(
+          { error: error.message ?? 'change-password failed' },
+          { status: typeof error.status === 'number' ? error.status : 400 },
+        );
+      }
+      throw error;
+    }
+  }
+
   if (method === 'POST' && path === '/permissions/check') {
     const session = await requireSession(ctx, request);
     if (!session) {
