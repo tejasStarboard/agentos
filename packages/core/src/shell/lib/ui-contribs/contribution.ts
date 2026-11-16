@@ -1,4 +1,19 @@
-/** UI contribution view kinds (maps to `ui/page|sidebar|widget.tsx`). */
+/**
+ * UI contribution view kinds (maps to `ui/page|sidebar|widget.tsx`).
+ *
+ * ## Host kinds
+ *
+ * - **Active-extension** hosts (e.g. left sidebar): show only the active
+ *   extension’s contribution (`ui/sidebar.tsx`), or Home’s in-process
+ *   `dashboardSidebar`. When empty, the Shell collapses the host chrome —
+ *   no empty column.
+ * - **Global / multi-extension** hosts (e.g. status bar): may aggregate all
+ *   enabled extensions and stay visible with Shell chrome even when some
+ *   extensions contribute nothing.
+ *
+ * App Home surfaces (`ui/dashboard.tsx`, `ui/dashboard-sidebar.tsx`) are
+ * in-process via `mountShell` — not `ExtensionView` / iframe entries.
+ */
 export type ExtensionView = 'page' | 'sidebar' | 'widget';
 
 /** Runtime lifecycle status for one mounted contribution frame. */

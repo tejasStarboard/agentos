@@ -32,6 +32,7 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 │  vite.config   ←── @agentos/core/vite                                │
 │                                                                      │
 │  ui/dashboard.tsx          ←── APP Home surface (in-process)         │
+│  ui/dashboard-sidebar.tsx  ←── APP Home sidebar (in-process)         │
 │                                                                      │
 │  extensions/<id>/          ←── EXTENSION                             │
 │    ui/*.tsx                ←── @agentos/core/client + @agentos/ui    │

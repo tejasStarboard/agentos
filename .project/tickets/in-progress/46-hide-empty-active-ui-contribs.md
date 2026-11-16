@@ -1,6 +1,6 @@
 # 46 — Hide empty active-extension UI contrib hosts + Home `dashboard-sidebar`
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -23,13 +23,13 @@ Also add app-level **`ui/dashboard-sidebar.tsx`** (sibling of `ui/dashboard.tsx`
 
 ## Done when
 
-- [ ] Model documents **active-extension** vs **global** UI contrib hosts
-- [ ] In contribution mode: if active view has **no** sidebar contribution (and Home has no `dashboardSidebar`), Shell **collapses/hides** the sidebar column (no empty pane). User can still open sidebar for Shell panels (manager / HITL) or when a sidebar exists
-- [ ] `ui/dashboard-sidebar.tsx` convention + `mountShell({ dashboardSidebar })` (name TBD but parallel to `dashboard`)
-- [ ] Home (`activeView === 'home'`) renders that component in the sidebar host when provided
-- [ ] Demo / extensions without `ui/sidebar.tsx` no longer leave an empty sidebar column
-- [ ] CRM Helper (has sidebar) still shows contextual sidebar when active
-- [ ] Docs + tests cover hide/show matrix; Home dashboard-sidebar render
+- [x] Model documents **active-extension** vs **global** UI contrib hosts
+- [x] In contribution mode: if active view has **no** sidebar contribution (and Home has no `dashboardSidebar`), Shell **collapses/hides** the sidebar column (no empty pane). User can still open sidebar for Shell panels (manager / HITL) or when a sidebar exists
+- [x] `ui/dashboard-sidebar.tsx` convention + `mountShell({ dashboardSidebar })` (name TBD but parallel to `dashboard`)
+- [x] Home (`activeView === 'home'`) renders that component in the sidebar host when provided
+- [x] Demo / extensions without `ui/sidebar.tsx` no longer leave an empty sidebar column
+- [x] CRM Helper (has sidebar) still shows contextual sidebar when active
+- [x] Docs + tests cover hide/show matrix; Home dashboard-sidebar render
 
 ## Notes
 

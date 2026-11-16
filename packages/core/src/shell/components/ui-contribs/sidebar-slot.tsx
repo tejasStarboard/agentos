@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import {
   useShellActiveView,
   useShellContributions,
@@ -22,14 +23,17 @@ export type SidebarSlotProps = {
   activeView?: ShellView;
   /** Override store sidebar panel mode (tests / controlled hosts). */
   sidebarPanel?: SidebarPanel;
+  /** App Home sidebar (`ui/dashboard-sidebar.tsx`), in-process. */
+  dashboardSidebar?: ComponentType;
 };
 
-/** Left sidebar host: active extension `ui/sidebar.tsx`, or Shell manager/HITL. */
+/** Left sidebar host: active extension `ui/sidebar.tsx`, Home sidebar, or Shell manager/HITL. */
 export function SidebarSlot({
   contributions: contributionsProp,
   sidebarOpen: sidebarOpenProp,
   activeView: activeViewProp,
   sidebarPanel: sidebarPanelProp,
+  dashboardSidebar: DashboardSidebar,
 }: SidebarSlotProps) {
   const sidebarOpen = useShellSidebarOpen(sidebarOpenProp);
   const activeView = useShellActiveView(activeViewProp);
@@ -41,6 +45,8 @@ export function SidebarSlot({
   });
 
   const contributionMode = mode === 'contribution';
+  const homeSidebarActive =
+    contributionMode && activeView === 'home' && DashboardSidebar != null;
 
   return (
     <aside
@@ -66,6 +72,15 @@ export function SidebarSlot({
       ) : null}
       {contributionMode ? (
         <div className="min-h-0 flex-1 overflow-hidden">
+          {homeSidebarActive ? (
+            <div
+              className="h-full w-full overflow-auto"
+              data-slot="dashboard-sidebar"
+              data-sidebar-active="true"
+            >
+              <DashboardSidebar />
+            </div>
+          ) : null}
           {sidebars.map((contribution) => {
             const active = contribution.extensionId === activeView;
             return (

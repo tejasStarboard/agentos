@@ -20,6 +20,12 @@ export type MountShellOptions = {
    */
   dashboard?: ComponentType;
   /**
+   * App-owned Home sidebar (convention: `ui/dashboard-sidebar.tsx`).
+   * Rendered in-process in the left sidebar when `activeView === 'home'`.
+   * Not an extension iframe / not a `UiViewName`.
+   */
+  dashboardSidebar?: ComponentType;
+  /**
    * Override `virtual:agentos-config` (tests).
    */
   config?: AuthGateConfig;
@@ -39,6 +45,10 @@ export function mountShell(
   }
   activeRoot = createRoot(root);
   activeRoot.render(
-    <AuthGate dashboard={options.dashboard} config={options.config} />,
+    <AuthGate
+      dashboard={options.dashboard}
+      dashboardSidebar={options.dashboardSidebar}
+      config={options.config}
+    />,
   );
 }

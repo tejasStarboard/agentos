@@ -1,8 +1,16 @@
 import type { ComponentType } from 'react';
 import {
   useShellActiveView,
+  useShellContributions,
   useShellSidebarOpen,
+  useShellSidebarPanel,
 } from '@agentos/core/shell/hooks';
+import {
+  sidebarColumnVisible,
+  type ShellView,
+  type SidebarPanel,
+  type UiContribution,
+} from '@agentos/core/shell/lib';
 import {
   AGENTOS_THEMES,
   ThemeProvider,
@@ -26,6 +34,13 @@ import '@agentos/ui/globals.css';
 export type ShellRootProps = {
   /** App-owned Home page from `ui/dashboard.tsx`. */
   dashboard?: ComponentType;
+  /** App-owned Home sidebar from `ui/dashboard-sidebar.tsx`. */
+  dashboardSidebar?: ComponentType;
+  /** Override store values (SSR / tests). */
+  activeView?: ShellView;
+  sidebarOpen?: boolean;
+  sidebarPanel?: SidebarPanel;
+  contributions?: UiContribution[];
 };
 
 function MainWorkspace({
@@ -55,10 +70,30 @@ function MainWorkspace({
   );
 }
 
-export function ShellRoot({ dashboard }: ShellRootProps = {}) {
-  const activeView = useShellActiveView();
-  const sidebarOpen = useShellSidebarOpen();
+export function ShellRoot({
+  dashboard,
+  dashboardSidebar,
+  activeView: activeViewProp,
+  sidebarOpen: sidebarOpenProp,
+  sidebarPanel: sidebarPanelProp,
+  contributions: contributionsProp,
+}: ShellRootProps = {}) {
+  const activeView = useShellActiveView(activeViewProp);
+  const sidebarOpen = useShellSidebarOpen(sidebarOpenProp);
+  const storePanel = useShellSidebarPanel();
+  const sidebarPanel = sidebarPanelProp ?? storePanel;
+  const sidebars = useShellContributions({
+    contributions: contributionsProp,
+    view: 'sidebar',
+  });
   const isHome = activeView === 'home';
+  const showSidebarColumn = sidebarColumnVisible({
+    sidebarOpen,
+    sidebarPanel,
+    activeView,
+    sidebars,
+    hasDashboardSidebar: dashboardSidebar != null,
+  });
 
   return (
     <ThemeProvider
@@ -75,7 +110,7 @@ export function ShellRoot({ dashboard }: ShellRootProps = {}) {
         >
           <div className="flex min-h-0 flex-1 overflow-hidden">
             <ActivityBar />
-            {sidebarOpen ? (
+            {showSidebarColumn ? (
               <ResizablePanelGroup
                 orientation="horizontal"
                 className="min-h-0 min-w-0 flex-1"
@@ -87,7 +122,13 @@ export function ShellRoot({ dashboard }: ShellRootProps = {}) {
                   maxSize={480}
                   className="min-h-0"
                 >
-                  <SidebarSlot />
+                  <SidebarSlot
+                    dashboardSidebar={dashboardSidebar}
+                    activeView={activeViewProp}
+                    sidebarOpen={sidebarOpenProp}
+                    sidebarPanel={sidebarPanelProp}
+                    contributions={contributionsProp}
+                  />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel

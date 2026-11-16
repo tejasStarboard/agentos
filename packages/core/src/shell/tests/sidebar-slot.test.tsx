@@ -74,6 +74,26 @@ describe('SidebarSlot contextual + shell panels', () => {
     expect(html).not.toContain('data-sidebar-active="true"');
   });
 
+  test('home renders in-process dashboardSidebar when provided', () => {
+    function HomeSidebar() {
+      return <div data-app-dashboard-sidebar>Home nav</div>;
+    }
+    const html = renderToStaticMarkup(
+      <SidebarSlot
+        sidebarOpen
+        activeView="home"
+        contributions={sidebars}
+        sidebarPanel="contribution"
+        dashboardSidebar={HomeSidebar}
+      />,
+    );
+    expect(html).toContain('data-slot="dashboard-sidebar"');
+    expect(html).toContain('data-app-dashboard-sidebar');
+    expect(html).toContain('Home nav');
+    expect(html).toContain('data-sidebar-active="true"');
+    expect(html).toContain('data-sidebar-active="false"');
+  });
+
   test('extensions panel renders Extension Manager inside sidebar (no sheet)', () => {
     const html = renderToStaticMarkup(
       <SidebarSlot
