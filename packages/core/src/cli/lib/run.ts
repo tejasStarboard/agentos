@@ -1,3 +1,4 @@
+import { formatCreateNextSteps, runCreate } from './create';
 import { runBuild } from './build';
 import { runDev } from './dev';
 import { parseArgs, usage } from './parse-args';
@@ -23,6 +24,20 @@ export async function main(argv: string[] = Bun.argv): Promise<number> {
   }
 
   try {
+    if (parsed.command === 'create') {
+      if (!parsed.createTarget) {
+        console.error('agentos create: missing <dir>');
+        console.error(usage());
+        return 1;
+      }
+      const result = runCreate({
+        target: parsed.createTarget,
+        template: parsed.template,
+        cwd: parsed.cwd ?? process.cwd(),
+      });
+      console.log(formatCreateNextSteps(result));
+      return 0;
+    }
     if (parsed.command === 'dev') {
       await runDev({ cwd: parsed.cwd });
       return 0;

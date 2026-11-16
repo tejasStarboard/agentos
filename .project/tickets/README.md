@@ -59,6 +59,7 @@ Agents must never promote tickets to `done/` themselves.
 39. Contextual sidebar (per active extension) + Shell panels (manager / HITL) in left sidebar
 40. App-level `ui/dashboard.tsx` Home surface (mountShell dashboard option)
 41. Chore: git / package metadata + README refresh
+42. CLI package: scaffold client app (`create` / `init`, CRA / shadcn-init style)
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

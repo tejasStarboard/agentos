@@ -15,5 +15,6 @@
 | [skills.md](./skills.md)             | Agent skills (custom + third-party)                  |
 | [adr/](./adr/)                       | Architecture Decision Records                        |
 | [cookbook/](./cookbook/)             | Step-by-step how-tos                                 |
+| [cookbook/create-client-app.md](./cookbook/create-client-app.md) | `agentos create` from `templates/` |
 
 Tickets live in [../tickets/](../tickets/) (`todo` → `in-progress` → `done`).

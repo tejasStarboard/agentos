@@ -1,0 +1,9 @@
+{
+  "name": "Starter",
+  "icon": "Rocket",
+  "api": {
+    "language": "bun",
+    "port": 6110,
+    "routesDir": "api/routes"
+  }
+}

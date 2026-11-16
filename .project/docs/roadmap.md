@@ -22,5 +22,6 @@ Implementation is tracked as numbered tickets in [../tickets/](../tickets/). Do 
 | Polish | Activity Bar primary + secondary (builtins-only bottom)      | **38**                                               |
 | Polish | Contextual sidebar + Shell panels left                       | **39**                                               |
 | Polish | App-level `ui/dashboard.tsx` Home surface                    | **40**                                               |
+| DX     | CLI scaffold consumer app (`agentos create` / `init`)        | **42**                                               |
 
 **Status:** setup docs/skills can proceed before ticket 1. **Do not start ticket 1** until explicitly asked to build.
