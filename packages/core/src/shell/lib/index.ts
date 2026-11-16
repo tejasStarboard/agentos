@@ -5,6 +5,7 @@ export {
   writeStoredActivity,
   type StoredActivitySelection,
 } from './activity-bar-persistence';
+export { applyBranding, isFontUrl } from './apply-branding';
 export {
   AUTH_API_BASE,
   fetchAuthSession,

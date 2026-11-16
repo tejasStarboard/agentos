@@ -13,12 +13,19 @@ import { navigateApp, readResetToken } from '../lib/auth-routes';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 
+export type ResetPasswordPageBranding = {
+  appName: string;
+  logoUrl?: string;
+};
+
 export type ResetPasswordPageProps = {
   search?: string;
+  branding?: ResetPasswordPageBranding;
 };
 
 export function ResetPasswordPage({
   search = typeof window !== 'undefined' ? window.location.search : '',
+  branding = { appName: 'AgentOS' },
 }: ResetPasswordPageProps) {
   const token = readResetToken(search);
   const [password, setPassword] = useState('');
@@ -51,7 +58,7 @@ export function ResetPasswordPage({
   if (!token) {
     return (
       <AuthPublicLayout>
-        <AuthFormCard>
+        <AuthFormCard appName={branding.appName} logoUrl={branding.logoUrl}>
           <AuthFormPanel>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
@@ -88,7 +95,7 @@ export function ResetPasswordPage({
 
   return (
     <AuthPublicLayout>
-      <AuthFormCard>
+      <AuthFormCard appName={branding.appName} logoUrl={branding.logoUrl}>
         <AuthFormPanel>
           <form onSubmit={onSubmit}>
             <FieldGroup>

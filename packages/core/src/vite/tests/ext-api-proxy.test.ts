@@ -230,7 +230,7 @@ describe('createExtApiProxyMiddleware', () => {
 });
 
 describe('agentos() gateway middleware wiring', () => {
-  test('registers enable + agent + proxy + html middlewares on configureServer', async () => {
+  test('registers public + enable + agent + proxy + html middlewares on configureServer', async () => {
     const plugin = asHooks(agentos({ extensionsDir, builtinsDir }));
     await plugin.configResolved?.({ root: fixturesRoot });
 
@@ -264,32 +264,43 @@ describe('agentos() gateway middleware wiring', () => {
     } as unknown as ViteDevServer;
 
     await plugin.configureServer?.(fakeServer);
-    expect(middlewares.length).toBe(4);
+    expect(middlewares.length).toBe(5);
 
-    // Enable middleware is first.
+    // Public assets middleware is first (passes through non-/_public).
+    let publicNext = false;
+    middlewares[0]!(
+      mockReqRes('/api/extensions/crm/enable').req,
+      mockReqRes('/api/extensions/crm/enable').res,
+      () => {
+        publicNext = true;
+      },
+    );
+    expect(publicNext).toBe(true);
+
+    // Enable middleware is second.
     const enableHit = mockReqRes('/api/extensions/crm/enable', {
       method: 'POST',
       body: JSON.stringify({ enabled: false }),
     });
-    middlewares[0]!(enableHit.req, enableHit.res, () => {});
+    middlewares[1]!(enableHit.req, enableHit.res, () => {});
     await enableHit.settle();
     expect(enableHit.status).toBe(200);
 
-    // Agent control plane is second.
+    // Agent control plane is third.
     const registryHit = mockReqRes('/api/agent/registry');
-    middlewares[1]!(registryHit.req, registryHit.res, () => {});
+    middlewares[2]!(registryHit.req, registryHit.res, () => {});
     await registryHit.settle();
     expect(registryHit.status).toBe(200);
 
-    // Proxy is third — disabled customer now 403.
+    // Proxy is fourth — disabled customer now 403.
     const proxyHit = mockReqRes('/api/ext/crm/tools/x');
-    middlewares[2]!(proxyHit.req, proxyHit.res, () => {});
+    middlewares[3]!(proxyHit.req, proxyHit.res, () => {});
     await proxyHit.settle();
     expect(proxyHit.status).toBe(403);
 
     // HTML middleware still last.
     const htmlHit = mockReqRes('/__agentos/ext/crm/page.html');
-    middlewares[3]!(htmlHit.req, htmlHit.res, () => {});
+    middlewares[4]!(htmlHit.req, htmlHit.res, () => {});
     expect(htmlHit.status).toBe(200);
   });
 });

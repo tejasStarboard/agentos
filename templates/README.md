@@ -8,7 +8,7 @@ Source trees for `agentos create <dir> --template <id>`.
 | `with-extension`    | Same + stub Bun extension `starter`                  |
 | `with-service`      | Stub extension UI + in-app Python `services/starter` |
 
-Every template includes `agentos.config.ts` (`@agentos/core/config` / `defineConfig`) for FDE app + builtin settings. Secrets stay in `src/env.ts`.
+Every template includes `agentos.config.ts` (`@agentos/core/config` / `defineConfig`) for FDE app settings (auth, branding, builtins) plus a `public/` folder served at `/_public/`. Secrets stay in `src/env.ts`.
 
 These are **not** workspace packages. Copy them with the CLI; do not treat them as demos (`examples/client-app` stays the kitchen-sink sample).
 

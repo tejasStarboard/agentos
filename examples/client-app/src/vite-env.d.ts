@@ -13,6 +13,13 @@ declare module 'virtual:agentos-config' {
       allowPasswordReset: boolean;
       afterSignInPath: string;
     };
+    branding: {
+      appName: string;
+      logoUrl?: string;
+      faviconUrl?: string;
+      fontSans?: string;
+      fontHeading?: string;
+    };
     builtins: Record<string, Record<string, unknown>>;
   };
 }

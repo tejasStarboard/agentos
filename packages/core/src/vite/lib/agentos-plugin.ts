@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -26,6 +26,10 @@ import {
   virtualExtEntryId,
   virtualExtEntryScriptSrc,
 } from './html-entry';
+import {
+  createPublicAssetsMiddleware,
+  resolvePublicRoot,
+} from './public-assets-middleware';
 import { scanExtensions } from './scan-extensions';
 import { serializeRegistryModule } from './serialize-registry';
 import type {
@@ -74,6 +78,15 @@ export {
   virtualExtEntryId,
   virtualExtEntryScriptSrc,
 } from './html-entry';
+
+export {
+  PUBLIC_ASSETS_PREFIX,
+  createPublicAssetsMiddleware,
+  parsePublicAssetPath,
+  pathUnderRoot as publicPathUnderRoot,
+  resolvePublicAssetFile,
+  resolvePublicRoot,
+} from './public-assets-middleware';
 
 /** Absolute path to the `@agentos/core` package root. */
 export function resolveCorePackageRoot(): string {
@@ -189,9 +202,13 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
 
   const getModel = (): RegistryModel => model;
 
+  const getPublicRoot = (): string =>
+    resolvePublicRoot(viteRoot, getResolvedConfig().publicDir);
+
   const mountGatewayMiddlewares = (middlewares: {
     use: (fn: ConnectMiddleware) => void;
   }): void => {
+    middlewares.use(createPublicAssetsMiddleware(getPublicRoot));
     middlewares.use(createExtensionEnableMiddleware(getModel, enableState));
     middlewares.use(createAgentControlPlaneMiddleware(getModel, enableState));
     middlewares.use(createExtApiProxyMiddleware(getModel, enableState));
@@ -234,6 +251,14 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
 
   return {
     name: 'agentos',
+
+    /**
+     * Disable Vite's default `public/` → `/` mapping so branding assets are
+     * only available under `/_public/` (gateway convention).
+     */
+    config() {
+      return { publicDir: false };
+    },
 
     async configResolved(config) {
       viteRoot = config.root;
@@ -372,6 +397,16 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
           }),
         });
       }
+    },
+
+    /** Copy consumer `public/` → `dist/_public/` for preview / production. */
+    writeBundle(outputOptions) {
+      const outDir = outputOptions.dir;
+      if (!outDir) return;
+      const publicRoot = getPublicRoot();
+      if (!existsSync(publicRoot)) return;
+      const dest = join(outDir, '_public');
+      cpSync(publicRoot, dest, { recursive: true });
     },
   };
 }

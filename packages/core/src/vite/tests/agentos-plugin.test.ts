@@ -77,6 +77,8 @@ describe('agentos()', () => {
     expect(source).toContain('export const config');
     expect(source).toContain('"allowSignUp": true');
     expect(source).toContain('"afterSignInPath": "/"');
+    expect(source).toContain('"appName": "AgentOS"');
+    expect(source).not.toContain('publicDir');
   });
 
   test('loads agentos.config.ts from consumer root', async () => {
@@ -86,7 +88,7 @@ describe('agentos()', () => {
     mkdirSync(join(root, 'builtins'), { recursive: true });
     writeFileSync(
       join(root, 'agentos.config.ts'),
-      `export default { auth: { allowSignUp: false, afterSignInPath: '/app' } };\n`,
+      `export default { auth: { allowSignUp: false, afterSignInPath: '/app' }, branding: { appName: 'Acme', logoUrl: '/_public/logo.svg' } };\n`,
     );
 
     const plugin = asHooks(
@@ -99,6 +101,8 @@ describe('agentos()', () => {
     const source = await plugin.load?.(RESOLVED_VIRTUAL_CONFIG_ID);
     expect(source).toContain('"allowSignUp": false');
     expect(source).toContain('"afterSignInPath": "/app"');
+    expect(source).toContain('"appName": "Acme"');
+    expect(source).toContain('"/_public/logo.svg"');
   });
 
   test('rescans and invalidates registry on watched file changes', async () => {

@@ -66,6 +66,7 @@ Agents must never promote tickets to `done/` themselves.
 46. Hide empty active-extension UI contrib hosts + Home `ui/dashboard-sidebar.tsx`
 47. Shell topbar (sidebar toggle, branding, settings stub)
 48. Builtin `settings` extension + topbar Settings opens it
+49. Shell not-found (404) page for unknown SPA paths
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

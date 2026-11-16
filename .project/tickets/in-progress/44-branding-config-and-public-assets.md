@@ -1,6 +1,6 @@
 # 44 — Branding in `agentos.config.ts` + `/_public` assets
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -14,12 +14,12 @@ Update [`examples/client-app/agentos.config.ts`](../../../examples/client-app/ag
 
 ## Done when
 
-- [ ] `AgentosConfig` includes a `branding` section, e.g. `appName`, `logoUrl`, `faviconUrl`, typography knobs (`fontSans` / `fontHeading` or CSS variable URLs)
-- [ ] Resolved branding flows through `virtual:agentos-config` for Shell / auth chrome
-- [ ] Consumer `public/` (default name; configurable if needed) is served at `/_public/<path>` in Vite plugin (dev + preview/build)
-- [ ] `examples/client-app` (and templates) ship `public/` + branding entries in `agentos.config.ts`
-- [ ] Docs: packages / cookbook note branding + `_public` vs secrets in `env.ts`
-- [ ] Tests: config resolve + virtual module; `/_public` middleware/asset serve
+- [x] `AgentosConfig` includes a `branding` section, e.g. `appName`, `logoUrl`, `faviconUrl`, typography knobs (`fontSans` / `fontHeading` or CSS variable URLs)
+- [x] Resolved branding flows through `virtual:agentos-config` for Shell / auth chrome
+- [x] Consumer `public/` (default name; configurable if needed) is served at `/_public/<path>` in Vite plugin (dev + preview/build)
+- [x] `examples/client-app` (and templates) ship `public/` + branding entries in `agentos.config.ts`
+- [x] Docs: packages / cookbook note branding + `_public` vs secrets in `env.ts`
+- [x] Tests: config resolve + virtual module; `/_public` middleware/asset serve
 
 ## Notes
 

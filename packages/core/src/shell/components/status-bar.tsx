@@ -13,6 +13,7 @@ import { Button } from '@agentos/ui/components/button';
 import { Spinner } from '@agentos/ui/components/spinner';
 import { Switch } from '@agentos/ui/components/switch';
 import { useTheme } from '@agentos/ui/components/theme-provider';
+import { config as agentosConfig } from 'virtual:agentos-config';
 import { EnsureMounted } from './ensure-mounted';
 
 function ThemeToggle() {
@@ -116,7 +117,9 @@ export function StatusBar(props: StatusBarProps = {}) {
         className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden"
         data-slot="status-bar-main"
       >
-        <span className="shrink-0 font-medium text-foreground">AgentOS</span>
+        <span className="shrink-0 font-medium text-foreground">
+          {agentosConfig.branding.appName}
+        </span>
         <Badge variant="outline">view: {activeView}</Badge>
         <Badge variant="secondary">panel: {sidebarPanel}</Badge>
         <Badge variant="outline" data-slot="status-enabled">

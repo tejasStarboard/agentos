@@ -5,6 +5,8 @@ export { loadAgentosConfig } from './lib/load-config';
 export { serializeConfigModule } from './lib/serialize-config';
 export type {
   AgentosAuthConfig,
+  AgentosBrandingConfig,
   AgentosConfig,
+  ResolvedAgentosBranding,
   ResolvedAgentosConfig,
 } from './lib/types';
