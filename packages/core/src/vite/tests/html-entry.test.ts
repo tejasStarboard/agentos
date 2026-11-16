@@ -60,6 +60,7 @@ describe('html-entry helpers', () => {
       scriptSrc: virtualExtEntryScriptSrc('crm', 'page'),
     });
     expect(html).toContain('<div id="root"></div>');
+    expect(html).toContain('data-agentos-ext');
     expect(html).toContain('src="/@id/virtual:agentos-ext-entry/crm/page"');
     expect(html).toContain('agentos-theme');
     expect(html).toContain('theme');

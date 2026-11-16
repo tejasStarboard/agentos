@@ -29,10 +29,17 @@ export function resolveThemeFromSearch(
   return 'dark';
 }
 
+/** Mark the document as an extension iframe so globals allow body scroll. */
+export function markExtensionDocument(): void {
+  if (typeof document === 'undefined') return;
+  document.documentElement.dataset.agentosExt = '';
+}
+
 /** Apply theme class on `<html>` (FOUC already handled in HTML shell). */
 export function applyDocumentTheme(theme: AgentosTheme): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
+  markExtensionDocument();
   for (const name of AGENTOS_THEMES) {
     root.classList.remove(name);
   }
