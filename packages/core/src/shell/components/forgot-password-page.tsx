@@ -13,7 +13,18 @@ import { navigateApp } from '../lib/auth-routes';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 
-export function ForgotPasswordPage() {
+export type ForgotPasswordPageBranding = {
+  appName: string;
+  logoUrl?: string;
+};
+
+export type ForgotPasswordPageProps = {
+  branding?: ForgotPasswordPageBranding;
+};
+
+export function ForgotPasswordPage({
+  branding = { appName: 'AgentOS' },
+}: ForgotPasswordPageProps) {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +48,7 @@ export function ForgotPasswordPage() {
 
   return (
     <AuthPublicLayout>
-      <AuthFormCard>
+      <AuthFormCard appName={branding.appName} logoUrl={branding.logoUrl}>
         <AuthFormPanel>
           {done ? (
             <FieldGroup>

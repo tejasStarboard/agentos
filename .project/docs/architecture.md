@@ -28,6 +28,8 @@ Browser:  Shell (mountShell) + extension UI iframes
 ## Gateway
 
 - Discovers builtins + customer extensions via Vite scanner → `virtual:agentos-registry`.
+- Loads consumer `agentos.config.ts` → `virtual:agentos-config` (auth + branding runtime subset).
+- Serves consumer `public/` at `/_public/<path>` (dev + preview/build copy into `dist/_public/`).
 - Proxies `/api/ext/:id/*` to upstream from `meta.json` (port, language `bun` | `python`).
 - Disabled **customer** extensions → 403 + UI unmounted. **Builtins** cannot be disabled.
 

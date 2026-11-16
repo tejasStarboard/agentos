@@ -13,11 +13,20 @@ import { navigateApp } from '../lib/auth-routes';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 
-export type RegisterPageProps = {
-  afterSignInPath: string;
+export type RegisterPageBranding = {
+  appName: string;
+  logoUrl?: string;
 };
 
-export function RegisterPage({ afterSignInPath }: RegisterPageProps) {
+export type RegisterPageProps = {
+  afterSignInPath: string;
+  branding?: RegisterPageBranding;
+};
+
+export function RegisterPage({
+  afterSignInPath,
+  branding = { appName: 'AgentOS' },
+}: RegisterPageProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,7 +53,7 @@ export function RegisterPage({ afterSignInPath }: RegisterPageProps) {
 
   return (
     <AuthPublicLayout>
-      <AuthFormCard>
+      <AuthFormCard appName={branding.appName} logoUrl={branding.logoUrl}>
         <AuthFormPanel>
           <form onSubmit={onSubmit}>
             <FieldGroup>

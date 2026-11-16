@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 32" fill="none">
+  <rect width="128" height="32" rx="4" fill="#1a1d24"/>
+  <path d="M12 8h8l6 16h-5.5l-1-3H14.5l-1 3H8l6-16zm3.2 9.5h4.6L17.5 12l-2.3 5.5z" fill="#e8eaed"/>
+  <text x="36" y="21" fill="#e8eaed" font-family="system-ui,sans-serif" font-size="14" font-weight="600">AgentOS</text>
+</svg>

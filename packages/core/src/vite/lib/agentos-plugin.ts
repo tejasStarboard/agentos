@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -6,6 +6,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Plugin, ViteDevServer } from 'vite';
 
 import {
+  AGENTOS_CONFIG_FILES,
+  findAgentosConfigFile,
   loadAgentosConfig,
   serializeConfigModule,
   type ResolvedAgentosConfig,
@@ -26,6 +28,10 @@ import {
   virtualExtEntryId,
   virtualExtEntryScriptSrc,
 } from './html-entry';
+import {
+  createPublicAssetsMiddleware,
+  resolvePublicRoot,
+} from './public-assets-middleware';
 import { scanExtensions } from './scan-extensions';
 import { serializeRegistryModule } from './serialize-registry';
 import type {
@@ -74,6 +80,15 @@ export {
   virtualExtEntryId,
   virtualExtEntryScriptSrc,
 } from './html-entry';
+
+export {
+  PUBLIC_ASSETS_PREFIX,
+  createPublicAssetsMiddleware,
+  parsePublicAssetPath,
+  pathUnderRoot as publicPathUnderRoot,
+  resolvePublicAssetFile,
+  resolvePublicRoot,
+} from './public-assets-middleware';
 
 /** Absolute path to the `@agentos/core` package root. */
 export function resolveCorePackageRoot(): string {
@@ -189,9 +204,13 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
 
   const getModel = (): RegistryModel => model;
 
+  const getPublicRoot = (): string =>
+    resolvePublicRoot(viteRoot, getResolvedConfig().publicDir);
+
   const mountGatewayMiddlewares = (middlewares: {
     use: (fn: ConnectMiddleware) => void;
   }): void => {
+    middlewares.use(createPublicAssetsMiddleware(getPublicRoot));
     middlewares.use(createExtensionEnableMiddleware(getModel, enableState));
     middlewares.use(createAgentControlPlaneMiddleware(getModel, enableState));
     middlewares.use(createExtApiProxyMiddleware(getModel, enableState));
@@ -213,6 +232,26 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
     }
   };
 
+  const applyResolvedDirs = (fileConfig: ResolvedAgentosConfig): void => {
+    const extensionsOption =
+      options.extensionsDir ?? fileConfig.extensionsDir ?? 'extensions';
+    extensionsDir = isAbsolute(extensionsOption)
+      ? extensionsOption
+      : resolve(viteRoot, extensionsOption);
+    const builtinsOption = options.builtinsDir ?? fileConfig.builtinsDir;
+    builtinsDir = builtinsOption
+      ? resolve(builtinsOption)
+      : defaultBuiltinsDir();
+  };
+
+  const fullReload = (): void => {
+    if (!server) return;
+    server.ws.send({
+      type: 'full-reload',
+      path: '*',
+    });
+  };
+
   const invalidateRegistry = (): void => {
     if (!server) return;
     const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_REGISTRY_ID);
@@ -226,29 +265,61 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
         server!.moduleGraph.invalidateModule(entryMod);
       }
     });
-    server.ws.send({
-      type: 'full-reload',
-      path: '*',
-    });
+    fullReload();
+  };
+
+  const invalidateConfig = (): void => {
+    if (!server) return;
+    const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_CONFIG_ID);
+    if (mod) {
+      server.moduleGraph.invalidateModule(mod);
+    }
+    fullReload();
+  };
+
+  const reloadAgentosConfigFromDisk = async (): Promise<void> => {
+    const prevExtensionsDir = extensionsDir;
+    const prevBuiltinsDir = builtinsDir;
+    const fileConfig = await loadAgentosConfig(viteRoot, { bustCache: true });
+    resolvedConfig = fileConfig;
+    applyResolvedDirs(fileConfig);
+    ensureDir(extensionsDir);
+    ensureDir(builtinsDir);
+    if (server) {
+      if (extensionsDir !== prevExtensionsDir) {
+        server.watcher.add(extensionsDir);
+      }
+      if (builtinsDir !== prevBuiltinsDir) {
+        server.watcher.add(builtinsDir);
+      }
+    }
+    if (
+      extensionsDir !== prevExtensionsDir ||
+      builtinsDir !== prevBuiltinsDir
+    ) {
+      rescan();
+      invalidateRegistry();
+      return;
+    }
+    invalidateConfig();
   };
 
   return {
     name: 'agentos',
 
+    /**
+     * Disable Vite's default `public/` → `/` mapping so branding assets are
+     * only available under `/_public/` (gateway convention).
+     */
+    config() {
+      return { publicDir: false };
+    },
+
     async configResolved(config) {
       viteRoot = config.root;
       const fileConfig = await loadAgentosConfig(viteRoot);
       resolvedConfig = fileConfig;
-
-      const extensionsOption =
-        options.extensionsDir ?? fileConfig.extensionsDir ?? 'extensions';
-      extensionsDir = isAbsolute(extensionsOption)
-        ? extensionsOption
-        : resolve(viteRoot, extensionsOption);
-      const builtinsOption = options.builtinsDir ?? fileConfig.builtinsDir;
-      builtinsDir = builtinsOption
-        ? resolve(builtinsOption)
-        : defaultBuiltinsDir();
+      applyResolvedDirs(fileConfig);
 
       ensureDir(extensionsDir);
       ensureDir(builtinsDir);
@@ -328,7 +399,28 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
       devServer.watcher.add(extensionsDir);
       devServer.watcher.add(builtinsDir);
 
+      const configFile = findAgentosConfigFile(viteRoot);
+      if (configFile) {
+        devServer.watcher.add(configFile);
+      }
+      // Watch candidate names so creating agentos.config.* later is picked up.
+      for (const name of AGENTOS_CONFIG_FILES) {
+        devServer.watcher.add(resolve(viteRoot, name));
+      }
+
+      const configFileNames = new Set<string>(AGENTOS_CONFIG_FILES);
+      const isAgentosConfigPath = (file: string): boolean => {
+        const base = file.split(/[/\\]/).pop() ?? '';
+        return configFileNames.has(base);
+      };
+
       const onFsChange = (file: string): void => {
+        if (isAgentosConfigPath(file)) {
+          void reloadAgentosConfigFromDisk().catch((err) => {
+            console.error('[agentos] failed to reload agentos.config:', err);
+          });
+          return;
+        }
         if (
           !pathUnderRoot(file, extensionsDir) &&
           !pathUnderRoot(file, builtinsDir)
@@ -372,6 +464,16 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
           }),
         });
       }
+    },
+
+    /** Copy consumer `public/` → `dist/_public/` for preview / production. */
+    writeBundle(outputOptions) {
+      const outDir = outputOptions.dir;
+      if (!outDir) return;
+      const publicRoot = getPublicRoot();
+      if (!existsSync(publicRoot)) return;
+      const dest = join(outDir, '_public');
+      cpSync(publicRoot, dest, { recursive: true });
     },
   };
 }

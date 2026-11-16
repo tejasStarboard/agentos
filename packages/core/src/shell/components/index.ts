@@ -1,5 +1,10 @@
 export { ActivityBar } from './activity-bar';
-export { AuthGate, type AuthGateConfig, type AuthGateProps } from './auth-gate';
+export {
+  AuthGate,
+  type AuthGateBranding,
+  type AuthGateConfig,
+  type AuthGateProps,
+} from './auth-gate';
 export {
   AuthFormCard,
   AuthFormPanel,

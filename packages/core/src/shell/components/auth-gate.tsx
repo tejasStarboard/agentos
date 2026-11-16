@@ -1,5 +1,6 @@
 import { useEffect, useState, type ComponentType } from 'react';
 import { config as virtualConfig } from 'virtual:agentos-config';
+import { applyBranding } from '../lib/apply-branding';
 import { fetchAuthSession } from '../lib/auth-api';
 import {
   loginPathWithNext,
@@ -13,12 +14,21 @@ import { RegisterPage } from './register-page';
 import { ResetPasswordPage } from './reset-password-page';
 import { ShellRoot } from './shell-root';
 
+export type AuthGateBranding = {
+  appName: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  fontSans?: string;
+  fontHeading?: string;
+};
+
 export type AuthGateConfig = {
   auth: {
     allowSignUp: boolean;
     allowPasswordReset: boolean;
     afterSignInPath: string;
   };
+  branding: AuthGateBranding;
 };
 
 export type AuthGateProps = {
@@ -35,6 +45,13 @@ function resolveConfig(override?: AuthGateConfig): AuthGateConfig {
       allowPasswordReset: virtualConfig.auth.allowPasswordReset,
       afterSignInPath: virtualConfig.auth.afterSignInPath,
     },
+    branding: {
+      appName: virtualConfig.branding.appName,
+      logoUrl: virtualConfig.branding.logoUrl,
+      faviconUrl: virtualConfig.branding.faviconUrl,
+      fontSans: virtualConfig.branding.fontSans,
+      fontHeading: virtualConfig.branding.fontHeading,
+    },
   };
 }
 
@@ -46,6 +63,10 @@ function PublicAuthRouteView({
   config: AuthGateConfig;
 }) {
   const search = typeof window !== 'undefined' ? window.location.search : '';
+  const branding = {
+    appName: config.branding.appName,
+    logoUrl: config.branding.logoUrl,
+  };
   switch (route) {
     case 'login':
       return (
@@ -54,14 +75,20 @@ function PublicAuthRouteView({
           allowPasswordReset={config.auth.allowPasswordReset}
           afterSignInPath={config.auth.afterSignInPath}
           search={search}
+          branding={branding}
         />
       );
     case 'register':
-      return <RegisterPage afterSignInPath={config.auth.afterSignInPath} />;
+      return (
+        <RegisterPage
+          afterSignInPath={config.auth.afterSignInPath}
+          branding={branding}
+        />
+      );
     case 'forgot-password':
-      return <ForgotPasswordPage />;
+      return <ForgotPasswordPage branding={branding} />;
     case 'reset-password':
-      return <ResetPasswordPage search={search} />;
+      return <ResetPasswordPage search={search} branding={branding} />;
   }
 }
 
@@ -75,6 +102,16 @@ export function AuthGate({ dashboard, config: configOverride }: AuthGateProps) {
   );
   const [ready, setReady] = useState(false);
   const [authed, setAuthed] = useState(false);
+
+  useEffect(() => {
+    applyBranding(config.branding);
+  }, [
+    config.branding.appName,
+    config.branding.logoUrl,
+    config.branding.faviconUrl,
+    config.branding.fontSans,
+    config.branding.fontHeading,
+  ]);
 
   useEffect(() => {
     const onPop = () => setPathname(window.location.pathname);

@@ -13,11 +13,17 @@ import { navigateApp, readNextParam } from '../lib/auth-routes';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 
+export type LoginPageBranding = {
+  appName: string;
+  logoUrl?: string;
+};
+
 export type LoginPageProps = {
   allowSignUp: boolean;
   allowPasswordReset: boolean;
   afterSignInPath: string;
   search?: string;
+  branding?: LoginPageBranding;
 };
 
 export function LoginPage({
@@ -25,6 +31,7 @@ export function LoginPage({
   allowPasswordReset,
   afterSignInPath,
   search = typeof window !== 'undefined' ? window.location.search : '',
+  branding = { appName: 'AgentOS' },
 }: LoginPageProps) {
   const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('password123');
@@ -49,10 +56,12 @@ export function LoginPage({
   return (
     <AuthPublicLayout>
       <AuthFormCard
+        appName={branding.appName}
+        logoUrl={branding.logoUrl}
         footer={
           <>
-            By continuing, you agree to the workspace terms for this AgentOS
-            deployment.
+            By continuing, you agree to the workspace terms for this{' '}
+            {branding.appName} deployment.
           </>
         }
       >
@@ -62,7 +71,7 @@ export function LoginPage({
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
                 <p className="text-balance text-muted-foreground">
-                  Login to your AgentOS account
+                  Login to your {branding.appName} account
                 </p>
               </div>
               <Field>

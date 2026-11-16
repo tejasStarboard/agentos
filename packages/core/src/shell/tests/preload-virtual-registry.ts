@@ -18,6 +18,9 @@ mock.module('virtual:agentos-config', () => ({
       allowPasswordReset: true,
       afterSignInPath: '/',
     },
+    branding: {
+      appName: 'AgentOS',
+    },
     builtins: {},
   },
 }));
