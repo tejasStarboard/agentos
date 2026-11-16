@@ -1,5 +1,19 @@
 export { ActivityBar } from './activity-bar';
+export { AuthGate, type AuthGateConfig, type AuthGateProps } from './auth-gate';
+export {
+  AuthFormCard,
+  AuthFormPanel,
+  type AuthFormCardProps,
+} from './auth-form-card';
+export { AuthPublicLayout } from './auth-public-layout';
 export { ChatPanel } from './chat-panel';
+export { ForgotPasswordPage } from './forgot-password-page';
+export { LoginPage, type LoginPageProps } from './login-page';
+export { RegisterPage, type RegisterPageProps } from './register-page';
+export {
+  ResetPasswordPage,
+  type ResetPasswordPageProps,
+} from './reset-password-page';
 export {
   CommandPalette,
   CommandPaletteSkills,

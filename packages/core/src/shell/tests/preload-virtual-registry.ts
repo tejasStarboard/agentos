@@ -10,3 +10,14 @@ mock.module('virtual:agentos-registry', () => ({
     scannedAt: 0,
   },
 }));
+
+mock.module('virtual:agentos-config', () => ({
+  config: {
+    auth: {
+      allowSignUp: true,
+      allowPasswordReset: true,
+      afterSignInPath: '/',
+    },
+    builtins: {},
+  },
+}));

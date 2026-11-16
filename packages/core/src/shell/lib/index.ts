@@ -6,6 +6,28 @@ export {
   type StoredActivitySelection,
 } from './activity-bar-persistence';
 export {
+  AUTH_API_BASE,
+  fetchAuthSession,
+  requestPasswordReset,
+  resetPasswordWithToken,
+  signInWithEmail,
+  signOutSession,
+  signUpWithEmail,
+  type AuthSessionOk,
+  type AuthSessionView,
+} from './auth-api';
+export {
+  isPublicAuthPath,
+  loginPathWithNext,
+  matchPublicAuthRoute,
+  navigateApp,
+  normalizePathname,
+  readNextParam,
+  readResetToken,
+  type AuthRouteFlags,
+  type PublicAuthRoute,
+} from './auth-routes';
+export {
   applyRegistry,
   mapRegistry,
   type AppliedRegistry,

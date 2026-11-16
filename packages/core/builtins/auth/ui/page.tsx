@@ -1,19 +1,19 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useHostApi, useHostNotifications } from '@agentos/core/client';
 import { Button } from '@agentos/ui/components/button';
-import { Input } from '@agentos/ui/components/input';
-import { Label } from '@agentos/ui/components/label';
 
 type SessionView = {
   user: { id: string; email: string; name: string } | null;
   roles: string[];
 };
 
-export default function AuthPage() {
+/**
+ * Auth secondary Activity Bar page — account settings (not public sign-in).
+ * Public auth lives at `/login`, `/register`, `/reset-password` (Shell gate).
+ */
+export default function AuthAccountPage() {
   const api = useHostApi();
   const notifications = useHostNotifications();
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('password123');
   const [session, setSession] = useState<SessionView | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,36 +42,6 @@ export default function AuthPage() {
     void refreshSession();
   }, []);
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await api.fetch('/sign-in', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        let message = 'Sign-in failed';
-        try {
-          const body = JSON.parse(res.body) as { error?: string };
-          if (body.error) message = body.error;
-        } catch {
-          /* ignore */
-        }
-        setError(message);
-        await notifications.show(message, 'error');
-        return;
-      }
-      const data = JSON.parse(res.body) as SessionView;
-      setSession({ user: data.user, roles: data.roles ?? [] });
-      await notifications.show('Signed in', 'success');
-    } finally {
-      setBusy(false);
-    }
-  }
-
   async function onSignOut() {
     setBusy(true);
     setError(null);
@@ -79,71 +49,65 @@ export default function AuthPage() {
       await api.fetch('/sign-out', { method: 'POST' });
       setSession({ user: null, roles: [] });
       await notifications.show('Signed out', 'info');
+      // Leave the iframe account panel; top-level gate will redirect on next load.
+      window.top!.location.assign('/login');
     } finally {
       setBusy(false);
     }
   }
 
-  if (session?.user) {
+  if (!session) {
     return (
       <main className="mx-auto flex max-w-md flex-col gap-4 p-6">
-        <h1 className="text-lg font-semibold">Auth</h1>
-        <p className="text-sm text-muted-foreground">
-          Signed in as {session.user.email}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Roles: {session.roles.length > 0 ? session.roles.join(', ') : 'none'}
-        </p>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={busy}
-          onClick={onSignOut}
-        >
-          Sign out
-        </Button>
+        <h1 className="text-lg font-semibold">Account</h1>
+        <p className="text-sm text-muted-foreground">Loading session…</p>
       </main>
     );
   }
 
-  return (
-    <main className="mx-auto flex max-w-md flex-col gap-4 p-6 h-full flex flex-col justify-center">
-      <h1 className="text-lg font-semibold">Sign in</h1>
-      <p className="text-sm text-muted-foreground">
-        Builtin auth (Better Auth). Demo: admin@example.com / password123
-      </p>
-      <form className="flex flex-col gap-3" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="auth-email">Email</Label>
-          <Input
-            id="auth-email"
-            type="email"
-            autoComplete="username"
-            value={email}
-            onValueChange={setEmail}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="auth-password">Password</Label>
-          <Input
-            id="auth-password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onValueChange={setPassword}
-            required
-          />
-        </div>
+  if (!session.user) {
+    return (
+      <main className="mx-auto flex max-w-md flex-col gap-4 p-6">
+        <h1 className="text-lg font-semibold">Account</h1>
+        <p className="text-sm text-muted-foreground">
+          You are not signed in. Open{' '}
+          <span className="font-medium text-foreground">/login</span> to
+          authenticate.
+        </p>
         {error ? (
           <p className="text-xs text-destructive" role="alert">
             {error}
           </p>
         ) : null}
-        <Button type="submit" disabled={busy}>
-          {busy ? 'Signing in…' : 'Sign in'}
-        </Button>
-      </form>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto flex max-w-md flex-col gap-4 p-6">
+      <h1 className="text-lg font-semibold">Account</h1>
+      <p className="text-sm text-muted-foreground">
+        Signed in as {session.user.email}
+      </p>
+      <p className="text-xs text-muted-foreground">
+        Name: {session.user.name || '—'}
+      </p>
+      <p className="text-xs text-muted-foreground">
+        Roles: {session.roles.length > 0 ? session.roles.join(', ') : 'none'}
+      </p>
+      {error ? (
+        <p className="text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <Button
+        type="button"
+        variant="outline"
+        disabled={busy}
+        onClick={onSignOut}
+      >
+        Sign out
+      </Button>
     </main>
   );
 }

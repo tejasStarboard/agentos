@@ -5,3 +5,14 @@ declare module 'virtual:agentos-registry' {
 
   export const registry: RegistryModel;
 }
+
+declare module 'virtual:agentos-config' {
+  export const config: {
+    auth: {
+      allowSignUp: boolean;
+      allowPasswordReset: boolean;
+      afterSignInPath: string;
+    };
+    builtins: Record<string, Record<string, unknown>>;
+  };
+}

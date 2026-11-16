@@ -5,6 +5,12 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { Plugin, ViteDevServer } from 'vite';
 
+import {
+  loadAgentosConfig,
+  serializeConfigModule,
+  type ResolvedAgentosConfig,
+} from '@agentos/core/config';
+
 import { createAgentControlPlaneMiddleware } from './agent-control-plane';
 import { createExtApiProxyMiddleware } from './ext-api-proxy';
 import { serializeExtEntryModule } from './ext-entry-module';
@@ -51,6 +57,12 @@ export const VIRTUAL_REGISTRY_ID = 'virtual:agentos-registry';
 
 /** Resolved id with Vite's `\0` virtual prefix. */
 export const RESOLVED_VIRTUAL_REGISTRY_ID = `\0${VIRTUAL_REGISTRY_ID}`;
+
+/** Runtime config from consumer `agentos.config.ts` (ticket 43). */
+export const VIRTUAL_CONFIG_ID = 'virtual:agentos-config';
+
+/** Resolved id with Vite's `\0` virtual prefix. */
+export const RESOLVED_VIRTUAL_CONFIG_ID = `\0${VIRTUAL_CONFIG_ID}`;
 
 export {
   EXT_HTML_PREFIX,
@@ -154,6 +166,7 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
   let extensionsDir = '';
   let builtinsDir = '';
   let model: RegistryModel = { extensions: [], scannedAt: 0 };
+  let resolvedConfig: ResolvedAgentosConfig | null = null;
   let server: ViteDevServer | undefined;
   const enableState = createExtensionEnableState();
   /** Rollup entry name → `{ extensionId, view }` for generateBundle HTML emit. */
@@ -165,6 +178,13 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
   const rescan = (): RegistryModel => {
     model = scanExtensions({ extensionsDir, builtinsDir });
     return model;
+  };
+
+  const getResolvedConfig = (): ResolvedAgentosConfig => {
+    if (!resolvedConfig) {
+      throw new Error('AgentOS config not loaded yet (configResolved pending)');
+    }
+    return resolvedConfig;
   };
 
   const getModel = (): RegistryModel => model;
@@ -215,14 +235,19 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
   return {
     name: 'agentos',
 
-    configResolved(config) {
+    async configResolved(config) {
       viteRoot = config.root;
-      const extensionsOption = options.extensionsDir ?? 'extensions';
+      const fileConfig = await loadAgentosConfig(viteRoot);
+      resolvedConfig = fileConfig;
+
+      const extensionsOption =
+        options.extensionsDir ?? fileConfig.extensionsDir ?? 'extensions';
       extensionsDir = isAbsolute(extensionsOption)
         ? extensionsOption
         : resolve(viteRoot, extensionsOption);
-      builtinsDir = options.builtinsDir
-        ? resolve(options.builtinsDir)
+      const builtinsOption = options.builtinsDir ?? fileConfig.builtinsDir;
+      builtinsDir = builtinsOption
+        ? resolve(builtinsOption)
         : defaultBuiltinsDir();
 
       ensureDir(extensionsDir);
@@ -268,6 +293,9 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
       if (id === VIRTUAL_REGISTRY_ID) {
         return RESOLVED_VIRTUAL_REGISTRY_ID;
       }
+      if (id === VIRTUAL_CONFIG_ID) {
+        return RESOLVED_VIRTUAL_CONFIG_ID;
+      }
       const parsed = parseVirtualExtEntryId(id);
       if (parsed) {
         return resolvedVirtualExtEntryId(parsed.extensionId, parsed.view);
@@ -278,6 +306,9 @@ export function agentos(options: AgentosPluginOptions = {}): Plugin {
     load(id) {
       if (id === RESOLVED_VIRTUAL_REGISTRY_ID) {
         return serializeRegistryModule(model);
+      }
+      if (id === RESOLVED_VIRTUAL_CONFIG_ID) {
+        return serializeConfigModule(getResolvedConfig());
       }
       const parsed = parseVirtualExtEntryId(id);
       if (!parsed) return undefined;

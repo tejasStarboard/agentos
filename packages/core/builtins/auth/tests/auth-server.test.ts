@@ -172,6 +172,103 @@ describe('builtin auth server', () => {
     expect(body.user.email).toBe(DEMO_ADMIN.email);
   });
 
+  test('sign-up creates session with viewer role', async () => {
+    const email = `newbie-${Date.now()}@example.com`;
+    const signUp = await handleAuthRequest(
+      ctx,
+      new Request('http://127.0.0.1:6110/sign-up', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'password123',
+          name: 'Newbie',
+        }),
+      }),
+    );
+    expect(signUp.status).toBe(200);
+    const body = (await signUp.json()) as {
+      user: { email: string };
+      roles: string[];
+    };
+    expect(body.user.email).toBe(email);
+    expect(body.roles).toContain('viewer');
+    expect(cookieHeaderFrom(signUp).length).toBeGreaterThan(0);
+  });
+
+  test('forgot-password + reset-password round-trip', async () => {
+    let capturedToken: string | null = null;
+    const resetDir = mkdtempSync(join(tmpdir(), 'agentos-auth-reset-'));
+    const resetCtx = await createAuth({
+      databasePath: join(resetDir, 'auth.sqlite'),
+      baseURL: 'http://127.0.0.1:6110',
+      secret: 'test-secret-at-least-32-characters-long!!',
+      seedDemoUsers: false,
+      appOrigin: 'http://localhost:5173',
+      sendResetPassword: async ({ token }) => {
+        capturedToken = token;
+      },
+    });
+
+    const email = `reset-${Date.now()}@example.com`;
+    const signUp = await handleAuthRequest(
+      resetCtx,
+      new Request('http://127.0.0.1:6110/sign-up', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'password123',
+          name: 'Reset User',
+        }),
+      }),
+    );
+    expect(signUp.status).toBe(200);
+
+    const forgot = await handleAuthRequest(
+      resetCtx,
+      new Request('http://127.0.0.1:6110/forgot-password', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          redirectTo: 'http://localhost:5173/reset-password',
+        }),
+      }),
+    );
+    expect(forgot.status).toBe(200);
+    expect(capturedToken).toBeTruthy();
+
+    const reset = await handleAuthRequest(
+      resetCtx,
+      new Request('http://127.0.0.1:6110/reset-password', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          token: capturedToken,
+          newPassword: 'newpassword123',
+        }),
+      }),
+    );
+    expect(reset.status).toBe(200);
+
+    const signIn = await handleAuthRequest(
+      resetCtx,
+      new Request('http://127.0.0.1:6110/sign-in', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: 'newpassword123',
+        }),
+      }),
+    );
+    expect(signIn.status).toBe(200);
+
+    resetCtx.db.close();
+    rmSync(resetDir, { recursive: true, force: true });
+  });
+
   afterAll(() => {
     ctx?.db.close();
     rmSync(dir, { recursive: true, force: true });
