@@ -1,6 +1,6 @@
 # 47 — Shell topbar (UI contrib host + basic chrome)
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

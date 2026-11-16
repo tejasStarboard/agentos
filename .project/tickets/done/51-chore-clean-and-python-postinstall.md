@@ -1,6 +1,6 @@
 # 51 — Chore: monorepo clean + Python uv sync on install
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

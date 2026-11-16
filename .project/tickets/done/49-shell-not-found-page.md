@@ -1,6 +1,6 @@
 # 49 — Shell not-found (404) page
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 

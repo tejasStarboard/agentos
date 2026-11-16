@@ -1,6 +1,6 @@
 # 43 — Auth gate routes + `agentos.config.ts`
 
-**Status:** in-progress
+**Status:** done
 
 ## Goal
 
