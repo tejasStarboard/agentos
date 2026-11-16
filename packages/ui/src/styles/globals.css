@@ -137,6 +137,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /*
+   * Shell host locks the viewport (scroll only inside panes). Extension
+   * iframes set `data-agentos-ext` on <html> so their documents can scroll.
+   */
   html,
   body,
   #root {
@@ -146,5 +150,15 @@
   body {
     @apply bg-background font-sans text-foreground antialiased;
     overscroll-behavior: none;
+  }
+  html[data-agentos-ext],
+  html[data-agentos-ext] body {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  html[data-agentos-ext] #root {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
   }
 }

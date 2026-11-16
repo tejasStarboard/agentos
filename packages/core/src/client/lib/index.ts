@@ -7,6 +7,8 @@ export {
 
 export {
   ExtensionViewApp,
+  applyDocumentTheme,
+  markExtensionDocument,
   mountExtensionView,
   resolveThemeFromSearch,
   type ExtensionViewAppProps,

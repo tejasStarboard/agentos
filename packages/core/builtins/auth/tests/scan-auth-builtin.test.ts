@@ -23,5 +23,6 @@ describe('scan builtin auth', () => {
       port: 6110,
     });
     expect(auth?.ui.page).toBeTruthy();
+    expect(auth?.ui.sidebar).toBeTruthy();
   });
 });

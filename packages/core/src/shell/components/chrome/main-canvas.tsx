@@ -30,7 +30,7 @@ export function MainCanvas({
 
   return (
     <section
-      className="relative h-full w-full bg-background"
+      className="relative h-full min-h-0 w-full overflow-hidden bg-background"
       data-slot="main"
       aria-label="Main canvas"
     >

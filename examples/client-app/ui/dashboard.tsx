@@ -4,7 +4,7 @@ import { Separator } from '@agentos/ui/components/separator';
 export default function Dashboard() {
   return (
     <div
-      className="flex h-full min-h-full flex-col gap-4 bg-background p-6 text-foreground"
+      className="flex min-h-full flex-col gap-4 bg-background p-6 text-foreground"
       data-app-dashboard
     >
       <div className="flex flex-col gap-1">

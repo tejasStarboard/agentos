@@ -56,7 +56,7 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 2. **UI primitives** → `@agentos/ui` (shadcn) for buttons, inputs, checkboxes, selects, dropdowns, etc. Avoid native HTML controls unless specifically required.
 3. **TS routes** → `@agentos/core/api/*` only. No customer product DB URL / Redis — use `/api/store` (db-store may use `AGENT_OS_EXT_DB_STORE_DATABASE_URL` internally only).
 4. **Python** → `agentos.*` in `services/` only, linked from `meta.json`.
-5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`). Public sign-in/up/reset are **Shell gate** routes (`/login`, `/register`, `/forgot-password`, `/reset-password`); Auth secondary Activity Bar is **account settings**.
+5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`). Public sign-in/up/reset are **Shell gate** routes (`/login`, `/register`, `/forgot-password`, `/reset-password`); Auth secondary Activity Bar is **account settings** (profile / roles / security / sign-out), not app Settings.
 6. **App config** → consumer-root `agentos.config.ts` via `@agentos/core/config` (`defineConfig`). Holds FDE settings including **auth** flags and **branding** (`appName`, `logoUrl`, `faviconUrl`, fonts). Consumer `public/` assets are served at `/_public/<path>` by the Vite gateway — use those URLs (or `https://…`) in branding, never filesystem paths. Secrets stay in `src/env.ts` / `createEnv` (never in branding).
 7. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
 8. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.

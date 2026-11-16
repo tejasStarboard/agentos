@@ -1,6 +1,6 @@
 # 50 — Auth account settings panel (proper user account UI)
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -16,15 +16,15 @@ Today `packages/core/builtins/auth/ui/page.tsx` is a thin session dump + one but
 
 ## Done when
 
-- [ ] `builtins/auth/ui/page.tsx` (and optional `ui/` components under kebab-case files) presents a structured **Account** panel, not a single paragraph + Sign out
-- [ ] **Profile** section: show email (read-only), display name; allow updating name via Auth API when Better Auth supports it
-- [ ] **Roles** section: list session roles (read-only); empty state when none
-- [ ] **Security** section: change password while signed in (current + new + confirm), or a clear “use forgot-password” path if in-session change is deferred — document choice
-- [ ] **Session** section: Sign out (existing behavior → redirect `/login`); loading / error / unsigned-in states stay clear
-- [ ] Auth API gains any missing routes (e.g. update profile / change password) under `/api/ext/auth/*`; use Better Auth APIs, no second auth stack
-- [ ] UI from `@agentos/ui` (`Card` / `Separator` / `Input` / `Button` / `Badge` / `Label` as needed); no native controls
-- [ ] Tests: account page render states; new API routes round-trip where added
-- [ ] Docs: `builtins.md` / cookbook note Auth secondary = full account panel (vs Settings = app prefs)
+- [x] `builtins/auth/ui/page.tsx` (and optional `ui/` components under kebab-case files) presents a structured **Account** panel, not a single paragraph + Sign out
+- [x] **Profile** section: show email (read-only), display name; allow updating name via Auth API when Better Auth supports it
+- [x] **Roles** section: list session roles (read-only); empty state when none
+- [x] **Security** section: change password while signed in (current + new + confirm), or a clear “use forgot-password” path if in-session change is deferred — document choice
+- [x] **Session** section: Sign out (existing behavior → redirect `/login`); loading / error / unsigned-in states stay clear
+- [x] Auth API gains any missing routes (e.g. update profile / change password) under `/api/ext/auth/*`; use Better Auth APIs, no second auth stack
+- [x] UI from `@agentos/ui` (`Card` / `Separator` / `Input` / `Button` / `Badge` / `Label` as needed); no native controls
+- [x] Tests: account page render states; new API routes round-trip where added
+- [x] Docs: `builtins.md` / cookbook note Auth secondary = full account panel (vs Settings = app prefs)
 
 ## Notes
 

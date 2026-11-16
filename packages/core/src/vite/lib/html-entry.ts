@@ -79,7 +79,7 @@ export function renderExtHtmlEntry(options: {
   const { extensionId, view, scriptSrc } = options;
   const title = `${extensionId} ${view}`;
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-agentos-ext>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -87,6 +87,7 @@ export function renderExtHtmlEntry(options: {
   <script>
     (function () {
       try {
+        document.documentElement.dataset.agentosExt = '';
         var p = new URLSearchParams(location.search);
         var t = p.get('theme') || localStorage.getItem('agentos-theme') || 'dark';
         if (t === 'light' || t === 'dark') {
