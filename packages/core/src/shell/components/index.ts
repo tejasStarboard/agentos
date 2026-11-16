@@ -14,6 +14,11 @@ export { AuthPublicLayout } from './auth/auth-public-layout';
 export { ChatPanel } from './chrome/chat-panel';
 export { ForgotPasswordPage } from './auth/forgot-password-page';
 export { LoginPage, type LoginPageProps } from './auth/login-page';
+export {
+  NotFoundPage,
+  type NotFoundPageBranding,
+  type NotFoundPageProps,
+} from './auth/not-found-page';
 export { RegisterPage, type RegisterPageProps } from './auth/register-page';
 export {
   ResetPasswordPage,

@@ -126,6 +126,9 @@ describe('createPublicAssetsMiddleware', () => {
       throw new Error('should not next');
     });
     expect(missing.status).toBe(404);
+    expect(missing.headers['content-type']).toBe('text/html; charset=utf-8');
+    expect(missing.body).toContain('Not Found');
+    expect(missing.body).toContain('/_public/nope.png');
 
     let nexted = false;
     const pass = mockReqRes('/api/health');

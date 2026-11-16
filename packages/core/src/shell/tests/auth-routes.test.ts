@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
 import {
+  isKnownAppPath,
   loginPathWithNext,
   matchPublicAuthRoute,
   normalizePathname,
@@ -31,8 +32,18 @@ describe('auth routes', () => {
     expect(matchPublicAuthRoute('/', flags)).toBeNull();
   });
 
-  test('loginPathWithNext encodes next', () => {
-    expect(loginPathWithNext('/crm')).toBe('/login?next=%2Fcrm');
+  test('isKnownAppPath only accepts workspace root', () => {
+    expect(isKnownAppPath('/')).toBe(true);
+    expect(isKnownAppPath('')).toBe(true);
+    expect(isKnownAppPath('/totally-missing')).toBe(false);
+    expect(isKnownAppPath('/__public/logo.svg')).toBe(false);
+    expect(isKnownAppPath('/login')).toBe(false);
+  });
+
+  test('loginPathWithNext drops unknown next paths', () => {
+    expect(loginPathWithNext('/crm')).toBe('/login');
+    expect(loginPathWithNext('/totally-missing')).toBe('/login');
+    expect(loginPathWithNext('/')).toBe('/login');
     expect(loginPathWithNext('/login')).toBe('/login');
   });
 
