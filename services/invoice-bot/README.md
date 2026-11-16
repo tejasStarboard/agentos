@@ -2,9 +2,13 @@
 
 Python FastAPI backend for the `invoice-bot` sample extension (ticket 26).
 
+**Repo:** [services/invoice-bot](https://github.com/tejasStarboard/agentos/tree/main/services/invoice-bot) · SDK: [`packages/python`](../../packages/python/README.md)
+
 Linked from `examples/client-app/extensions/invoice-bot/meta.json`
 (`language: python`, `root: ../../services/invoice-bot`, port **6102**).
 `examples/client-app/services` is a symlink to the repo-root `services/` folder.
+
+See [services.md](../../.project/docs/services.md) for the extension ↔ service boundary.
 
 ## Run
 

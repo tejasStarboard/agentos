@@ -1,14 +1,21 @@
 [project]
 name = "invoice-bot"
 version = "0.0.0"
-description = "AgentOS sample invoice-bot Python service"
+description = "AgentOS sample invoice-bot Python service (FastAPI + agentos SDK)"
+readme = "README.md"
 requires-python = ">=3.11"
+license = { text = "UNLICENSED" }
 dependencies = [
   "agentos",
   "fastapi>=0.115.0",
   "uvicorn[standard]>=0.30.0",
   "pydantic>=2.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/tejasStarboard/agentos/tree/main/services/invoice-bot"
+Repository = "https://github.com/tejasStarboard/agentos"
+Issues = "https://github.com/tejasStarboard/agentos/issues"
 
 [tool.uv.sources]
 agentos = { path = "../../packages/python", editable = true }

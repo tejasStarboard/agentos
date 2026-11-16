@@ -3,7 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "AgentOS monorepo",
+  "description": "AgentOS monorepo — Shell, Comlink iframes, Bun APIs, Python services, and builtins",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/tejasStarboard/agentos#readme",
+  "bugs": {
+    "url": "https://github.com/tejasStarboard/agentos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasStarboard/agentos.git"
+  },
   "scripts": {
     "dev": "turbo run dev --filter=@agentos/client-app",
     "lint": "eslint .",

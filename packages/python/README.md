@@ -2,6 +2,8 @@
 
 Installable SDK for **AgentOS services** under `services/<id>/`. Mirrors `@agentos/core/api/*` domains for FastAPI backends.
 
+**Repo:** [packages/python](https://github.com/tejasStarboard/agentos/tree/main/packages/python)
+
 **Python code lives in `services/`, not `extensions/`.** Extensions keep UI + agent decls (TypeScript); Python backends are separate processes linked from `meta.json` (`api.language: "python"`). See [ADR 003](../../.project/docs/adr/003-python-services-outside-extensions.md) and [services.md](../../.project/docs/services.md).
 
 ## Install
