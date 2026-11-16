@@ -18,6 +18,7 @@ export {
   type AuthSessionView,
 } from './auth/auth-api';
 export {
+  isKnownAppPath,
   isPublicAuthPath,
   loginPathWithNext,
   matchPublicAuthRoute,

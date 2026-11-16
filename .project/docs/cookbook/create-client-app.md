@@ -26,9 +26,9 @@ Fails if the target directory already exists.
 | `with-extension` | + stub Bun extension `starter` (port 6110)                    |
 | `with-service`   | + extension UI + in-app Python `services/starter` (port 6111) |
 
-`agentos.config.ts` (`defineConfig` from `@agentos/core/config`) holds FDE app settings: auth gate flags, **branding** (`appName`, `logoUrl`, `faviconUrl`, optional fonts), and builtin knobs. Put logo/favicon files in consumer `public/` — the Vite gateway serves them at `/_public/<path>` (e.g. `logoUrl: '/_public/logo.svg'`). Secrets stay in `src/env.ts` (never in branding).
+`agentos.config.ts` (`defineConfig` from `@agentos/core/config`) holds FDE app settings: auth gate flags, **branding** (`appName`, `logoUrl`, `faviconUrl`, optional fonts), and builtin knobs. Put logo/favicon files in consumer `public/` — the Vite gateway serves them at `/_public/<path>` (e.g. `logoUrl: '/_public/logo.svg'`). Missing files under `/_public/` return HTTP 404 from the gateway (not the SPA). Secrets stay in `src/env.ts` (never in branding).
 
-Public auth is framework-owned: `/login`, `/register`, `/forgot-password`, `/reset-password` gate the Shell. The Auth Activity Bar item is account settings.
+Public auth is framework-owned: `/login`, `/register`, `/forgot-password`, `/reset-password` gate the Shell. The Auth Activity Bar item is account settings. Unknown browser paths (anything other than `/` or those auth routes) render a framework **Not Found** page outside Shell chrome — e.g. `/totally-missing` or a `/__public/…` typo (double underscore).
 
 `examples/client-app` remains the kitchen-sink **demo** — do not clone it for new apps.
 

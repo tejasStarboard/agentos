@@ -29,9 +29,20 @@ Browser:  Shell (mountShell) + extension UI iframes
 
 - Discovers builtins + customer extensions via Vite scanner → `virtual:agentos-registry`.
 - Loads consumer `agentos.config.ts` → `virtual:agentos-config` (auth + branding runtime subset).
-- Serves consumer `public/` at `/_public/<path>` (dev + preview/build copy into `dist/_public/`).
+- Serves consumer `public/` at `/_public/<path>` (dev + preview/build copy into `dist/_public/`). Missing `/_public/<file>` returns **HTTP 404** with a minimal HTML body (middleware answers before SPA fallback).
 - Proxies `/api/ext/:id/*` to upstream from `meta.json` (port, language `bun` | `python`).
 - Disabled **customer** extensions → 403 + UI unmounted. **Builtins** cannot be disabled.
+
+## SPA paths vs gateway prefixes
+
+| Kind                | Examples                                 | Who answers                                                            |
+| ------------------- | ---------------------------------------- | ---------------------------------------------------------------------- |
+| Known SPA workspace | `/`                                      | AuthGate → Shell (session required)                                    |
+| Public auth         | `/login`, `/register`, …                 | AuthGate → auth pages (outside Shell chrome)                           |
+| Unknown SPA path    | `/totally-missing`, `/__public/…` (typo) | AuthGate → **Not Found** UI (no session)                               |
+| Reserved gateway    | `/_public/…`, `/__agentos/…`, `/api/…`   | Vite gateway middleware (HTTP status); **not** claimed as Shell routes |
+
+Correct public assets use a **single** underscore: `/_public/<path>`. A double-underscore typo (`/__public/…`) is an unknown SPA path and shows the client Not Found page.
 
 ## Builtins (platform)
 

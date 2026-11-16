@@ -75,8 +75,30 @@ export function resolvePublicAssetFile(
   return candidate;
 }
 
+/** Minimal HTML body for missing `/_public/<file>` (gateway owns HTTP 404). */
+export function publicAssetNotFoundHtml(pathname: string): string {
+  const safe = pathname
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Not Found</title>
+</head>
+<body>
+<h1>Not Found</h1>
+<p>AgentOS public asset not found: ${safe}</p>
+</body>
+</html>
+`;
+}
+
 /**
  * Serve consumer `public/` files at `/_public/<path>` (dev + preview gateway).
+ * Missing files return HTTP 404 with a minimal HTML body (not SPA fallback).
  */
 export function createPublicAssetsMiddleware(
   getPublicRoot: () => string,
@@ -97,8 +119,12 @@ export function createPublicAssetsMiddleware(
     const filePath = resolvePublicAssetFile(getPublicRoot(), relative);
     if (!filePath) {
       res.statusCode = 404;
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      res.end(`AgentOS public asset not found: ${pathname}`);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      if (req.method === 'HEAD') {
+        res.end();
+        return;
+      }
+      res.end(publicAssetNotFoundHtml(pathname));
       return;
     }
 

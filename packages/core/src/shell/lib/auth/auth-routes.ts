@@ -47,6 +47,14 @@ export function isPublicAuthPath(
   return matchPublicAuthRoute(pathname, flags) != null;
 }
 
+/**
+ * Known SPA workspace path (Shell Home). Public auth paths are matched
+ * separately; everything else is a client Not Found.
+ */
+export function isKnownAppPath(pathname: string): boolean {
+  return normalizePathname(pathname) === '/';
+}
+
 /** Client navigation that keeps AuthGate in sync via popstate. */
 export function navigateApp(to: string): void {
   const url = new URL(to, window.location.origin);
@@ -60,10 +68,15 @@ export function navigateApp(to: string): void {
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
+/**
+ * Build `/login` with optional `?next=`. Unknown SPA paths are never encoded —
+ * AuthGate shows Not Found for those URLs. Today only `/` is a known workspace
+ * path, so `next` is never attached.
+ */
 export function loginPathWithNext(nextPath?: string | null): string {
   if (
     !nextPath ||
-    nextPath === '/' ||
+    isKnownAppPath(nextPath) ||
     matchPublicAuthRoute(nextPath, {
       allowSignUp: true,
       allowPasswordReset: true,
@@ -71,7 +84,8 @@ export function loginPathWithNext(nextPath?: string | null): string {
   ) {
     return '/login';
   }
-  return `/login?next=${encodeURIComponent(nextPath)}`;
+  // Unknown path → do not park in ?next=
+  return '/login';
 }
 
 export function readNextParam(search: string): string | null {

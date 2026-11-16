@@ -1,6 +1,6 @@
 # 49 — Shell not-found (404) page
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -18,12 +18,12 @@ Cover both:
 
 ## Done when
 
-- [ ] Unknown app pathnames (not public auth routes, not `/`, not known Shell deep-links if any) render a **Not Found** page outside or inside Shell chrome (pick one consistent pattern)
-- [ ] Page uses `@agentos/ui` + branding `appName` where sensible; primary CTA back to Home / login as appropriate
-- [ ] Reserved gateway prefixes (`/_public`, `/__agentos`, `/api`, …) are **not** claimed by the SPA shell as “app routes” when the middleware already answered (document behavior; fix if Vite SPA fallback interferes)
-- [ ] Missing `/_public/<file>` still returns HTTP 404; prefer a minimal HTML 404 body (or keep text 404) — document the contract
-- [ ] Tests: route matching / AuthGate (or router) shows not-found for unknown paths; gateway `/_public` miss stays 404
-- [ ] Docs: cookbook / architecture note SPA unknown → 404 vs gateway prefixes
+- [x] Unknown app pathnames (not public auth routes, not `/`, not known Shell deep-links if any) render a **Not Found** page outside or inside Shell chrome (pick one consistent pattern)
+- [x] Page uses `@agentos/ui` + branding `appName` where sensible; primary CTA back to Home / login as appropriate
+- [x] Reserved gateway prefixes (`/_public`, `/__agentos`, `/api`, …) are **not** claimed by the SPA shell as “app routes” when the middleware already answered (document behavior; fix if Vite SPA fallback interferes)
+- [x] Missing `/_public/<file>` still returns HTTP 404; prefer a minimal HTML 404 body (or keep text 404) — document the contract
+- [x] Tests: route matching / AuthGate (or router) shows not-found for unknown paths; gateway `/_public` miss stays 404
+- [x] Docs: cookbook / architecture note SPA unknown → 404 vs gateway prefixes
 
 ## Notes
 

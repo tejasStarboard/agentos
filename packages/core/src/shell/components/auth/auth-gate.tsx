@@ -3,6 +3,7 @@ import { config as virtualConfig } from 'virtual:agentos-config';
 import {
   applyBranding,
   fetchAuthSession,
+  isKnownAppPath,
   loginPathWithNext,
   matchPublicAuthRoute,
   navigateApp,
@@ -11,6 +12,7 @@ import {
 import { ShellRoot } from '../chrome/shell-root';
 import { ForgotPasswordPage } from './forgot-password-page';
 import { LoginPage } from './login-page';
+import { NotFoundPage } from './not-found-page';
 import { RegisterPage } from './register-page';
 import { ResetPasswordPage } from './reset-password-page';
 
@@ -37,6 +39,8 @@ export type AuthGateProps = {
   dashboardSidebar?: ComponentType;
   /** Override virtual config (tests). */
   config?: AuthGateConfig;
+  /** Initial pathname override (tests / SSR). */
+  initialPathname?: string;
 };
 
 function resolveConfig(override?: AuthGateConfig): AuthGateConfig {
@@ -101,11 +105,13 @@ export function AuthGate({
   dashboard,
   dashboardSidebar,
   config: configOverride,
+  initialPathname,
 }: AuthGateProps) {
   const config = resolveConfig(configOverride);
-  const [pathname, setPathname] = useState(() =>
-    typeof window !== 'undefined' ? window.location.pathname : '/',
-  );
+  const [pathname, setPathname] = useState(() => {
+    if (initialPathname != null) return initialPathname;
+    return typeof window !== 'undefined' ? window.location.pathname : '/';
+  });
   const [ready, setReady] = useState(false);
   const [authed, setAuthed] = useState(false);
 
@@ -126,11 +132,19 @@ export function AuthGate({
   }, []);
 
   const publicRoute = matchPublicAuthRoute(pathname, config.auth);
+  const knownAppPath = isKnownAppPath(pathname);
+  const isNotFound = !publicRoute && !knownAppPath;
 
   useEffect(() => {
     let cancelled = false;
 
     async function run() {
+      if (isNotFound) {
+        setAuthed(false);
+        setReady(true);
+        return;
+      }
+
       if (publicRoute) {
         try {
           const session = await fetchAuthSession();
@@ -171,7 +185,18 @@ export function AuthGate({
     return () => {
       cancelled = true;
     };
-  }, [pathname, publicRoute, config.auth.afterSignInPath]);
+  }, [pathname, publicRoute, isNotFound, config.auth.afterSignInPath]);
+
+  if (isNotFound) {
+    return (
+      <NotFoundPage
+        branding={{
+          appName: config.branding.appName,
+          logoUrl: config.branding.logoUrl,
+        }}
+      />
+    );
+  }
 
   if (publicRoute) {
     if (!ready) {
