@@ -53,7 +53,8 @@ describe('buildActivityBarSections', () => {
     });
 
     expect(primary.map((i) => i.id)).toEqual(['home', 'demo']);
-    expect(secondary.map((i) => i.id)).toEqual(['hitl', 'auth', 'extensions']);
+    // flex-col-reverse: Approvals last in array → top of secondary cluster.
+    expect(secondary.map((i) => i.id)).toEqual(['extensions', 'auth', 'hitl']);
     expect(secondary.find((i) => i.id === 'hitl')?.panel).toBe('hitl');
     expect(secondary.find((i) => i.id === 'hitl')?.label).toBe('Approvals');
     expect(secondary.find((i) => i.id === 'extensions')?.panel).toBe(
@@ -100,7 +101,7 @@ describe('buildActivityBarSections', () => {
       contributions,
     });
     expect(primary.map((i) => i.id)).toEqual(['home', 'demo']);
-    expect(secondary.map((i) => i.id)).toEqual(['hitl', 'auth', 'extensions']);
+    expect(secondary.map((i) => i.id)).toEqual(['extensions', 'auth', 'hitl']);
   });
 });
 

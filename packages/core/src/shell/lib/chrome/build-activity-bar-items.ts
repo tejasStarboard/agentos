@@ -60,7 +60,8 @@ export type ActivityBarSections = {
   primary: ActivityBarItem[];
   /**
    * Bottom cluster for `flex-col-reverse`: index 0 is nearest the bottom edge.
-   * Order: Approvals (HITL chrome), secondary page builtins (e.g. auth), Extensions manager.
+   * Array order (bottom → top): Extensions manager, secondary page builtins
+   * (e.g. auth, settings), Approvals (HITL chrome) at the top of the cluster.
    */
   secondary: ActivityBarItem[];
 };
@@ -110,6 +111,7 @@ export function buildActivityBarSections(input: {
 
   return {
     primary: [HOME_ITEM, ...primaryPages],
-    secondary: [...secondaryChrome, ...secondaryPages, MANAGER_ITEM],
+    // flex-col-reverse: last item renders at the top of the secondary cluster.
+    secondary: [MANAGER_ITEM, ...secondaryPages, ...secondaryChrome],
   };
 }
