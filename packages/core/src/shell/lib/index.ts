@@ -46,6 +46,10 @@ export {
   type UiContribution,
 } from './ui-contribs/contribution';
 export {
+  sidebarColumnVisible,
+  type SidebarColumnVisibleInput,
+} from './ui-contribs/sidebar-column-visible';
+export {
   createShellHostApi,
   resetShellHostApiStorage,
 } from './chrome/create-shell-host-api';

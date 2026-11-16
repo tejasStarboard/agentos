@@ -120,9 +120,18 @@ Customer `meta.json` that sets `"activityBarSection": "secondary"` is coerced to
 
 The consumer app owns **`ui/dashboard.tsx`** next to `extensions/` and `services/` — not inside an extension. Pass it into `mountShell(root, { dashboard })`. Shell renders it in-process in the Home pane (`activeView === 'home'`). Optional extension `ui/widget.tsx` cards still appear in a grid below when present. Without a dashboard option, Home shows a minimal empty placeholder.
 
-### Left sidebar host
+Optional **`ui/dashboard-sidebar.tsx`** is the Home sidebar entrypoint — also in-process via `mountShell(root, { dashboardSidebar })`. It is **not** a `UiViewName` / extension iframe.
 
-`ui/sidebar.tsx` mounts in the Shell’s left column. Only the **active** extension’s sidebar is visible (`activeView === extensionId`). Home or an extension without a sidebar shows an empty placeholder — sidebars are not stacked globally.
+### Left sidebar host (active-extension)
+
+Shell UI contribution hosts are either **active-extension** or **global**:
+
+| Host kind            | Example      | Shows                                                                      | When empty                           |
+| -------------------- | ------------ | -------------------------------------------------------------------------- | ------------------------------------ |
+| **Active-extension** | Left sidebar | Only the active extension’s `ui/sidebar.tsx`, or Home’s `dashboardSidebar` | Column **collapses** — no empty pane |
+| **Global**           | Status bar   | May aggregate all enabled extensions                                       | May stay visible with Shell chrome   |
+
+`ui/sidebar.tsx` mounts in the Shell’s left column. Only the **active** extension’s sidebar is visible (`activeView === extensionId`). Home without `dashboardSidebar`, or an extension without `ui/sidebar.tsx`, hides the sidebar column.
 
 Opening **Extensions** or **Approvals** from the Activity Bar (secondary) swaps that column to the Shell Extension Manager or HITL panel (mutually exclusive with contribution sidebars). These are left-sidebar panels, not right-edge sheets.
 

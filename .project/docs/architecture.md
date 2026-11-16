@@ -20,8 +20,8 @@ Browser:  Shell (mountShell) + extension UI iframes
 ## Comlink sandbox
 
 - Each extension `ui/page.tsx` | `sidebar.tsx` | `widget.tsx` loads in `iframe sandbox="allow-scripts allow-same-origin allow-forms"`.
-- App-level `ui/dashboard.tsx` (passed to `mountShell`) is the Home surface, rendered in-process (not an iframe). Optional extension `ui/widget.tsx` cards appear below on Home.
-- Left sidebar host shows the **active** extension’s `ui/sidebar.tsx` (matched to `activeView`). Extension Manager and HITL Approvals are Shell panels in that same left column (not right sheets).
+- App-level `ui/dashboard.tsx` (passed to `mountShell`) is the Home surface, rendered in-process (not an iframe). Optional extension `ui/widget.tsx` cards appear below on Home. Optional `ui/dashboard-sidebar.tsx` is the Home sidebar (also in-process).
+- Left sidebar is an **active-extension** host: the active extension’s `ui/sidebar.tsx`, or Home’s `dashboardSidebar`. When neither applies, the column collapses. Extension Manager and HITL Approvals are Shell panels in that same left column (not right sheets). Status bar remains a **global** aggregator.
 - Transport: **dual MessageChannel** per iframe (not shared `windowEndpoint` — avoids cross-talk).
 - UI uses `@agentos/core/client` hooks; never raw `postMessage`.
 

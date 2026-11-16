@@ -6,10 +6,11 @@ Sample AgentOS **consumer app**: mounts the Shell, ships demo extensions, and li
 
 ```text
 examples/client-app/
-  ui/dashboard.tsx          # App Home (in-process via mountShell)
-  extensions/               # crm-helper, invoice-bot, demo, …
+  ui/dashboard.tsx            # App Home (in-process via mountShell)
+  ui/dashboard-sidebar.tsx    # App Home sidebar (in-process)
+  extensions/                 # crm-helper, invoice-bot, demo, …
   services/ → ../../services/
-  src/main.tsx              # mountShell(root, { dashboard })
+  src/main.tsx                # mountShell({ dashboard, dashboardSidebar })
 ```
 
 ## Run

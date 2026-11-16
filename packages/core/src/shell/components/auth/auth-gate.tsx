@@ -33,6 +33,8 @@ export type AuthGateConfig = {
 
 export type AuthGateProps = {
   dashboard?: ComponentType;
+  /** App Home sidebar (`ui/dashboard-sidebar.tsx`), in-process. */
+  dashboardSidebar?: ComponentType;
   /** Override virtual config (tests). */
   config?: AuthGateConfig;
 };
@@ -95,7 +97,11 @@ function PublicAuthRouteView({
 /**
  * Framework auth gate: public routes outside Shell chrome; workspace requires session.
  */
-export function AuthGate({ dashboard, config: configOverride }: AuthGateProps) {
+export function AuthGate({
+  dashboard,
+  dashboardSidebar,
+  config: configOverride,
+}: AuthGateProps) {
   const config = resolveConfig(configOverride);
   const [pathname, setPathname] = useState(() =>
     typeof window !== 'undefined' ? window.location.pathname : '/',
@@ -192,5 +198,7 @@ export function AuthGate({ dashboard, config: configOverride }: AuthGateProps) {
     );
   }
 
-  return <ShellRoot dashboard={dashboard} />;
+  return (
+    <ShellRoot dashboard={dashboard} dashboardSidebar={dashboardSidebar} />
+  );
 }

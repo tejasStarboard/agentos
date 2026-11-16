@@ -148,7 +148,18 @@ describe('ExtensionFrame slot placement', () => {
   });
 
   test('ShellRoot still exposes all slots', () => {
-    const html = renderToStaticMarkup(<ShellRoot dashboard={StubDashboard} />);
+    function HomeSidebar() {
+      return <div data-app-dashboard-sidebar />;
+    }
+    const html = renderToStaticMarkup(
+      <ShellRoot
+        dashboard={StubDashboard}
+        dashboardSidebar={HomeSidebar}
+        activeView="home"
+        sidebarOpen
+        sidebarPanel="contribution"
+      />,
+    );
     expect(html).toContain('data-slot="sidebar"');
     expect(html).toContain('data-slot="main"');
     expect(html).toContain('data-slot="dashboard"');
