@@ -46,7 +46,9 @@ export {
   type UiContribution,
 } from './ui-contribs/contribution';
 export {
+  sidebarColumnHasContent,
   sidebarColumnVisible,
+  type SidebarColumnContentInput,
   type SidebarColumnVisibleInput,
 } from './ui-contribs/sidebar-column-visible';
 export {

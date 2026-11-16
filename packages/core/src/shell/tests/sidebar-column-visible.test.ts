@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  sidebarColumnHasContent,
   sidebarColumnVisible,
   type UiContribution,
 } from '@agentos/core/shell/lib';
@@ -10,23 +11,10 @@ const crmSidebar: UiContribution = {
   src: '/__agentos/ext/crm/sidebar.html',
 };
 
-describe('sidebarColumnVisible', () => {
-  test('hides when sidebarOpen is false', () => {
+describe('sidebarColumnHasContent', () => {
+  test('shell panels always have content', () => {
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: false,
-        sidebarPanel: 'extensions',
-        activeView: 'home',
-        sidebars: [crmSidebar],
-        hasDashboardSidebar: true,
-      }),
-    ).toBe(false);
-  });
-
-  test('shows shell panels when open', () => {
-    expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'extensions',
         activeView: 'home',
         sidebars: [],
@@ -34,8 +22,7 @@ describe('sidebarColumnVisible', () => {
       }),
     ).toBe(true);
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'hitl',
         activeView: 'demo',
         sidebars: [],
@@ -44,10 +31,9 @@ describe('sidebarColumnVisible', () => {
     ).toBe(true);
   });
 
-  test('home without dashboardSidebar hides in contribution mode', () => {
+  test('home without dashboardSidebar has no contribution content', () => {
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'contribution',
         activeView: 'home',
         sidebars: [crmSidebar],
@@ -56,10 +42,9 @@ describe('sidebarColumnVisible', () => {
     ).toBe(false);
   });
 
-  test('home with dashboardSidebar shows in contribution mode', () => {
+  test('home with dashboardSidebar has content', () => {
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'contribution',
         activeView: 'home',
         sidebars: [],
@@ -70,8 +55,7 @@ describe('sidebarColumnVisible', () => {
 
   test('extension without sidebar hides; CRM with sidebar shows', () => {
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'contribution',
         activeView: 'demo',
         sidebars: [crmSidebar],
@@ -79,11 +63,33 @@ describe('sidebarColumnVisible', () => {
       }),
     ).toBe(false);
     expect(
-      sidebarColumnVisible({
-        sidebarOpen: true,
+      sidebarColumnHasContent({
         sidebarPanel: 'contribution',
         activeView: 'crm',
         sidebars: [crmSidebar],
+        hasDashboardSidebar: false,
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('sidebarColumnVisible', () => {
+  test('requires sidebarOpen even when content exists', () => {
+    expect(
+      sidebarColumnVisible({
+        sidebarOpen: false,
+        sidebarPanel: 'extensions',
+        activeView: 'home',
+        sidebars: [crmSidebar],
+        hasDashboardSidebar: true,
+      }),
+    ).toBe(false);
+    expect(
+      sidebarColumnVisible({
+        sidebarOpen: true,
+        sidebarPanel: 'extensions',
+        activeView: 'home',
+        sidebars: [],
         hasDashboardSidebar: false,
       }),
     ).toBe(true);

@@ -7,9 +7,10 @@
  *   extension’s contribution (`ui/sidebar.tsx`), or Home’s in-process
  *   `dashboardSidebar`. When empty, the Shell collapses the host chrome —
  *   no empty column.
- * - **Global / multi-extension** hosts (e.g. status bar): may aggregate all
- *   enabled extensions and stay visible with Shell chrome even when some
- *   extensions contribute nothing.
+ * - **Global / multi-extension** hosts (e.g. status bar, topbar): may
+ *   aggregate all enabled extensions and stay visible with Shell chrome even
+ *   when some extensions contribute nothing. Topbar v1 is Shell chrome only
+ *   (`top-bar-start` / `top-bar-center` / `top-bar-end` reserved for later).
  *
  * App Home surfaces (`ui/dashboard.tsx`, `ui/dashboard-sidebar.tsx`) are
  * in-process via `mountShell` — not `ExtensionView` / iframe entries.

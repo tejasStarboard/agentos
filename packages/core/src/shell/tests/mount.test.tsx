@@ -21,6 +21,7 @@ describe('mountShell / ShellRoot', () => {
     expect(html).toContain('data-slot="main"');
     expect(html).toContain('data-slot="dashboard"');
     expect(html).toContain('data-slot="hidden"');
+    expect(html).toContain('data-slot="top-bar"');
     expect(html).toContain('data-slot="status-bar"');
     expect(html).toContain('Command Palette');
   });
@@ -86,6 +87,34 @@ describe('mountShell / ShellRoot', () => {
     );
     expect(html).toContain('data-slot="sidebar"');
     expect(html).toContain('data-sidebar-panel="extensions"');
+  });
+
+  test('closing sidebar keeps column + main mounted (no layout tear-down)', () => {
+    const open = renderToStaticMarkup(
+      <ShellRoot
+        activeView="crm"
+        sidebarOpen
+        sidebarPanel="contribution"
+        contributions={[crmSidebar]}
+      />,
+    );
+    expect(open).toContain('data-slot="sidebar"');
+    expect(open).toContain('data-slot="main"');
+    expect(open).toContain('data-open="true"');
+
+    const closed = renderToStaticMarkup(
+      <ShellRoot
+        activeView="crm"
+        sidebarOpen={false}
+        sidebarPanel="contribution"
+        contributions={[crmSidebar]}
+      />,
+    );
+    // Same hosts stay in the tree so extension pages/sidebars are not remounted.
+    expect(closed).toContain('data-slot="sidebar"');
+    expect(closed).toContain('data-slot="main"');
+    expect(closed).toContain('data-open="false"');
+    expect(closed).toContain('data-slot="resizable-panel-group"');
   });
 
   test('non-home view keeps main slot active', () => {

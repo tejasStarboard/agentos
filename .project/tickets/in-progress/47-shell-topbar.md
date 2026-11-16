@@ -1,6 +1,6 @@
 # 47 — Shell topbar (UI contrib host + basic chrome)
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -22,13 +22,13 @@ Add a **topbar** to the Shell, symmetric to the bottom **status bar**: a horizon
 
 ## Done when
 
-- [ ] `TopBar` (kebab-case file) rendered in `ShellRoot` above the workspace row
-- [ ] Left: sidebar toggle (uses existing `sidebarOpen` store)
-- [ ] Center: branding from `virtual:agentos-config` / mount options (`appName`, optional logo via `/_public/...`)
-- [ ] Right: Settings icon button present; click may be no-op or emit a stub store flag until ticket **48**
-- [ ] Slot/host shape documented for future UI contributions (mirror status-bar patterns where sensible)
-- [ ] UI from `@agentos/ui`; tests for layout presence + toggle behavior
-- [ ] Docs: architecture / extensions note topbar chrome
+- [x] `TopBar` (kebab-case file) rendered in `ShellRoot` above the workspace row
+- [x] Left: sidebar toggle (uses existing `sidebarOpen` store)
+- [x] Center: branding from `virtual:agentos-config` / mount options (`appName`, optional logo via `/_public/...`)
+- [x] Right: Settings icon button present; click may be no-op or emit a stub store flag until ticket **48**
+- [x] Slot/host shape documented for future UI contributions (mirror status-bar patterns where sensible)
+- [x] UI from `@agentos/ui`; tests for layout presence + toggle behavior
+- [x] Docs: architecture / extensions note topbar chrome
 
 ## Notes
 

@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import { useEffect, useRef, type ComponentType } from 'react';
 import {
   useShellActiveView,
   useShellContributions,
@@ -6,7 +6,7 @@ import {
   useShellSidebarPanel,
 } from '@agentos/core/shell/hooks';
 import {
-  sidebarColumnVisible,
+  sidebarColumnHasContent,
   type ShellView,
   type SidebarPanel,
   type UiContribution,
@@ -19,17 +19,25 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
+  usePanelRef,
 } from '@agentos/ui/components/resizable';
 import { Toaster, toast } from '@agentos/ui/components/toast';
+import { cn } from '@agentos/ui/lib/utils';
 import { HomeDashboard } from '../home/home-dashboard';
 import { HiddenSlot } from '../ui-contribs/hidden-slot';
 import { SidebarSlot } from '../ui-contribs/sidebar-slot';
 import { StatusBar } from '../ui-contribs/status-bar';
+import { TopBar } from '../ui-contribs/top-bar';
 import { ActivityBar } from './activity-bar';
 import { ChatPanel } from './chat-panel';
 import { CommandPalette } from './command-palette';
 import { MainCanvas } from './main-canvas';
 import '@agentos/ui/globals.css';
+
+/** Default expanded sidebar width (px); also used after toggle if expand() undershoots. */
+const SIDEBAR_DEFAULT_SIZE_PX = 256;
+const SIDEBAR_MIN_SIZE_PX = 180;
+const SIDEBAR_MAX_SIZE_PX = 480;
 
 export type ShellRootProps = {
   /** App-owned Home page from `ui/dashboard.tsx`. */
@@ -87,13 +95,36 @@ export function ShellRoot({
     view: 'sidebar',
   });
   const isHome = activeView === 'home';
-  const showSidebarColumn = sidebarColumnVisible({
-    sidebarOpen,
+  // Allocate the resizable column when there is content — do not tear it down
+  // on toggle, or MainCanvas / extension pages remount.
+  const hasSidebarContent = sidebarColumnHasContent({
     sidebarPanel,
     activeView,
     sidebars,
     hasDashboardSidebar: dashboardSidebar != null,
   });
+  const sidebarPanelRef = usePanelRef();
+  /** Last expanded width so toggle-open restores a usable size (not min/collapsed). */
+  const lastSidebarSizePxRef = useRef(SIDEBAR_DEFAULT_SIZE_PX);
+
+  useEffect(() => {
+    if (!hasSidebarContent) return;
+    const panel = sidebarPanelRef.current;
+    if (!panel) return;
+    if (sidebarOpen) {
+      if (panel.isCollapsed()) {
+        panel.expand();
+      }
+      // expand() often restores a tiny width; always apply the last open size.
+      panel.resize(lastSidebarSizePxRef.current);
+    } else if (!panel.isCollapsed()) {
+      const { inPixels } = panel.getSize();
+      if (inPixels >= SIDEBAR_MIN_SIZE_PX) {
+        lastSidebarSizePxRef.current = Math.min(SIDEBAR_MAX_SIZE_PX, inPixels);
+      }
+      panel.collapse();
+    }
+  }, [hasSidebarContent, sidebarOpen, sidebarPanelRef]);
 
   return (
     <ThemeProvider
@@ -108,18 +139,22 @@ export function ShellRoot({
           className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background text-foreground"
           data-agentos-shell
         >
+          <TopBar />
           <div className="flex min-h-0 flex-1 overflow-hidden">
             <ActivityBar />
-            {showSidebarColumn ? (
+            {hasSidebarContent ? (
               <ResizablePanelGroup
                 orientation="horizontal"
                 className="min-h-0 min-w-0 flex-1"
               >
                 <ResizablePanel
                   id="shell-sidebar"
-                  defaultSize={256}
-                  minSize={180}
-                  maxSize={480}
+                  panelRef={sidebarPanelRef}
+                  collapsible
+                  collapsedSize={0}
+                  defaultSize={sidebarOpen ? SIDEBAR_DEFAULT_SIZE_PX : 0}
+                  minSize={SIDEBAR_MIN_SIZE_PX}
+                  maxSize={SIDEBAR_MAX_SIZE_PX}
                   className="min-h-0"
                 >
                   <SidebarSlot
@@ -130,7 +165,11 @@ export function ShellRoot({
                     contributions={contributionsProp}
                   />
                 </ResizablePanel>
-                <ResizableHandle withHandle />
+                <ResizableHandle
+                  withHandle
+                  disabled={!sidebarOpen}
+                  className={cn(!sidebarOpen && 'hidden')}
+                />
                 <ResizablePanel
                   id="shell-main"
                   defaultSize="70%"
