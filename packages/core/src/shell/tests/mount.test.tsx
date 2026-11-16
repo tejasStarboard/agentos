@@ -15,7 +15,7 @@ function resetStore(
   useShellStore.setState({
     activeView: 'home',
     sidebarOpen: true,
-    drawerOpen: false,
+    sidebarPanel: 'contribution',
     extensions: STUB_EXTENSION_CATALOG,
     enabledById: defaultEnabledById(),
     desiredContributions: [],
@@ -38,7 +38,7 @@ describe('mountShell / ShellRoot', () => {
     expect(html).toContain('data-agentos-shell');
     expect(html).toContain('data-slot="sidebar"');
     expect(html).toContain('data-slot="main"');
-    expect(html).toContain('data-slot="widgets"');
+    expect(html).toContain('data-slot="dashboard"');
     expect(html).toContain('data-slot="hidden"');
     expect(html).toContain('data-slot="status-bar"');
     expect(html).toContain('Command Palette');

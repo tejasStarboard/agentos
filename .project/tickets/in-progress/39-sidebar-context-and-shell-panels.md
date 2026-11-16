@@ -36,7 +36,7 @@ ActivityBar | SidebarSlot (one host) | Main
               └─ hitl:        Approvals body
 ```
 
-**Shell mode:** Prefer a small mode (derive from existing `drawerOpen` / `hitlInboxOpen`, or a single `sidebarPanel: 'contribution' | 'extensions' | 'hitl'`) over keeping parallel right overlays. Reuse existing manager/HITL React bodies; strip `Sheet` chrome and mount them in `SidebarSlot` when that mode is active.
+**Shell mode:** Use a single `sidebarPanel: 'contribution' | 'extensions' | 'hitl'` (not sheet-era `drawerOpen` / right overlays). Activity Bar items with `panel` toggle that mode; extension clicks use `setActiveView` (which resets to `contribution`). Reuse manager/HITL React bodies in `SidebarSlot`.
 
 **Viewport lock:** `ShellRoot` uses `h-dvh max-h-dvh overflow-hidden` (not `min-h-screen`). Workspace row and panes use `min-h-0` / `overflow-hidden`; main + home keep `overflow-auto`. Global + client-app `html`/`body`/`#root` are `overflow: hidden` with `overscroll-behavior: none` on `body`.
 
@@ -45,3 +45,9 @@ ActivityBar | SidebarSlot (one host) | Main
 **Key paths:** `packages/core/src/shell/components/sidebar-slot.tsx`, `extension-manager-drawer.tsx`, `hitl-inbox.tsx`, `shell-root.tsx`, `activity-bar.tsx`, `store.ts`, `packages/ui/src/styles/globals.css`, `examples/client-app/index.html`.
 
 UI primitives stay on `@agentos/ui`; source files remain kebab-case.
+
+## Covered in follow-up (with ticket 40 PR)
+
+- **`sidebarPanel` store** — removed `drawerOpen` / `hitlInboxOpen`; Activity Bar uses unified `item.panel` instead of separate manager/HITL branches
+- **Host API** — `hitl.requestApproval` opens `sidebarPanel: 'hitl'`
+- **Tests/docs** — store / sidebar-slot / host-api assertions updated for panel mode

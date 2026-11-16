@@ -21,8 +21,7 @@ describe('SidebarSlot contextual + shell panels', () => {
     useShellStore.setState({
       activeView: 'home',
       sidebarOpen: true,
-      drawerOpen: false,
-      hitlInboxOpen: false,
+      sidebarPanel: 'contribution',
       contributions: sidebars,
     });
   });
@@ -33,8 +32,7 @@ describe('SidebarSlot contextual + shell panels', () => {
         sidebarOpen
         activeView="crm"
         contributions={sidebars}
-        drawerOpen={false}
-        hitlInboxOpen={false}
+        sidebarPanel="contribution"
       />,
     );
     expect(onCrm).toContain('data-sidebar-panel="contribution"');
@@ -52,8 +50,7 @@ describe('SidebarSlot contextual + shell panels', () => {
         sidebarOpen
         activeView="demo"
         contributions={sidebars}
-        drawerOpen={false}
-        hitlInboxOpen={false}
+        sidebarPanel="contribution"
       />,
     );
     expect(onDemo).toMatch(
@@ -64,29 +61,26 @@ describe('SidebarSlot contextual + shell panels', () => {
     );
   });
 
-  test('home with sidebars present shows empty contribution placeholder', () => {
+  test('home with sidebars present shows no active contribution', () => {
     const html = renderToStaticMarkup(
       <SidebarSlot
         sidebarOpen
         activeView="home"
         contributions={sidebars}
-        drawerOpen={false}
-        hitlInboxOpen={false}
+        sidebarPanel="contribution"
       />,
     );
     expect(html).toContain('data-sidebar-panel="contribution"');
-    expect(html).toContain('Sidebar slot');
     expect(html).not.toContain('data-sidebar-active="true"');
   });
 
-  test('drawerOpen renders Extension Manager inside sidebar (no sheet)', () => {
+  test('extensions panel renders Extension Manager inside sidebar (no sheet)', () => {
     const html = renderToStaticMarkup(
       <SidebarSlot
         sidebarOpen
         activeView="home"
         contributions={sidebars}
-        drawerOpen
-        hitlInboxOpen={false}
+        sidebarPanel="extensions"
       />,
     );
     expect(html).toContain('data-sidebar-panel="extensions"');
@@ -96,19 +90,17 @@ describe('SidebarSlot contextual + shell panels', () => {
     expect(html).not.toContain('role="dialog"');
   });
 
-  test('hitlInboxOpen renders Approvals inside sidebar (no sheet)', () => {
+  test('hitl panel renders Approvals inside sidebar (no sheet)', () => {
     const html = renderToStaticMarkup(
       <SidebarSlot
         sidebarOpen
         activeView="home"
         contributions={sidebars}
-        drawerOpen={false}
-        hitlInboxOpen
+        sidebarPanel="hitl"
       />,
     );
     expect(html).toContain('data-sidebar-panel="hitl"');
     expect(html).toContain('data-slot="hitl-inbox"');
-    expect(html).toContain('Approvals');
     expect(html).not.toContain('data-view="sidebar"');
     expect(html).not.toContain('role="dialog"');
   });

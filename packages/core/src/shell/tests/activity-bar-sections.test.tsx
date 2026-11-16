@@ -54,10 +54,10 @@ describe('buildActivityBarSections', () => {
 
     expect(primary.map((i) => i.id)).toEqual(['home', 'demo']);
     expect(secondary.map((i) => i.id)).toEqual(['hitl', 'auth', 'extensions']);
-    expect(secondary.find((i) => i.id === 'hitl')?.opensHitl).toBe(true);
+    expect(secondary.find((i) => i.id === 'hitl')?.panel).toBe('hitl');
     expect(secondary.find((i) => i.id === 'hitl')?.label).toBe('Approvals');
-    expect(secondary.find((i) => i.id === 'extensions')?.opensManager).toBe(
-      true,
+    expect(secondary.find((i) => i.id === 'extensions')?.panel).toBe(
+      'extensions',
     );
   });
 

@@ -28,7 +28,7 @@ Import base controls from `@agentos/ui/components/*` (shadcn + Tailwind tokens i
 
 Icons: `@phosphor-icons/react` (matches the UI package).
 
-Themes: wrap app/Shell with `@agentos/ui/components/theme-provider` (`next-themes`). Default is `dark`; extend `AGENTOS_THEMES` when adding themes. Do not hardcode a `dark` class on layout roots.
+Themes: wrap app/Shell with `@agentos/ui/components/theme-provider`. Default is `dark`; extend `AGENTOS_THEMES` when adding themes. Anti-FOUC lives in app/`index.html` (no inline `<script>` from the provider — React 19). Do not hardcode a `dark` class on layout roots.
 
 ## Do not
 

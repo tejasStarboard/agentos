@@ -12,8 +12,7 @@ function resetStore() {
   useShellStore.setState({
     activeView: 'home',
     sidebarOpen: true,
-    drawerOpen: false,
-    hitlInboxOpen: false,
+    sidebarPanel: 'contribution',
     chatOpen: false,
     chatMessages: [],
     chatBusy: false,
@@ -176,9 +175,9 @@ describe('createShellHostApi notifications', () => {
     try {
       const host = createShellHostApi('crm');
       const resultPromise = host.hitl.requestApproval({ title: 'Pay' });
-      // Allow create + setHitlInboxOpen to settle before asserting.
+      // Allow create + setSidebarPanel('hitl') to settle before asserting.
       await new Promise((r) => setTimeout(r, 0));
-      expect(useShellStore.getState().hitlInboxOpen).toBe(true);
+      expect(useShellStore.getState().sidebarPanel).toBe('hitl');
       const result = await resultPromise;
       expect(result).toEqual({ approved: true, id: 'a1' });
     } finally {

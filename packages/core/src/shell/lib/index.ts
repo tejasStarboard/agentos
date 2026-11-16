@@ -1,4 +1,11 @@
 export {
+  ACTIVITY_BAR_STORAGE_KEY,
+  readStoredActivity,
+  restoreStoredActivity,
+  writeStoredActivity,
+  type StoredActivitySelection,
+} from './activity-bar-persistence';
+export {
   applyRegistry,
   mapRegistry,
   type AppliedRegistry,
@@ -7,6 +14,7 @@ export {
   buildActivityBarSections,
   type ActivityBarItem,
   type ActivityBarSections,
+  type ActivityBarShellPanel,
 } from './build-activity-bar-items';
 export {
   contributionKey,
@@ -52,5 +60,6 @@ export {
   type ChatMessage,
   type ShellUiState,
   type ShellView,
+  type SidebarPanel,
 } from './store';
 export { withThemeQuery } from './with-theme-query';

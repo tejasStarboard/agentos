@@ -11,8 +11,7 @@ function resetStore() {
   useShellStore.setState({
     activeView: 'home',
     sidebarOpen: true,
-    drawerOpen: false,
-    hitlInboxOpen: false,
+    sidebarPanel: 'contribution',
     chatOpen: false,
     chatMessages: [],
     chatBusy: false,
@@ -41,7 +40,7 @@ describe('useShellStore', () => {
     const state = useShellStore.getState();
     expect(state.activeView).toBe('home');
     expect(state.sidebarOpen).toBe(true);
-    expect(state.drawerOpen).toBe(false);
+    expect(state.sidebarPanel).toBe('contribution');
     expect(state.contributions).toEqual([]);
     expect(state.runtimeStatus).toEqual({});
     expect(state.extensions.map((e) => e.id)).toContain('auth');
@@ -82,33 +81,30 @@ describe('useShellStore', () => {
   });
 
   test('setActiveView updates active view and clears shell panels', () => {
-    useShellStore.getState().setDrawerOpen(true);
+    useShellStore.getState().setSidebarPanel('extensions');
     useShellStore.getState().setActiveView('ext-placeholder');
     expect(useShellStore.getState().activeView).toBe('ext-placeholder');
-    expect(useShellStore.getState().drawerOpen).toBe(false);
-    expect(useShellStore.getState().hitlInboxOpen).toBe(false);
+    expect(useShellStore.getState().sidebarPanel).toBe('contribution');
   });
 
-  test('toggleSidebar and setDrawerOpen flip drawer flags', () => {
+  test('toggleSidebar and setSidebarPanel manage left sidebar host', () => {
     useShellStore.getState().toggleSidebar();
     expect(useShellStore.getState().sidebarOpen).toBe(false);
-    useShellStore.getState().setDrawerOpen(true);
-    expect(useShellStore.getState().drawerOpen).toBe(true);
+    useShellStore.getState().setSidebarPanel('extensions');
+    expect(useShellStore.getState().sidebarPanel).toBe('extensions');
     expect(useShellStore.getState().sidebarOpen).toBe(true);
-    useShellStore.getState().toggleDrawer();
-    expect(useShellStore.getState().drawerOpen).toBe(false);
+    useShellStore.getState().setSidebarPanel('contribution');
+    expect(useShellStore.getState().sidebarPanel).toBe('contribution');
   });
 
-  test('drawer and HITL panels are mutually exclusive and force sidebar open', () => {
+  test('extensions and HITL panels are mutually exclusive and force sidebar open', () => {
     useShellStore.getState().setSidebarOpen(false);
-    useShellStore.getState().setDrawerOpen(true);
-    expect(useShellStore.getState().drawerOpen).toBe(true);
-    expect(useShellStore.getState().hitlInboxOpen).toBe(false);
+    useShellStore.getState().setSidebarPanel('extensions');
+    expect(useShellStore.getState().sidebarPanel).toBe('extensions');
     expect(useShellStore.getState().sidebarOpen).toBe(true);
 
-    useShellStore.getState().setHitlInboxOpen(true);
-    expect(useShellStore.getState().hitlInboxOpen).toBe(true);
-    expect(useShellStore.getState().drawerOpen).toBe(false);
+    useShellStore.getState().setSidebarPanel('hitl');
+    expect(useShellStore.getState().sidebarPanel).toBe('hitl');
     expect(useShellStore.getState().sidebarOpen).toBe(true);
   });
 

@@ -2,6 +2,7 @@ import { useShellActiveView } from '@agentos/core/shell/hooks';
 import {
   buildActivityBarSections,
   useShellStore,
+  writeStoredActivity,
   type ActivityBarItem,
 } from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
@@ -51,11 +52,9 @@ function ActivityIconButton({
 
 export function ActivityBar() {
   const activeView = useShellActiveView();
-  const drawerOpen = useShellStore((s) => s.drawerOpen);
-  const hitlInboxOpen = useShellStore((s) => s.hitlInboxOpen);
+  const sidebarPanel = useShellStore((s) => s.sidebarPanel);
   const setActiveView = useShellStore((s) => s.setActiveView);
-  const setDrawerOpen = useShellStore((s) => s.setDrawerOpen);
-  const toggleHitlInbox = useShellStore((s) => s.toggleHitlInbox);
+  const setSidebarPanel = useShellStore((s) => s.setSidebarPanel);
   const toggleSidebar = useShellStore((s) => s.toggleSidebar);
   const extensions = useShellStore((s) => s.extensions);
   const enabledById = useShellStore((s) => s.enabledById);
@@ -65,18 +64,17 @@ export function ActivityBar() {
     buildActivityBarSections({ extensions, enabledById, contributions });
 
   function currentFor(item: ActivityBarItem): boolean {
-    if (item.opensManager) return drawerOpen;
-    if (item.opensHitl) return hitlInboxOpen;
+    if (item.panel) return sidebarPanel === item.panel;
     return activeView === item.id;
   }
 
   function activate(item: ActivityBarItem) {
-    if (item.opensManager) {
-      setDrawerOpen(!drawerOpen);
-      return;
-    }
-    if (item.opensHitl) {
-      toggleHitlInbox();
+    // Shell chrome (manager / HITL): same path — toggle left sidebar panel only.
+    if (item.panel) {
+      const nextPanel =
+        sidebarPanel === item.panel ? 'contribution' : item.panel;
+      setSidebarPanel(nextPanel);
+      writeStoredActivity({ view: activeView, panel: nextPanel });
       return;
     }
     if (activeView === item.id) {
@@ -84,6 +82,7 @@ export function ActivityBar() {
       return;
     }
     setActiveView(item.id);
+    writeStoredActivity({ view: item.id, panel: 'contribution' });
   }
 
   return (
