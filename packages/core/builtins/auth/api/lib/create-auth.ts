@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { betterAuth, type Auth } from 'better-auth';
+import { betterAuth, type Auth, type BetterAuthOptions } from 'better-auth';
 import { getMigrations } from 'better-auth/db/migration';
 import { Database } from 'bun:sqlite';
 
@@ -15,6 +15,10 @@ import {
 
 export type AuthSqlite = Database;
 
+type BetterAuthSendResetPassword = NonNullable<
+  NonNullable<BetterAuthOptions['emailAndPassword']>['sendResetPassword']
+>;
+
 export type CreateAuthOptions = {
   /** SQLite path, or `:memory:` for tests. */
   databasePath?: string;
@@ -24,6 +28,13 @@ export type CreateAuthOptions = {
   seedDemoUsers?: boolean;
   /** Optional soft-fail permission cache via cache-store. */
   permissionCache?: PermissionCacheConfig;
+  /**
+   * Origin of the consumer Shell (for password-reset links).
+   * @default http://localhost:5173
+   */
+  appOrigin?: string;
+  /** Override password-reset email sender (tests). Default logs the app URL. */
+  sendResetPassword?: BetterAuthSendResetPassword;
 };
 
 export type AuthContext = {
@@ -88,13 +99,37 @@ export async function createAuth(
   const db = openDatabase(databasePath);
   const baseURL = options.baseURL ?? `http://127.0.0.1:${AUTH_PORT}`;
   const secret = options.secret ?? DEFAULT_SECRET;
+  const appOrigin =
+    options.appOrigin ??
+    process.env.AGENT_OS_GLOBAL_APP_ORIGIN ??
+    'http://localhost:5173';
 
-  const betterAuthOptions = {
+  const sendResetPassword: BetterAuthSendResetPassword = async (
+    data,
+    request,
+  ) => {
+    if (options.sendResetPassword) {
+      await options.sendResetPassword(data, request);
+      return;
+    }
+    const resetUrl = `${appOrigin}/reset-password?token=${encodeURIComponent(data.token)}`;
+    console.info(`[auth] Password reset for ${data.user.email}: ${resetUrl}`);
+  };
+
+  const betterAuthOptions: BetterAuthOptions = {
     database: db,
     baseURL,
     secret,
-    emailAndPassword: { enabled: true },
-    trustedOrigins: [baseURL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    emailAndPassword: {
+      enabled: true,
+      sendResetPassword,
+    },
+    trustedOrigins: [
+      baseURL,
+      appOrigin,
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+    ],
     advanced: {
       useSecureCookies: false,
       defaultCookieAttributes: {

@@ -60,6 +60,12 @@ Agents must never promote tickets to `done/` themselves.
 40. App-level `ui/dashboard.tsx` Home surface (mountShell dashboard option)
 41. Chore: git / package metadata + README refresh
 42. CLI package: scaffold client app (`create` / `init`, CRA / shadcn-init style)
+43. Auth gate routes (`/login` `/register` `/reset-password`) + `agentos.config.ts`
+44. Branding in `agentos.config.ts` + `/_public` consumer assets
+45. Organize Shell components/hooks/lib by feature (auth, ui-contribs, …)
+46. Hide empty active-extension UI contrib hosts + Home `ui/dashboard-sidebar.tsx`
+47. Shell topbar (sidebar toggle, branding, settings stub)
+48. Builtin `settings` extension + topbar Settings opens it
 
 **Runtime policy:** `pnpm install` for the monorepo; `bun run` / `bun` for all TS/JS services (never Node).
 

@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 
 import {
   agentos,
+  RESOLVED_VIRTUAL_CONFIG_ID,
   RESOLVED_VIRTUAL_REGISTRY_ID,
+  VIRTUAL_CONFIG_ID,
   VIRTUAL_REGISTRY_ID,
 } from '@agentos/core/vite/lib/agentos-plugin';
 import type { Plugin, ViteDevServer } from 'vite';
@@ -61,6 +63,42 @@ describe('agentos()', () => {
     expect(source).toContain('/__agentos/ext/crm/page.html');
     expect(source).toContain('import { skills as __agentos_skills_crm }');
     expect(source).toMatch(/"skills":\s*__agentos_skills_crm/);
+  });
+
+  test('resolves and loads virtual:agentos-config defaults', async () => {
+    const plugin = asHooks(agentos({ extensionsDir, builtinsDir }));
+    await plugin.configResolved?.({ root: fixturesRoot });
+
+    expect(plugin.resolveId?.(VIRTUAL_CONFIG_ID)).toBe(
+      RESOLVED_VIRTUAL_CONFIG_ID,
+    );
+    const source = await plugin.load?.(RESOLVED_VIRTUAL_CONFIG_ID);
+    expect(typeof source).toBe('string');
+    expect(source).toContain('export const config');
+    expect(source).toContain('"allowSignUp": true');
+    expect(source).toContain('"afterSignInPath": "/"');
+  });
+
+  test('loads agentos.config.ts from consumer root', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'agentos-config-'));
+    temps.push(root);
+    mkdirSync(join(root, 'extensions'), { recursive: true });
+    mkdirSync(join(root, 'builtins'), { recursive: true });
+    writeFileSync(
+      join(root, 'agentos.config.ts'),
+      `export default { auth: { allowSignUp: false, afterSignInPath: '/app' } };\n`,
+    );
+
+    const plugin = asHooks(
+      agentos({
+        extensionsDir: join(root, 'extensions'),
+        builtinsDir: join(root, 'builtins'),
+      }),
+    );
+    await plugin.configResolved?.({ root });
+    const source = await plugin.load?.(RESOLVED_VIRTUAL_CONFIG_ID);
+    expect(source).toContain('"allowSignUp": false');
+    expect(source).toContain('"afterSignInPath": "/app"');
   });
 
   test('rescans and invalidates registry on watched file changes', async () => {

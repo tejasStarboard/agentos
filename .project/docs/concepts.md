@@ -55,13 +55,14 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 2. **UI primitives** → `@agentos/ui` (shadcn) for buttons, inputs, checkboxes, selects, dropdowns, etc. Avoid native HTML controls unless specifically required.
 3. **TS routes** → `@agentos/core/api/*` only. No customer product DB URL / Redis — use `/api/store` (db-store may use `AGENT_OS_EXT_DB_STORE_DATABASE_URL` internally only).
 4. **Python** → `agentos.*` in `services/` only, linked from `meta.json`.
-5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`).
-6. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
-7. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.
-8. **Builtins** locked; **customer** extensions toggleable.
-9. **pnpm** installs the monorepo; **Bun** runs all TS/JS. Never Node for services.
-10. **Env** → each extension exports `keys = () => createEnv(...)`; the app calls `createEnv({ extends: [keys(), ...] })`. Naming: `AGENT_OS_GLOBAL_*` (platform), `AGENT_OS_EXT_<DOMAIN>_*` (extensions). Helpers live in `@agentos/core/api/env`.
-11. **Bun API kit** → `@agentos/core/api` (`createApp`, `loadRoutes`) wires `extensions/<id>/api/server.ts` + `api/routes/**/index.ts` (`[param]` → `:param`). Built-in `GET /health` → `{ ok: true }`. Domain clients (`auth`, `store`, …) live under `@agentos/core/api/*`.
+5. **Auth/RBAC** → builtin `auth` + `@agentos/core/api/auth` (no second stack; no `/api/rbac`). Public sign-in/up/reset are **Shell gate** routes (`/login`, `/register`, `/forgot-password`, `/reset-password`); Auth secondary Activity Bar is **account settings**.
+6. **App config** → consumer-root `agentos.config.ts` via `@agentos/core/config` (`defineConfig`). Secrets stay in `src/env.ts` / `createEnv`.
+7. **SQL/cache** → `dbStore` / `cacheStore` → builtins only.
+8. **TS backend** stays in the extension (`api/`). **Python backend** is a **service**.
+9. **Builtins** locked; **customer** extensions toggleable.
+10. **pnpm** installs the monorepo; **Bun** runs all TS/JS. Never Node for services.
+11. **Env** → each extension exports `keys = () => createEnv(...)`; the app calls `createEnv({ extends: [keys(), ...] })`. Naming: `AGENT_OS_GLOBAL_*` (platform), `AGENT_OS_EXT_<DOMAIN>_*` (extensions). Helpers live in `@agentos/core/api/env`.
+12. **Bun API kit** → `@agentos/core/api` (`createApp`, `loadRoutes`) wires `extensions/<id>/api/server.ts` + `api/routes/**/index.ts` (`[param]` → `:param`). Built-in `GET /health` → `{ ok: true }`. Domain clients (`auth`, `store`, …) live under `@agentos/core/api/*`.
 
 ## Prefer these words
 
@@ -70,5 +71,6 @@ Short definitions so humans and agents never confuse **extension**, **service**,
 | extension API / Bun API | “the Node BFF”                        |
 | service                 | “Python extension folder”             |
 | builtin `auth`          | “rbac package” as separate builtin    |
+| `agentos.config.ts`     | stuffing secrets into the Vite plugin |
 | `db-store`              | “give the CRM service a database URL” |
 | `@agentos/ui` Button    | raw `<button>` / ad-hoc button CSS    |
