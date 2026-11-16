@@ -1,0 +1,10 @@
+{
+  "name": "Starter",
+  "icon": "Rocket",
+  "api": {
+    "language": "python",
+    "root": "../../services/starter",
+    "port": 6111,
+    "health": "/health"
+  }
+}

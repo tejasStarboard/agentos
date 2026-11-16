@@ -22,6 +22,34 @@ describe('parseArgs', () => {
     expect(parsed.cwd).toBe('/tmp/app');
   });
 
+  test('parses create with target and template', () => {
+    const parsed = parseArgs([
+      'bun',
+      'agentos',
+      'create',
+      'my-app',
+      '--template',
+      'with-extension',
+    ]);
+    expect(parsed.command).toBe('create');
+    expect(parsed.createTarget).toBe('my-app');
+    expect(parsed.template).toBe('with-extension');
+    expect(parsed.unknown).toEqual([]);
+  });
+
+  test('parses create --template=value before target', () => {
+    const parsed = parseArgs([
+      'bun',
+      'agentos',
+      'create',
+      '--template=minimal',
+      'examples/foo',
+    ]);
+    expect(parsed.command).toBe('create');
+    expect(parsed.createTarget).toBe('examples/foo');
+    expect(parsed.template).toBe('minimal');
+  });
+
   test('help flag without command yields help', () => {
     const parsed = parseArgs(['bun', 'agentos', '--help']);
     expect(parsed.command).toBe('help');
@@ -34,8 +62,10 @@ describe('parseArgs', () => {
     expect(parsed.unknown).toEqual(['--foo']);
   });
 
-  test('usage mentions dev and build', () => {
+  test('usage mentions create, dev, and build', () => {
+    expect(usage()).toContain('create');
     expect(usage()).toContain('dev');
     expect(usage()).toContain('build');
+    expect(usage()).toContain('minimal');
   });
 });

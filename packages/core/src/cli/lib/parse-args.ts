@@ -1,10 +1,16 @@
 /** Parse `agentos` CLI argv into a command + options. */
 
-export type CliCommand = 'dev' | 'build' | 'help';
+import { DEFAULT_TEMPLATE, TEMPLATE_IDS } from './template-paths';
+
+export type CliCommand = 'dev' | 'build' | 'create' | 'help';
 
 export type ParsedArgs = {
   command: CliCommand | null;
   cwd: string | undefined;
+  /** Destination directory for `create`. */
+  createTarget: string | undefined;
+  /** Template id for `create` (default applied in runCreate). */
+  template: string | undefined;
   unknown: string[];
   helpRequested: boolean;
 };
@@ -13,6 +19,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
   const args = argv.slice(2);
   let command: CliCommand | null = null;
   let cwd: string | undefined;
+  let createTarget: string | undefined;
+  let template: string | undefined;
   const unknown: string[] = [];
   let helpRequested = false;
 
@@ -35,12 +43,38 @@ export function parseArgs(argv: string[]): ParsedArgs {
       cwd = arg.slice('--cwd='.length) || undefined;
       continue;
     }
-    if (arg === 'dev' || arg === 'build' || arg === 'help') {
+    if (arg === '--template') {
+      const value = args[++i];
+      if (!value) {
+        unknown.push('--template');
+        continue;
+      }
+      template = value;
+      continue;
+    }
+    if (arg.startsWith('--template=')) {
+      template = arg.slice('--template='.length) || undefined;
+      continue;
+    }
+    if (
+      arg === 'dev' ||
+      arg === 'build' ||
+      arg === 'create' ||
+      arg === 'help'
+    ) {
       if (command === null) {
         command = arg;
       } else {
         unknown.push(arg);
       }
+      continue;
+    }
+    if (
+      command === 'create' &&
+      createTarget === undefined &&
+      !arg.startsWith('-')
+    ) {
+      createTarget = arg;
       continue;
     }
     unknown.push(arg);
@@ -50,19 +84,33 @@ export function parseArgs(argv: string[]): ParsedArgs {
     command = 'help';
   }
 
-  return { command, cwd, unknown, helpRequested };
+  return {
+    command,
+    cwd,
+    createTarget,
+    template,
+    unknown,
+    helpRequested,
+  };
 }
 
 export function usage(): string {
+  const templateList = TEMPLATE_IDS.join(' | ');
   return `Usage: agentos <command> [options]
 
 Commands:
+  create  Scaffold a consumer app from templates/ (copy + rename)
   dev     Start Vite Shell, builtin APIs, customer Bun APIs, and Python services
   build   Build the consumer app and required workspace packages
   help    Show this message
 
+Create:
+  agentos create <dir> [--template ${DEFAULT_TEMPLATE}]
+  Templates: ${templateList}
+
 Options:
-  --cwd <path>   Consumer app root (default: current working directory)
-  -h, --help     Show this message
+  --cwd <path>        Consumer app root for dev/build (default: cwd)
+  --template <id>     Template for create (default: ${DEFAULT_TEMPLATE})
+  -h, --help          Show this message
 `;
 }

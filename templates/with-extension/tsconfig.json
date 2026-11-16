@@ -1,0 +1,19 @@
+{
+  "extends": "@agentos/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@extensions/*": ["./extensions/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "ui/**/*.tsx",
+    "extensions/**/api/**/*.ts",
+    "extensions/**/ui/**/*.tsx"
+  ]
+}
