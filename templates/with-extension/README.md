@@ -1,4 +1,4 @@
-# __APP_NAME__
+# **APP_NAME**
 
 AgentOS **consumer app** scaffolded with `agentos create` (`with-extension` template).
 

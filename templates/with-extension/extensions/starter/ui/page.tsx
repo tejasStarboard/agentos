@@ -12,8 +12,9 @@ export default function Page() {
         <Badge variant="secondary">Bun API</Badge>
       </div>
       <p className="max-w-prose text-sm text-muted-foreground">
-        Stub extension from the <code className="text-foreground">with-extension</code>{' '}
-        template. Edit <code className="text-foreground">ui/page.tsx</code> and{' '}
+        Stub extension from the{' '}
+        <code className="text-foreground">with-extension</code> template. Edit{' '}
+        <code className="text-foreground">ui/page.tsx</code> and{' '}
         <code className="text-foreground">api/routes</code>.
       </p>
     </div>

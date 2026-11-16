@@ -11,20 +11,20 @@ bun packages/core/bin/agentos create examples/my-app --template minimal
 agentos create examples/my-app --template minimal
 ```
 
-| Flag | Meaning |
-| ---- | ------- |
-| `<dir>` | New folder name/path (e.g. `examples/my-app`). Package `name` becomes the basename (`my-app`). |
-| `--template` | `minimal` (default), `with-extension`, or `with-service` |
+| Flag         | Meaning                                                                                        |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `<dir>`      | New folder name/path (e.g. `examples/my-app`). Package `name` becomes the basename (`my-app`). |
+| `--template` | `minimal` (default), `with-extension`, or `with-service`                                       |
 
 Fails if the target directory already exists.
 
 ## Templates
 
-| Id | What you get |
-| -- | ------------ |
-| `minimal` | Shell host, empty `extensions/` |
-| `with-extension` | + stub Bun extension `starter` (port 6110) |
-| `with-service` | + extension UI + in-app Python `services/starter` (port 6111) |
+| Id               | What you get                                                  |
+| ---------------- | ------------------------------------------------------------- |
+| `minimal`        | Shell host, empty `extensions/`                               |
+| `with-extension` | + stub Bun extension `starter` (port 6110)                    |
+| `with-service`   | + extension UI + in-app Python `services/starter` (port 6111) |
 
 `examples/client-app` remains the kitchen-sink **demo** — do not clone it for new apps.
 

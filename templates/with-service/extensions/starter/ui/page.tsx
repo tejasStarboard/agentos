@@ -12,8 +12,9 @@ export default function Page() {
         <Badge variant="secondary">Python service</Badge>
       </div>
       <p className="max-w-prose text-sm text-muted-foreground">
-        Stub from the <code className="text-foreground">with-service</code> template.
-        UI lives here; API is <code className="text-foreground">services/starter</code>.
+        Stub from the <code className="text-foreground">with-service</code>{' '}
+        template. UI lives here; API is{' '}
+        <code className="text-foreground">services/starter</code>.
       </p>
     </div>
   );

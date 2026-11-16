@@ -30,10 +30,10 @@ Does **not** require ticket **29** (E2E) or **30** (Next host spike).
 
 **Product analogy**
 
-| Tool | AgentOS equivalent |
-| ---- | ------------------ |
-| `npx create-react-app my-app` | Copy `templates/<id>` → user dir |
-| `npx shadcn@latest init` | (later) wire into existing project — out of scope for v1 create |
+| Tool                          | AgentOS equivalent                                              |
+| ----------------------------- | --------------------------------------------------------------- |
+| `npx create-react-app my-app` | Copy `templates/<id>` → user dir                                |
+| `npx shadcn@latest init`      | (later) wire into existing project — out of scope for v1 create |
 
 **Layout (source of truth)**
 
@@ -47,11 +47,11 @@ templates/
 
 **Proposed templates (lock at implement; drop to 2 if needed)**
 
-| Id | What you get |
-| -- | ------------ |
-| `minimal` (default) | Shell host only; empty `extensions/` |
-| `with-extension` | Same + one stub Bun extension (`meta.json`, `ui/page.tsx`, `api/` stub) |
-| `with-service` | Same as extension stub + `services/<id>/` Python skeleton linked from `meta.json` |
+| Id                  | What you get                                                                      |
+| ------------------- | --------------------------------------------------------------------------------- |
+| `minimal` (default) | Shell host only; empty `extensions/`                                              |
+| `with-extension`    | Same + one stub Bun extension (`meta.json`, `ui/page.tsx`, `api/` stub)           |
+| `with-service`      | Same as extension stub + `services/<id>/` Python skeleton linked from `meta.json` |
 
 Do **not** use `examples/client-app` as the copy source — it stays the kitchen-sink demo. Templates stay lean; demos stay in `examples/`.
 

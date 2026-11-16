@@ -15,8 +15,9 @@ export default function Dashboard() {
       </div>
       <Separator />
       <p className="max-w-prose text-sm text-muted-foreground">
-        Add extensions under <code className="text-foreground">extensions/</code>{' '}
-        and open them from the Activity Bar. See the cookbook for next steps.
+        Add extensions under{' '}
+        <code className="text-foreground">extensions/</code> and open them from
+        the Activity Bar. See the cookbook for next steps.
       </p>
     </div>
   );

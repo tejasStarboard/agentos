@@ -69,7 +69,11 @@ export function parseArgs(argv: string[]): ParsedArgs {
       }
       continue;
     }
-    if (command === 'create' && createTarget === undefined && !arg.startsWith('-')) {
+    if (
+      command === 'create' &&
+      createTarget === undefined &&
+      !arg.startsWith('-')
+    ) {
       createTarget = arg;
       continue;
     }
