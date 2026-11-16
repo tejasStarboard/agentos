@@ -21,7 +21,10 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "build": "pnpm -r --if-present build",
     "test": "bun test",
-    "ci": "turbo run //#lint //#format:check typecheck build //#test"
+    "ci": "turbo run //#lint //#format:check typecheck build //#test",
+    "postinstall": "bun ./scripts/uv-sync.ts",
+    "python:sync": "bun ./scripts/uv-sync.ts",
+    "clean": "turbo run clean && bun ./scripts/clean.ts"
   },
   "devDependencies": {
     "@agentos/typescript-config": "workspace:*",

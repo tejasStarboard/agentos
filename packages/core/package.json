@@ -63,7 +63,8 @@
     "files:dev": "bun ./builtins/files/api/server.ts",
     "notifications:dev": "bun ./builtins/notifications/api/server.ts",
     "secrets:dev": "bun ./builtins/secrets/api/server.ts",
-    "audit:dev": "bun ./builtins/audit/api/server.ts"
+    "audit:dev": "bun ./builtins/audit/api/server.ts",
+    "clean": "rm -rf dist node_modules .turbo .venv __pycache__ .pytest_cache *.egg-info .ruff_cache .mypy_cache *.tsbuildinfo"
   },
   "dependencies": {
     "@agentos/ui": "workspace:*",

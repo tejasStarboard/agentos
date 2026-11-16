@@ -17,7 +17,8 @@
   "scripts": {
     "dev": "agentos dev",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "build": "bunx --bun vite build"
+    "build": "bunx --bun vite build",
+    "clean": "rm -rf dist node_modules .turbo .venv __pycache__ .pytest_cache *.egg-info .ruff_cache .mypy_cache *.tsbuildinfo"
   },
   "dependencies": {
     "@agentos/core": "workspace:*",
