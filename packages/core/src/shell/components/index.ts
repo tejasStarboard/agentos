@@ -1,45 +1,45 @@
-export { ActivityBar } from './activity-bar';
+export { ActivityBar } from './chrome/activity-bar';
 export {
   AuthGate,
   type AuthGateBranding,
   type AuthGateConfig,
   type AuthGateProps,
-} from './auth-gate';
+} from './auth/auth-gate';
 export {
   AuthFormCard,
   AuthFormPanel,
   type AuthFormCardProps,
-} from './auth-form-card';
-export { AuthPublicLayout } from './auth-public-layout';
-export { ChatPanel } from './chat-panel';
-export { ForgotPasswordPage } from './forgot-password-page';
-export { LoginPage, type LoginPageProps } from './login-page';
-export { RegisterPage, type RegisterPageProps } from './register-page';
+} from './auth/auth-form-card';
+export { AuthPublicLayout } from './auth/auth-public-layout';
+export { ChatPanel } from './chrome/chat-panel';
+export { ForgotPasswordPage } from './auth/forgot-password-page';
+export { LoginPage, type LoginPageProps } from './auth/login-page';
+export { RegisterPage, type RegisterPageProps } from './auth/register-page';
 export {
   ResetPasswordPage,
   type ResetPasswordPageProps,
-} from './reset-password-page';
+} from './auth/reset-password-page';
 export {
   CommandPalette,
   CommandPaletteSkills,
   groupPaletteSkills,
   isCommandPaletteHotkey,
   type CommandPaletteProps,
-} from './command-palette';
-export { type StatusBarProps } from './status-bar';
-export { EnsureMounted } from './ensure-mounted';
-export { ExtensionFrame } from './extension-frame';
+} from './chrome/command-palette';
+export { type StatusBarProps } from './ui-contribs/status-bar';
+export { EnsureMounted } from './ui-contribs/ensure-mounted';
+export { ExtensionFrame } from './ui-contribs/extension-frame';
 export {
   ExtensionManagerDrawer,
   ExtensionManagerList,
   ExtensionManagerPanel,
   type ExtensionManagerListProps,
-} from './extension-manager-drawer';
-export { HiddenSlot } from './hidden-slot';
-export { HitlInbox } from './hitl-inbox';
-export { HomeDashboard } from './home-dashboard';
-export { MainCanvas } from './main-canvas';
-export { ShellRoot, type ShellRootProps } from './shell-root';
-export type { HomeDashboardProps } from './home-dashboard';
-export { SidebarSlot } from './sidebar-slot';
-export { StatusBar } from './status-bar';
+} from './chrome/extension-manager-drawer';
+export { HiddenSlot } from './ui-contribs/hidden-slot';
+export { HitlInbox } from './chrome/hitl-inbox';
+export { HomeDashboard } from './home/home-dashboard';
+export { MainCanvas } from './chrome/main-canvas';
+export { ShellRoot, type ShellRootProps } from './chrome/shell-root';
+export type { HomeDashboardProps } from './home/home-dashboard';
+export { SidebarSlot } from './ui-contribs/sidebar-slot';
+export { StatusBar } from './ui-contribs/status-bar';

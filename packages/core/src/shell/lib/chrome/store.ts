@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import type { NotificationType } from '@agentos/core/sdk';
-import type { ContributionRuntimeStatus, UiContribution } from './contribution';
-import { contributionKey } from './contribution';
+import {
+  contributionKey,
+  type ContributionRuntimeStatus,
+  type UiContribution,
+} from '../ui-contribs/contribution';
 import { defaultEnabledById, type ExtensionEntry } from './extension-catalog';
 import { requestExtensionEnable } from './extension-enable';
 

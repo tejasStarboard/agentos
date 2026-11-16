@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ActivityBar } from '../components/activity-bar';
-import { buildActivityBarSections } from '../lib/build-activity-bar-items';
-import type { ExtensionEntry } from '../lib/extension-catalog';
-import type { UiContribution } from '../lib/contribution';
+import { ActivityBar } from '../components/chrome/activity-bar';
+import { buildActivityBarSections } from '../lib/chrome/build-activity-bar-items';
+import type { ExtensionEntry } from '../lib/chrome/extension-catalog';
+import type { UiContribution } from '../lib/ui-contribs/contribution';
 
 const catalog: ExtensionEntry[] = [
   {

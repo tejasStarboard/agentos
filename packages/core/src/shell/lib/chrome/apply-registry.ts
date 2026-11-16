@@ -1,5 +1,5 @@
 import type { RegistryModel } from '@agentos/core/vite/lib/types';
-import type { UiContribution } from './contribution';
+import type { UiContribution } from '../ui-contribs/contribution';
 import {
   resolveActivityBarSection,
   type ExtensionEntry,

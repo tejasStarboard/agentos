@@ -13,14 +13,14 @@ import {
   ResizablePanelGroup,
 } from '@agentos/ui/components/resizable';
 import { Toaster, toast } from '@agentos/ui/components/toast';
+import { HomeDashboard } from '../home/home-dashboard';
+import { HiddenSlot } from '../ui-contribs/hidden-slot';
+import { SidebarSlot } from '../ui-contribs/sidebar-slot';
+import { StatusBar } from '../ui-contribs/status-bar';
 import { ActivityBar } from './activity-bar';
 import { ChatPanel } from './chat-panel';
 import { CommandPalette } from './command-palette';
-import { HiddenSlot } from './hidden-slot';
-import { HomeDashboard } from './home-dashboard';
 import { MainCanvas } from './main-canvas';
-import { SidebarSlot } from './sidebar-slot';
-import { StatusBar } from './status-bar';
 import '@agentos/ui/globals.css';
 
 export type ShellRootProps = {

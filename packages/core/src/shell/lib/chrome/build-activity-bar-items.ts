@@ -4,7 +4,7 @@ import {
   SquaresFourIcon,
   type Icon,
 } from '@phosphor-icons/react';
-import type { UiContribution } from './contribution';
+import type { UiContribution } from '../ui-contribs/contribution';
 import {
   resolveActivityBarSection,
   type ExtensionEntry,

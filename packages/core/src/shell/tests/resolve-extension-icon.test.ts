@@ -4,7 +4,7 @@ import {
   DEFAULT_EXTENSION_ICON,
   normalizeExtensionIconName,
   resolveExtensionIcon,
-} from '../lib/resolve-extension-icon';
+} from '../lib/chrome/resolve-extension-icon';
 
 describe('resolveExtensionIcon', () => {
   test('normalize strips Icon suffix and trims', () => {

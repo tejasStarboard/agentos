@@ -8,8 +8,11 @@ import {
   FieldLabel,
 } from '@agentos/ui/components/field';
 import { Input } from '@agentos/ui/components/input';
-import { resetPasswordWithToken } from '../lib/auth-api';
-import { navigateApp, readResetToken } from '../lib/auth-routes';
+import {
+  navigateApp,
+  readResetToken,
+  resetPasswordWithToken,
+} from '@agentos/core/shell/lib';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 

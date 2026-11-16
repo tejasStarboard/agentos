@@ -11,9 +11,9 @@ import {
   type UiContribution,
 } from '@agentos/core/shell/lib';
 import { cn } from '@agentos/ui/lib/utils';
+import { ExtensionManagerPanel } from '../chrome/extension-manager-drawer';
+import { HitlInbox } from '../chrome/hitl-inbox';
 import { ExtensionFrame } from './extension-frame';
-import { ExtensionManagerPanel } from './extension-manager-drawer';
-import { HitlInbox } from './hitl-inbox';
 
 export type SidebarSlotProps = {
   contributions?: UiContribution[];

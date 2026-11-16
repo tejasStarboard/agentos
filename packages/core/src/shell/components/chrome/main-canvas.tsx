@@ -8,7 +8,7 @@ import {
   type UiContribution,
 } from '@agentos/core/shell/lib';
 import { cn } from '@agentos/ui/lib/utils';
-import { ExtensionFrame } from './extension-frame';
+import { ExtensionFrame } from '../ui-contribs/extension-frame';
 
 export type MainCanvasProps = {
   /** Override store contributions (tests / controlled hosts). */
