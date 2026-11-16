@@ -15,7 +15,7 @@ describe('TopBar', () => {
     expect(html).toContain('data-slot="top-bar-center"');
     expect(html).toContain('data-slot="top-bar-end"');
     expect(html).toContain('data-slot="topbar-sidebar-toggle"');
-    expect(html).toContain('data-slot="topbar-settings"');
+    expect(html).not.toContain('data-slot="topbar-settings"');
     expect(html).toContain('data-slot="topbar-app-name"');
     expect(html).toContain('AgentOS');
   });

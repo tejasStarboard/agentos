@@ -1,4 +1,4 @@
-import { GearSixIcon, SidebarSimpleIcon } from '@phosphor-icons/react';
+import { SidebarSimpleIcon } from '@phosphor-icons/react';
 import { useShellSidebarOpen } from '@agentos/core/shell/hooks';
 import { useShellStore } from '@agentos/core/shell/lib';
 import { Button } from '@agentos/ui/components/button';
@@ -17,7 +17,7 @@ export type TopBarProps = {
  * Regions `top-bar-start` / `top-bar-center` / `top-bar-end` are reserved
  * **global** UI contribution hosts (symmetric to status-bar main/end).
  * v1 owns the controls inside them; extension contributions come later.
- * Settings click is a no-op until ticket 48 (`data-slot="topbar-settings"`).
+ * Settings opens via Activity Bar secondary (builtin `settings`).
  */
 export function TopBar(props: TopBarProps = {}) {
   const {
@@ -76,21 +76,10 @@ export function TopBar(props: TopBarProps = {}) {
         </span>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1" data-slot="top-bar-end">
-        {/* Fixed end slot: Shell Settings control; extension contribs must not steal this. */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="size-8 text-muted-foreground"
-          data-slot="topbar-settings"
-          aria-label="Settings"
-          // Wired in ticket 48 (builtin settings extension).
-          onClick={() => {}}
-        >
-          <GearSixIcon className="size-4" weight="regular" />
-        </Button>
-      </div>
+      <div
+        className="flex shrink-0 items-center gap-1"
+        data-slot="top-bar-end"
+      />
     </header>
   );
 }
