@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { useShellContributions } from '@agentos/core/shell/hooks';
 import { contributionKey, type UiContribution } from '@agentos/core/shell/lib';
-import { ExtensionFrame } from './extension-frame';
+import { ExtensionFrame } from '../ui-contribs/extension-frame';
 
 export type HomeDashboardProps = {
   /** App-owned Home page (`ui/dashboard.tsx`), rendered in-process — not an extension iframe. */

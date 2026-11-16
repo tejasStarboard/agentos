@@ -1,6 +1,6 @@
 # 45 — Organize Shell `components` / `hooks` / `lib` by feature
 
-**Status:** todo
+**Status:** in-progress
 
 ## Goal
 
@@ -34,11 +34,11 @@ Exact folder names can be adjusted, but **auth** and **ui-contribs** (active-ext
 
 ## Done when
 
-- [ ] Shell source moved into feature folders; barrels (`components/index.ts`, `lib/index.ts`, `hooks/index.ts`) updated
-- [ ] Public import paths (`@agentos/core/shell`, `@agentos/core/shell/components`, `@agentos/core/shell/lib`) still work
-- [ ] File names remain **kebab-case**
-- [ ] Tests + docs import paths updated; `bun test` shell suites green
-- [ ] No behavior change (pure organize)
+- [x] Shell source moved into feature folders; barrels (`components/index.ts`, `lib/index.ts`, `hooks/index.ts`) updated
+- [x] Public import paths (`@agentos/core/shell`, `@agentos/core/shell/components`, `@agentos/core/shell/lib`) still work
+- [x] File names remain **kebab-case**
+- [x] Tests + docs import paths updated; `bun test` shell suites green
+- [x] No behavior change (pure organize)
 
 ## Notes
 

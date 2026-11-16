@@ -8,8 +8,11 @@ import {
   FieldLabel,
 } from '@agentos/ui/components/field';
 import { Input } from '@agentos/ui/components/input';
-import { signInWithEmail } from '../lib/auth-api';
-import { navigateApp, readNextParam } from '../lib/auth-routes';
+import {
+  navigateApp,
+  readNextParam,
+  signInWithEmail,
+} from '@agentos/core/shell/lib';
 import { AuthFormCard, AuthFormPanel } from './auth-form-card';
 import { AuthPublicLayout } from './auth-public-layout';
 

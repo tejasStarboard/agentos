@@ -1,18 +1,18 @@
 import { useEffect, useState, type ComponentType } from 'react';
 import { config as virtualConfig } from 'virtual:agentos-config';
-import { applyBranding } from '../lib/apply-branding';
-import { fetchAuthSession } from '../lib/auth-api';
 import {
+  applyBranding,
+  fetchAuthSession,
   loginPathWithNext,
   matchPublicAuthRoute,
   navigateApp,
   type PublicAuthRoute,
-} from '../lib/auth-routes';
+} from '@agentos/core/shell/lib';
+import { ShellRoot } from '../chrome/shell-root';
 import { ForgotPasswordPage } from './forgot-password-page';
 import { LoginPage } from './login-page';
 import { RegisterPage } from './register-page';
 import { ResetPasswordPage } from './reset-password-page';
-import { ShellRoot } from './shell-root';
 
 export type AuthGateBranding = {
   appName: string;

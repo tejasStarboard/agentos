@@ -1,6 +1,6 @@
+import type { ExtensionManagerStatus } from '../chrome/extension-catalog';
 import type { ContributionRuntimeStatus, UiContribution } from './contribution';
 import { contributionKey } from './contribution';
-import type { ExtensionManagerStatus } from './extension-catalog';
 
 /**
  * Derive Extension Manager row status from enable flag + mounted frame statuses.

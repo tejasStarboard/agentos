@@ -2,9 +2,9 @@ import { createRoot, type Root } from 'react-dom/client';
 import type { ComponentType } from 'react';
 import { registry as virtualRegistry } from 'virtual:agentos-registry';
 import type { RegistryModel } from '@agentos/core/vite/lib/types';
-import { AuthGate, type AuthGateConfig } from './components/auth-gate';
-import { restoreStoredActivity } from './lib/activity-bar-persistence';
-import { applyRegistry } from './lib/apply-registry';
+import { AuthGate, type AuthGateConfig } from './components/auth/auth-gate';
+import { restoreStoredActivity } from './lib/chrome/activity-bar-persistence';
+import { applyRegistry } from './lib/chrome/apply-registry';
 
 let activeRoot: Root | null = null;
 
